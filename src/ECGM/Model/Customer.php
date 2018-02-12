@@ -1,5 +1,4 @@
 <?php
-
 namespace ECGM\Model;
 
 
@@ -17,16 +16,21 @@ class Customer
      * @var BaseArray
      */
     private $history;
+    /**
+     * @var CustomerGroup
+     */
+    private $group;
 
     /**
      * Customer constructor.
      * @param mixed $id
      */
-    public function __construct($id)
+    public function __construct($id, CustomerGroup $group)
     {
-        $this->parameters = new BaseArray(null, "CustomerParameter");
-        $this->history = new BaseArray();
+        $this->parameters = new BaseArray(null, "ECGM\Model\CustomerParameter");
+        $this->history = new BaseArray(null, "ECGM\Model\Order");
         $this->id = $id;
+        $this->group = $group;
     }
 
     /**
@@ -45,10 +49,17 @@ class Customer
         return $this->parameters;
     }
 
+    /**
+     * @param CustomerParameter $parameter
+     */
     public function addParameter(CustomerParameter $parameter){
-        return $this->parameters->add($parameter, $parameter->getId());
+        $parameter->setCustomer($this);
+        $this->parameters->add($parameter, $parameter->getId());
     }
 
+    /**
+     * @param $parameterId
+     */
     public function removeParameter($parameterId){
         $this->parameters->remove($parameterId);
     }
@@ -61,6 +72,35 @@ class Customer
         return $this->history;
     }
 
+    /**
+     * @param Order $order
+     */
+    public function addOrder(Order $order){
+        $order->setCustomer($this);
+        $this->history->add($order, $order->getId());
+    }
 
+    /**
+     * @param $orderId
+     */
+    public function removeOrder($orderId){
+        $this->history->remove($orderId);
+    }
+
+    /**
+     * @return CustomerGroup
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param CustomerGroup $group
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
+    }
 
 }

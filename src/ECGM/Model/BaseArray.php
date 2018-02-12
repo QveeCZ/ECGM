@@ -1,7 +1,8 @@
 <?php
-
 namespace ECGM\Model;
 
+
+use ECGM\Exceptions\InvalidValueException;
 
 class BaseArray
 {
@@ -23,7 +24,7 @@ class BaseArray
      * @param BaseArray|null $baseArray
      * @param string $requiredBaseClass
      */
-    public function __construct(BaseArray $baseArray = null,$requiredBaseClass = null)
+    public function __construct(BaseArray $baseArray = null, $requiredBaseClass = null)
     {
         if (!is_null($baseArray)) {
             $this->list = $baseArray->list;
@@ -37,40 +38,47 @@ class BaseArray
 
     /**
      * @param mixed $obj
-     * @param mixed|null $key
-     * @return boolean
+     * @param null|mixed $key
+     * @throws InvalidValueException
      */
     public function add($obj, $key = null)
     {
-        if(!$this->isValid($obj)){
-            return false;
+        if (!$this->isValid($obj)) {
+            throw new InvalidValueException("Object " . get_class($obj) . " is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
         }
 
-        if(is_null($key) || !$this->keyExists($key)){
+        if (is_null($key) || !$this->keyExists($key)) {
             $this->size++;
         }
 
-        if(is_null($key)){
+        if (is_null($key)) {
             $this->list[$key] = $obj;
-        }else{
+        } else {
             array_push($this->list, $obj);
         }
-
     }
 
     /**
      * @param array $list
-     * @return boolean
+     * @throws InvalidValueException
      */
     public function set($list)
     {
-        if(!$this->isValid($list)){
-            return false;
+        if(!is_array($list)){
+            throw new InvalidValueException("Parameter is not an array..");
+        }
+
+        $listCount = count($list);
+
+        for ($i = 0; $i < $listCount; $i++){
+            $obj = $list[$i];
+            if (!$this->isValid($obj)) {
+                throw new InvalidValueException("Object " . get_class($obj) . " on position " . $i . " in array is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
+            }
         }
 
         $this->list = $list;
-        $this->size = count($list);
-        return true;
+        $this->size = $listCount;
     }
 
     /**
@@ -116,7 +124,8 @@ class BaseArray
     /**
      * @return array
      */
-    public function get(){
+    public function get()
+    {
         return $this->list;
     }
 
@@ -139,26 +148,25 @@ class BaseArray
      * @param mixed $key
      * @return bool
      */
-    public function keyExists($key){
+    public function keyExists($key)
+    {
         return ($this->getKey($key) === -1) ? false : true;
     }
 
     //Private functions
 
-    private function isValid($obj){
-
-        if(is_null($this->requiredBaseClass)){
+    /**
+     * @param mixed $obj
+     * @return bool
+     */
+    private function isValid($obj)
+    {
+        if (is_null($this->requiredBaseClass)) {
             return true;
         }
 
-        if(!is_array($obj)){
-            $obj = array($obj);
-        }
-
-        foreach ($obj as $singleObj){
-            if(!is_subclass_of($singleObj, $this->requiredBaseClass)){
-                return false;
-            }
+        if (!is_a($obj, $this->requiredBaseClass)) {
+            return false;
         }
 
         return true;

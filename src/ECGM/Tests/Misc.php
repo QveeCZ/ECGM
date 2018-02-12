@@ -16,7 +16,7 @@ class Misc extends TestCase
     {
         //Validate bad required class
         $this->expectException(InvalidValueException::class);
-        new BaseArray(null, "SomeNonexistentClassName");
+        new BaseArray(null, "SomeNonexistentClassName123");
 
         //Validate bad insert value
         $this->expectException(InvalidValueException::class);

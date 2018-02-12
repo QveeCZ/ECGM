@@ -1,0 +1,14 @@
+{
+  "name": "qveecz/ecgm",
+  "license": "MIT",
+  "type": "library",
+  "description": "Application of game theory to e-commerce solutions",
+  "autoload": {
+    "psr-4": {
+      "ECGM\\": "src/ECGM"
+    }
+  },
+  "require": {
+    "php": ">=5.6"
+  }
+}

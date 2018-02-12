@@ -11,15 +11,11 @@ use PHPUnit\Framework\TestCase;
 class Misc extends TestCase
 {
 
-    public function runAll(){
-
-    }
-
     public function testBaseArray(){
 
         //Validate bad required class
         $this->expectException(InvalidValueException::class);
-        new BaseArray(null, "afsasaff");
+        new BaseArray(null, "SomeNonexistentClassName");
 
         //Validate bad insert value
         $this->expectException(InvalidValueException::class);

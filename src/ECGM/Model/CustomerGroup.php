@@ -20,7 +20,7 @@ class CustomerGroup
     public function __construct($id)
     {
         $this->id = $id;
-        $this->customers = new BaseArray(null, "ECGM\Model\Customer");
+        $this->customers = new BaseArray(null, Customer::class);
     }
 
     /**

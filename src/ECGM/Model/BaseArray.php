@@ -15,23 +15,29 @@ class BaseArray
      */
     private $list;
     /**
-     * @var string allows only object of specified class to be inserted into array
+     * @var string if specified and valid classname, only instances or children of this class will be allowed into array
      */
     private $requiredBaseClass;
 
     /**
      * BaseArray constructor.
      * @param BaseArray|null $baseArray
-     * @param string $requiredBaseClass
+     * @param string|null $requiredBaseClass
+     * @throws InvalidValueException
      */
     public function __construct(BaseArray $baseArray = null, $requiredBaseClass = null)
     {
-        if (!is_null($baseArray)) {
-            $this->list = $baseArray->list;
-            $this->size = $baseArray->size;
+        if(is_null($baseArray) && !is_null($requiredBaseClass) && !class_exists ($requiredBaseClass)){
+            throw new InvalidValueException("Required class " . $requiredBaseClass . " is invalid.");
+        }
+
+        if (is_null($baseArray)) {
+            $this->list = array();
+            $this->size = 0;
             $this->requiredBaseClass = $requiredBaseClass;
         } else {
-            $this->list = array();
+            $this->list = $baseArray->list;
+            $this->size = $baseArray->size;
             $this->requiredBaseClass = $baseArray->requiredBaseClass;
         }
     }
@@ -165,7 +171,7 @@ class BaseArray
             return true;
         }
 
-        if (!is_a($obj, $this->requiredBaseClass)) {
+        if (!$obj instanceof $this->requiredBaseClass) {
             return false;
         }
 

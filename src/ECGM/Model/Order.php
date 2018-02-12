@@ -26,7 +26,7 @@ class Order
     {
         $this->id = $id;
         $this->customer = $customer;
-        $this->products = new BaseArray(null, "ECGM\Model\Product");
+        $this->products = new BaseArray(null, OrderProduct::class);
     }
 
     /**

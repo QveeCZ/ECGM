@@ -27,8 +27,8 @@ class Customer
      */
     public function __construct($id, CustomerGroup $group)
     {
-        $this->parameters = new BaseArray(null, "ECGM\Model\CustomerParameter");
-        $this->history = new BaseArray(null, "ECGM\Model\Order");
+        $this->parameters = new BaseArray(null, CustomerParameter::class);
+        $this->history = new BaseArray(null, Order::class);
         $this->id = $id;
         $this->group = $group;
     }

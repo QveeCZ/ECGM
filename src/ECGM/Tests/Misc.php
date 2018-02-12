@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class Misc extends TestCase
 {
-
+řř
     public function testBaseArray(){
 
         //Validate bad required class

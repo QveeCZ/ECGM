@@ -2,6 +2,8 @@
 namespace ECGM\Model;
 
 
+use ECGM\Exceptions\InvalidValueException;
+
 class CustomerGroup
 {
     /**
@@ -32,6 +34,20 @@ class CustomerGroup
     }
 
     /**
+     * @param BaseArray $customers
+     */
+    public function setCustomers(BaseArray $customers)
+    {
+        if($customers->requiredBaseClass() != Customer::class){
+            throw new InvalidValueException("Required class for customerArray has to be equal to " . Customer::class . " but is " . $customers->requiredBaseClass() . ".");
+        }
+
+        $this->customers = $customers;
+    }
+
+
+
+    /**
      * @return BaseArray
      */
     public function getCustomers()
@@ -44,7 +60,7 @@ class CustomerGroup
      */
     public function addCustomer(Customer $customer){
         $customer->setGroup($this);
-        $this->customers->add($customer, $customer->getId());
+        $this->customers->add($customer);
     }
 
     /**

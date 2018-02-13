@@ -10,7 +10,7 @@ use ECGM\Model\CustomerGroup;
 use ECGM\Model\CustomerParameter;
 use PHPUnit\Framework\TestCase;
 
-class Misc extends TestCase
+class MiscTests extends TestCase
 {
     public function testInvalidValueExceptions()
     {

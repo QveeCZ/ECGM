@@ -6,21 +6,44 @@ namespace ECGM\Controller;
 use ECGM\Exceptions\InvalidValueException;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
+use ECGM\Model\CustomerGroup;
 use ECGM\Model\CustomerParameter;
 use ECGM\Model\Order;
 
 class CustomerParametersController
 {
 
+    public function cleanCustomerGroups(BaseArray $customerGroups){
+        if ($customerGroups->requiredBaseClass() != Customer::class) {
+            throw new InvalidValueException("Required class for customerGroups has to be equal to " . CustomerGroup::class . " but is " . $customerGroups->requiredBaseClass() . ".");
+        }
+
+        $retGroups = new BaseArray(null, CustomerGroup::class);
+
+        /**
+         * @var CustomerGroup $customerGroup
+         */
+        foreach ($customerGroups as $customerGroup){
+            $retGroups->add($this->cleanCustomerGroup($customerGroup));
+        }
+
+        return $retGroups;
+    }
+
+    public function cleanCustomerGroup(CustomerGroup $customerGroup){
+        $customerGroup->setCustomers($this->cleanCustomers($customerGroup->getCustomers()));
+        return $customerGroup;
+    }
+
     /**
-     * @param BaseArray $customerArray
+     * @param BaseArray $customers
      * @return BaseArray
      * @throws InvalidValueException
      */
-    public function cleanCustomers(BaseArray $customerArray)
+    public function cleanCustomers(BaseArray $customers)
     {
-        if ($customerArray->requiredBaseClass() != Customer::class) {
-            throw new InvalidValueException("Required class for customerArray should be equal to " . Customer::class . " but is " . $customerArray->requiredBaseClass() . ".");
+        if ($customers->requiredBaseClass() != Customer::class) {
+            throw new InvalidValueException("Required class for customers has to be equal to " . Customer::class . " but is " . $customers->requiredBaseClass() . ".");
         }
 
         $cleanedCustomerArray = new BaseArray(null, Customer::class);
@@ -28,7 +51,7 @@ class CustomerParametersController
         /**
          * @var Customer $customer
          */
-        foreach ($customerArray->get() as $customer) {
+        foreach ($customers as $customer) {
             $cleanedCustomerArray->add($this->cleanCustomer($customer));
         }
 
@@ -47,7 +70,7 @@ class CustomerParametersController
         /**
          * @var Order $order
          */
-        foreach ($customer->getHistory()->get() as $order){
+        foreach ($customer->getHistory() as $order){
             $order->setCustomer($this->transformCircularValues($order->getCustomer()));
             $transformedHistory->add($order);
         }
@@ -56,19 +79,27 @@ class CustomerParametersController
         return $customer;
     }
 
+    /**
+     * @param Customer $customer
+     * @throws InvalidValueException
+     */
     private function validateCustomerParameters(Customer $customer){
         $expectedSize = $customer->getParameters()->size();
 
         /**
          * @var Order $customerOrder
          */
-        foreach ($customer->getHistory()->get() as $customerOrder){
+        foreach ($customer->getHistory() as $customerOrder){
             if($customerOrder->getCustomer()->getParameters()->size() != $expectedSize){
                 throw new InvalidValueException("Expected parameter size is $expectedSize but some parameters in customer " . $customer->getId() . " history are not equal.");
             }
         }
     }
 
+    /**
+     * @param Customer $customer
+     * @return Customer
+     */
     private function transformCircularValues(Customer $customer){
 
         $transformedCustomerParameters = new BaseArray(null, CustomerParameter::class);
@@ -76,7 +107,7 @@ class CustomerParametersController
         /**
          * @var CustomerParameter $customerParameter
          */
-        foreach ($customer->getParameters()->get() as $customerParameter){
+        foreach ($customer->getParameters() as $customerParameter){
             if($customerParameter->isCircular()){
                 $transformedCustomerParameters->merge($this->transformCircularValue($customerParameter));
             }else{

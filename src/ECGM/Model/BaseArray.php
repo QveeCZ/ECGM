@@ -5,7 +5,7 @@ namespace ECGM\Model;
 
 use ECGM\Exceptions\InvalidValueException;
 
-class BaseArray
+class BaseArray implements \Iterator
 {
     /**
      * @var integer $size
@@ -15,6 +15,10 @@ class BaseArray
      * @var array
      */
     private $list;
+    /**
+     * @var integer
+     */
+    private $position;
     /**
      * @var string if specified and valid classname, only instances or children of this class will be allowed into array
      */
@@ -36,10 +40,12 @@ class BaseArray
             $this->list = array();
             $this->size = 0;
             $this->requiredBaseClass = $requiredBaseClass;
+            $this->position = 0;
         } else {
             $this->list = $baseArray->list;
             $this->size = $baseArray->size;
             $this->requiredBaseClass = $baseArray->requiredBaseClass;
+            $this->position = $baseArray->position;
         }
     }
 
@@ -65,6 +71,7 @@ class BaseArray
         $this->isListValid($list);
         $this->list = $list;
         $this->size = count($list);
+        $this->position = 0;
     }
 
     /**
@@ -85,6 +92,7 @@ class BaseArray
         $this->list = $baseArray->list;
         $this->size = $baseArray->size;
         $this->requiredBaseClass = $baseArray->requiredBaseClass;
+        $this->position = $baseArray->position;
     }
 
     /**
@@ -164,6 +172,43 @@ class BaseArray
     public function requiredBaseClass()
     {
         return $this->requiredBaseClass;
+    }
+
+    //Iterator functions
+
+    /**
+     *
+     */
+    public function rewind() {
+        $this->position = 0;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function current() {
+        return $this->list[$this->position];
+    }
+
+    /**
+     * @return int
+     */
+    public function key() {
+        return $this->position;
+    }
+
+    /**
+     *
+     */
+    public function next() {
+        ++$this->position;
+    }
+
+    /**
+     * @return bool
+     */
+    public function valid() {
+        return isset($this->list[$this->position]);
     }
 
     //Private functions

@@ -20,6 +20,10 @@ class OrderProduct
      */
     private $discount;
     /**
+     * @var integer
+     */
+    private $amount;
+    /**
      * @var Order
      */
     private $order;
@@ -28,13 +32,18 @@ class OrderProduct
      * OrderProduct constructor.
      * @param $id
      * @param float $price
+     * @param integer $amount
      * @param float $discount
      * @throws InvalidValueException
      */
-    public function __construct($id, $price, $discount = 0.0)
+    public function __construct($id, $price, $amount = 1, $discount = 0.0)
     {
-        if(!is_numeric($price) || !is_numeric($discount)){
-            throw  new InvalidValueException("Price or discount are not numeric.");
+        if(!is_numeric($price) || !is_numeric($discount) || !is_numeric($amount)){
+            throw  new InvalidValueException("Price, amount or discount are not numeric.");
+        }
+
+        if($amount < 1){
+            throw  new InvalidValueException("Amount cannot be lower than 1, but is " . $amount . ".");
         }
 
         $this->id = $id;
@@ -64,6 +73,14 @@ class OrderProduct
     public function getDiscount()
     {
         return $this->discount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmount()
+    {
+        return $this->amount;
     }
 
     /**

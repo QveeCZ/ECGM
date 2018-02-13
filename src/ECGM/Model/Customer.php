@@ -2,6 +2,8 @@
 namespace ECGM\Model;
 
 
+use ECGM\Exceptions\InvalidValueException;
+
 class Customer
 {
     /**
@@ -42,6 +44,18 @@ class Customer
     }
 
     /**
+     * @param BaseArray $parameters
+     * @throws InvalidValueException
+     */
+    public function setParameters(BaseArray $parameters)
+    {
+        if($parameters->requiredBaseClass() != CustomerParameter::class){
+            throw new InvalidValueException("Base class has to be equal to " . CustomerParameter::class . " but is " . $parameters->requiredBaseClass() . ".");
+        }
+        $this->parameters = $parameters;
+    }
+
+    /**
      * @return BaseArray
      */
     public function getParameters()
@@ -62,6 +76,19 @@ class Customer
      */
     public function removeParameter($parameterId){
         $this->parameters->remove($parameterId);
+    }
+
+    /**
+     * @param BaseArray $history
+     * @throws InvalidValueException
+     */
+    public function setHistory(BaseArray $history)
+    {
+        if($history->requiredBaseClass() != Order::class){
+            throw new InvalidValueException("Base class has to be equal to " . Order::class . " but is " . $history->requiredBaseClass() . ".");
+        }
+
+        $this->history = $history;
     }
 
     /**

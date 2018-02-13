@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Model;
 
 
@@ -27,7 +28,7 @@ class BaseArray
      */
     public function __construct(BaseArray $baseArray = null, $requiredBaseClass = null)
     {
-        if(is_null($baseArray) && !is_null($requiredBaseClass) && !class_exists ($requiredBaseClass)){
+        if (is_null($baseArray) && !is_null($requiredBaseClass) && !class_exists($requiredBaseClass)) {
             throw new InvalidValueException("Required class " . $requiredBaseClass . " is invalid.");
         }
 
@@ -44,47 +45,78 @@ class BaseArray
 
     /**
      * @param mixed $obj
-     * @param null|mixed $key
+     * @param mixed $key
      * @throws InvalidValueException
      */
-    public function add($obj, $key = null)
+    public function add($obj, $key)
     {
         if (!$this->isValid($obj)) {
             throw new InvalidValueException("Object " . get_class($obj) . " is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
         }
 
-        if (is_null($key) || !$this->keyExists($key)) {
+        if (!$this->keyExists($key)) {
             $this->size++;
         }
 
-        if (is_null($key)) {
-            $this->list[$key] = $obj;
-        } else {
-            array_push($this->list, $obj);
-        }
+        $this->list[$key] = $obj;
+        ksort($this->list);
     }
 
     /**
      * @param array $list
+     */
+    public function setList($list)
+    {
+        $this->isListValid($list);
+        $this->list = $list;
+        $this->size = count($list);
+        ksort($this->list);
+    }
+
+    /**
+     * @param $list
+     */
+    public function mergeList($list)
+    {
+        $this->isListValid($list);
+        $this->list = array_merge($this->list, $list);
+        $this->size += count($list);
+        ksort($this->list);
+
+    }
+
+    /**
+     * @param BaseArray $baseArray
+     */
+    public function set(BaseArray $baseArray)
+    {
+        $this->list = $baseArray->list;
+        $this->size = $baseArray->size;
+        $this->requiredBaseClass = $baseArray->requiredBaseClass;
+        ksort($this->list);
+    }
+
+    /**
+     * @param BaseArray $baseArray
      * @throws InvalidValueException
      */
-    public function set($list)
+    public function merge(BaseArray $baseArray)
     {
-        if(!is_array($list)){
-            throw new InvalidValueException("Parameter is not an array..");
+        if ($this->requiredBaseClass != $baseArray->requiredBaseClass) {
+            throw new InvalidValueException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $this->requiredBaseClass . ".");
         }
+        $this->list = array_merge($this->list, $baseArray->list);
+        $this->size += $baseArray->size;
+        ksort($this->list);
+    }
 
-        $listCount = count($list);
-
-        for ($i = 0; $i < $listCount; $i++){
-            $obj = $list[$i];
-            if (!$this->isValid($obj)) {
-                throw new InvalidValueException("Object " . get_class($obj) . " on position " . $i . " in array is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
-            }
-        }
-
-        $this->list = $list;
-        $this->size = $listCount;
+    /**
+     *
+     */
+    public function clear()
+    {
+        $this->list = array();
+        $this->size = 0;
     }
 
     /**
@@ -95,6 +127,7 @@ class BaseArray
         if (array_key_exists($key, $this->list)) {
             unset($this->list[$key]);
             $this->size--;
+            ksort($this->list);
         }
     }
 
@@ -123,8 +156,22 @@ class BaseArray
         if (array_key_exists($key, $this->list)) {
             return $this->list[$key];
         } else {
-            return NULL;
+            return null;
         }
+    }
+
+    /**
+     * @param integer $index
+     * @return mixed|null
+     */
+    public function getObjByIndex($index)
+    {
+        if (!is_numeric($index) || $index > $this->size() - 1 || $index < 0) {
+            return null;
+        }
+
+        $key = array_keys($this->list)[$index];
+        return $this->getObj($key);
     }
 
     /**
@@ -156,7 +203,15 @@ class BaseArray
      */
     public function keyExists($key)
     {
-        return ($this->getKey($key) === -1) ? false : true;
+        return array_key_exists($key, $this->list);
+    }
+
+    /**
+     * @return string
+     */
+    public function requiredBaseClass()
+    {
+        return $this->requiredBaseClass;
     }
 
     //Private functions
@@ -176,6 +231,26 @@ class BaseArray
         }
 
         return true;
+    }
+
+    /**
+     * @param array $list
+     * @throws InvalidValueException
+     */
+    private function isListValid($list)
+    {
+        if (!is_array($list)) {
+            throw new InvalidValueException("Parameter is not an array.");
+        }
+
+        $listCount = count($list);
+
+        for ($i = 0; $i < $listCount; $i++) {
+            $obj = $list[$i];
+            if (!$this->isValid($obj)) {
+                throw new InvalidValueException("Object " . get_class($obj) . " on position " . $i . " in array is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
+            }
+        }
     }
 
 }

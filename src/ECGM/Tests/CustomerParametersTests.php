@@ -19,20 +19,23 @@ class CustomerParametersTests extends TestCase
 
         $customer = new Customer(1, new CustomerGroup(1));
 
-        //Set current parameters
-        $customerParameters = new BaseArray(null, CustomerParameter::class);
-
-        $customerParameters->add(new CustomerParameter(1, 4,$customer, true, 12));
-        $customerParameters->add(new CustomerParameter(2, 5,$customer, true, 7));
-        $customerParameters->add(new CustomerParameter(3, 11,$customer, true, 24));
-        $customerParameters->add(new CustomerParameter(4, 49.652456,$customer));
-        $customerParameters->add(new CustomerParameter(5, 16.259766,$customer));
-
-        $customer->setParameters($customerParameters);
-
         // Set historical parameters
-        $customerHistoryParameters = new BaseArray(null, CustomerParameter::class);
+        $history = new BaseArray(null, Order::class);
 
+        //pps1
+        $customerHistoryParameters = new BaseArray(null, CustomerParameter::class);
+        $customerHistoryParameters->add(new CustomerParameter(1, 4,$customer, true, 12));
+        $customerHistoryParameters->add(new CustomerParameter(2, 5,$customer, true, 7));
+        $customerHistoryParameters->add(new CustomerParameter(3, 11,$customer, true, 24));
+        $customerHistoryParameters->add(new CustomerParameter(4, 49.652456,$customer));
+        $customerHistoryParameters->add(new CustomerParameter(5, 16.259766,$customer));
+
+        $historicalCustomer = new Customer(1, new CustomerGroup(1));
+        $historicalCustomer->setParameters($customerHistoryParameters);
+        $history->add(new Order(1, $historicalCustomer));
+
+        //pps2
+        $customerHistoryParameters = new BaseArray(null, CustomerParameter::class);
         $customerHistoryParameters->add(new CustomerParameter(1, 6,$customer, true, 12));
         $customerHistoryParameters->add(new CustomerParameter(2, 6,$customer, true, 7));
         $customerHistoryParameters->add(new CustomerParameter(3, 12,$customer, true, 24));
@@ -41,8 +44,54 @@ class CustomerParametersTests extends TestCase
 
         $historicalCustomer = new Customer(1, new CustomerGroup(1));
         $historicalCustomer->setParameters($customerHistoryParameters);
+        $history->add(new Order(1, $historicalCustomer));
 
-        $history = new BaseArray(null, Order::class);
+        //pps3
+        $customerHistoryParameters = new BaseArray(null, CustomerParameter::class);
+        $customerHistoryParameters->add(new CustomerParameter(1, 8,$customer, true, 12));
+        $customerHistoryParameters->add(new CustomerParameter(2, 1,$customer, true, 7));
+        $customerHistoryParameters->add(new CustomerParameter(3, 9,$customer, true, 24));
+        $customerHistoryParameters->add(new CustomerParameter(4, 49.652456,$customer));
+        $customerHistoryParameters->add(new CustomerParameter(5, 16.259766,$customer));
+
+        $historicalCustomer = new Customer(1, new CustomerGroup(1));
+        $historicalCustomer->setParameters($customerHistoryParameters);
+        $history->add(new Order(1, $historicalCustomer));
+
+        //pps4
+        $customerHistoryParameters = new BaseArray(null, CustomerParameter::class);
+        $customerHistoryParameters->add(new CustomerParameter(1, 10,$customer, true, 12));
+        $customerHistoryParameters->add(new CustomerParameter(2, 2,$customer, true, 7));
+        $customerHistoryParameters->add(new CustomerParameter(3, 13,$customer, true, 24));
+        $customerHistoryParameters->add(new CustomerParameter(4, 35.320802,$customer));
+        $customerHistoryParameters->add(new CustomerParameter(5, 25.138551,$customer));
+
+        $historicalCustomer = new Customer(1, new CustomerGroup(1));
+        $historicalCustomer->setParameters($customerHistoryParameters);
+        $history->add(new Order(1, $historicalCustomer));
+
+        //pps5
+        $customerHistoryParameters = new BaseArray(null, CustomerParameter::class);
+        $customerHistoryParameters->add(new CustomerParameter(1, 11,$customer, true, 12));
+        $customerHistoryParameters->add(new CustomerParameter(2, 6,$customer, true, 7));
+        $customerHistoryParameters->add(new CustomerParameter(3, 10,$customer, true, 24));
+        $customerHistoryParameters->add(new CustomerParameter(4, 49.652456,$customer));
+        $customerHistoryParameters->add(new CustomerParameter(5, 16.259766,$customer));
+
+        $historicalCustomer = new Customer(1, new CustomerGroup(1));
+        $historicalCustomer->setParameters($customerHistoryParameters);
+        $history->add(new Order(1, $historicalCustomer));
+
+        //pps6
+        $customerHistoryParameters = new BaseArray(null, CustomerParameter::class);
+        $customerHistoryParameters->add(new CustomerParameter(1, 12,$customer, true, 12));
+        $customerHistoryParameters->add(new CustomerParameter(2, 1,$customer, true, 7));
+        $customerHistoryParameters->add(new CustomerParameter(3, 23,$customer, true, 24));
+        $customerHistoryParameters->add(new CustomerParameter(4, 49.652456,$customer));
+        $customerHistoryParameters->add(new CustomerParameter(5, 16.259766,$customer));
+
+        $historicalCustomer = new Customer(1, new CustomerGroup(1));
+        $historicalCustomer->setParameters($customerHistoryParameters);
         $history->add(new Order(1, $historicalCustomer));
 
         $customer->setHistory($history);
@@ -59,21 +108,31 @@ class CustomerParametersTests extends TestCase
 
         for ($i = 0; $i < 8; $i++){
             echo $i;
-            $this->assertEquals($expected[$i], round($cleanedCustomer->getParameters()->getObj($i)->getValue(), 3));
+            $this->assertEquals($expected[$i], round($cleanedCustomer->getHistory()->getObj(0)->getCustomer()->getParameters()->getObj($i)->getValue(), 3));
             echo " - OK\n";
         }
-
-        echo "\nCurrent parameters OK.\n\n";
+        echo "\npps1 OK.\n";
 
         $expected = array(0, -1, -0.782, 0.623, 0, -1, 49.652, 16.260);
 
         for ($i = 0; $i < 8; $i++){
             echo $i;
-            $this->assertEquals($expected[$i], round($cleanedCustomer->getHistory()->getObj(0)->getCustomer()->getParameters()->getObj($i)->getValue(), 3));
+            $this->assertEquals($expected[$i], round($cleanedCustomer->getHistory()->getObj(1)->getCustomer()->getParameters()->getObj($i)->getValue(), 3));
+            echo " - OK\n";
+        }
+        echo "\npps2 OK.\n\n";
+
+        echo "\nHistorical parameters OK.\n\n";
+
+        $expected = array(-0.228, 0.061, 0, 0.341, 0.158, -0.59, 49.401, 16.509);
+
+        for ($i = 0; $i < 8; $i++){
+            echo $i;
+            $this->assertEquals($expected[$i], round($cleanedCustomer->getParameters()->getObj($i)->getValue(), 3));
             echo " - OK\n";
         }
 
-        echo "\nHistorical parameters OK.\n\n";
+        echo "\nFinal parameters OK.\n\n";
     }
 
 }

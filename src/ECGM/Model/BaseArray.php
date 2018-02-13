@@ -45,21 +45,16 @@ class BaseArray
 
     /**
      * @param mixed $obj
-     * @param mixed $key
      * @throws InvalidValueException
      */
-    public function add($obj, $key)
+    public function add($obj)
     {
         if (!$this->isValid($obj)) {
             throw new InvalidValueException("Object " . get_class($obj) . " is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
         }
 
-        if (!$this->keyExists($key)) {
-            $this->size++;
-        }
-
-        $this->list[$key] = $obj;
-        ksort($this->list);
+        $this->list[] = $obj;
+        $this->size++;
     }
 
     /**
@@ -70,7 +65,6 @@ class BaseArray
         $this->isListValid($list);
         $this->list = $list;
         $this->size = count($list);
-        ksort($this->list);
     }
 
     /**
@@ -81,8 +75,6 @@ class BaseArray
         $this->isListValid($list);
         $this->list = array_merge($this->list, $list);
         $this->size += count($list);
-        ksort($this->list);
-
     }
 
     /**
@@ -93,7 +85,6 @@ class BaseArray
         $this->list = $baseArray->list;
         $this->size = $baseArray->size;
         $this->requiredBaseClass = $baseArray->requiredBaseClass;
-        ksort($this->list);
     }
 
     /**
@@ -107,7 +98,6 @@ class BaseArray
         }
         $this->list = array_merge($this->list, $baseArray->list);
         $this->size += $baseArray->size;
-        ksort($this->list);
     }
 
     /**
@@ -120,14 +110,13 @@ class BaseArray
     }
 
     /**
-     * @param mixed $key
+     * @param integer $index
      */
-    public function remove($key)
+    public function remove($index)
     {
-        if (array_key_exists($key, $this->list)) {
-            unset($this->list[$key]);
+        if (is_numeric($index) && $index < $this->size()) {
+            unset($this->list[$index]);
             $this->size--;
-            ksort($this->list);
         }
     }
 
@@ -148,30 +137,17 @@ class BaseArray
     }
 
     /**
-     * @param mixed $key
-     * @return mixed|null
-     */
-    public function getObj($key)
-    {
-        if (array_key_exists($key, $this->list)) {
-            return $this->list[$key];
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * @param integer $index
      * @return mixed|null
      */
-    public function getObjByIndex($index)
+    public function getObj($index)
     {
+
         if (!is_numeric($index) || $index > $this->size() - 1 || $index < 0) {
             return null;
         }
 
-        $key = array_keys($this->list)[$index];
-        return $this->getObj($key);
+        return $this->list[$index];
     }
 
     /**
@@ -180,30 +156,6 @@ class BaseArray
     public function get()
     {
         return $this->list;
-    }
-
-    /**
-     * @param mixed $obj
-     * @return int
-     */
-    public function getKey($obj)
-    {
-        $arrKeys = array_keys($this->list, $obj);
-
-        if (empty($arrKeys)) {
-            return -1;
-        } else {
-            return $arrKeys[0];
-        }
-    }
-
-    /**
-     * @param mixed $key
-     * @return bool
-     */
-    public function keyExists($key)
-    {
-        return array_key_exists($key, $this->list);
     }
 
     /**

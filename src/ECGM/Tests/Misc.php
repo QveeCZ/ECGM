@@ -21,7 +21,7 @@ class Misc extends TestCase
         //Validate bad insert value
         $this->expectException(InvalidValueException::class);
         $arrayTest = new BaseArray(null, Customer::class);
-        $arrayTest->add(new CustomerGroup(1),1);
+        $arrayTest->add(new CustomerGroup(1));
 
         //Validate non numeric CustomerParameter value
         $this->expectException(InvalidValueException::class);

@@ -80,7 +80,7 @@ class CustomerParametersController
             if($customerParameter->isCircular()){
                 $transformedCustomerParameters->merge($this->transformCircularValue($customerParameter));
             }else{
-                $transformedCustomerParameters->add($customerParameter, $customerParameter->getId());
+                $transformedCustomerParameters->add($customerParameter);
             }
         }
 
@@ -109,8 +109,8 @@ class CustomerParametersController
         $parameterValueY = cos(2 * pi() * $parameterValue / $maxValue);
 
         $ret = new BaseArray(null, CustomerParameter::class);
-        $ret->add(new CustomerParameter($parameter->getId() . "X", $parameterValueX, $parameter->getCustomer()), $parameter->getId() . "X");
-        $ret->add(new CustomerParameter($parameter->getId() . "Y", $parameterValueY, $parameter->getCustomer()), $parameter->getId() . "Y");
+        $ret->add(new CustomerParameter($parameter->getId() . "X", $parameterValueX, $parameter->getCustomer()));
+        $ret->add(new CustomerParameter($parameter->getId() . "Y", $parameterValueY, $parameter->getCustomer()));
 
         return $ret;
     }

@@ -85,7 +85,7 @@ class CustomerParametersMergeController
     private function mergeTransformedParameters($parameters)
     {
 
-        $median = StaticFuncController::arrayMedian($parameters);
+        $median = SharedStaticFunctionsController::arrayMedian($parameters);
         $zScores = $this->getModifietZScore($parameters, $median);
         $weightedSum = 0;
         $weightSum = 0;
@@ -112,7 +112,7 @@ class CustomerParametersMergeController
     private function getModifietZScore($parameters, $median)
     {
         if (is_null($median)) {
-            $median = StaticFuncController::arrayMedian($parameters);
+            $median = SharedStaticFunctionsController::arrayMedian($parameters);
         }
 
         //Using MAD
@@ -140,7 +140,7 @@ class CustomerParametersMergeController
     private function getMAD($parameters, $median = null)
     {
         if (is_null($median)) {
-            $median = StaticFuncController::arrayMedian($parameters);
+            $median = SharedStaticFunctionsController::arrayMedian($parameters);
         }
 
         $absMedianDiffs = array();
@@ -149,7 +149,7 @@ class CustomerParametersMergeController
             $absMedianDiffs[] = abs($parameter - $median);
         }
 
-        return StaticFuncController::arrayMedian($absMedianDiffs);
+        return SharedStaticFunctionsController::arrayMedian($absMedianDiffs);
     }
 
     /**
@@ -160,7 +160,7 @@ class CustomerParametersMergeController
     private function getMeanAD($parameters, $median = null)
     {
         if (is_null($median)) {
-            $median = StaticFuncController::arrayMedian($parameters);
+            $median = SharedStaticFunctionsController::arrayMedian($parameters);
         }
 
         $n = count($parameters);

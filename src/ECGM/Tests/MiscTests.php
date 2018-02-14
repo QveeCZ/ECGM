@@ -12,8 +12,14 @@ use PHPUnit\Framework\TestCase;
 
 class MiscTests extends TestCase
 {
+
+    public static $splitLine = "\n\n---------------------------------------------------------\n\n";
+
     public function testInvalidValueExceptions()
     {
+
+        echo "Testing invalid value exceptions\n\n";
+
         //Validate bad required class
         $this->expectException(InvalidValueException::class);
         new BaseArray(null, "SomeNonexistentClassName");
@@ -26,5 +32,8 @@ class MiscTests extends TestCase
         //Validate non numeric CustomerParameter value
         $this->expectException(InvalidValueException::class);
         new CustomerParameter(1, "fasfaf", new Customer(12, new CustomerGroup(1)));
+
+        echo "Invalid value exceptions OK";
+        echo self::$splitLine;
     }
 }

@@ -5,7 +5,7 @@ namespace ECGM\Controller;
 
 use ECGM\Exceptions\UndefinedException;
 
-class StaticFuncController
+class SharedStaticFunctionsController
 {
     public static function arrayMedian($array)
     {

@@ -2,7 +2,7 @@
 namespace ECGM\Tests;
 
 
-use ECGM\Controller\CustomerParametersController;
+use ECGM\Controller\CustomerParametersCleaningController;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
@@ -96,7 +96,7 @@ class CustomerParametersTests extends TestCase
 
         $customer->setHistory($history);
 
-        $customerParametersController = new CustomerParametersController();
+        $customerParametersController = new CustomerParametersCleaningController();
 
         $cleanedCustomer = $customerParametersController->cleanCustomer($customer);
 
@@ -111,7 +111,7 @@ class CustomerParametersTests extends TestCase
             $this->assertEquals($expected[$i], round($cleanedCustomer->getHistory()->getObj(0)->getCustomer()->getParameters()->getObj($i)->getValue(), 3));
             echo " - OK\n";
         }
-        echo "\npps1 OK.\n";
+        echo "\npps1 OK.\n\n";
 
         $expected = array(0, -1, -0.782, 0.623, 0, -1, 49.652, 16.260);
 
@@ -132,7 +132,7 @@ class CustomerParametersTests extends TestCase
             echo " - OK\n";
         }
 
-        echo "\nFinal parameters OK.\n\n";
+        echo "\nMerged parameters OK.\n\n";
     }
 
 }

@@ -182,11 +182,13 @@ class CustomerParametersMergeController
     {
         $c = 1.28;
 
-        if ($hatU == 0) {
-            $hatU = 1;
+        $hatU = abs($hatU);
+
+        if(-$hatU == $parameter){
+            $hatU += 1;
         }
 
-        $weight = min(1, ($c / abs($parameter - abs($hatU))));
+        $weight = min(1, ($c / abs($parameter - $hatU)));
 
         return $weight;
     }

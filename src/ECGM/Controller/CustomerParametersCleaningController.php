@@ -3,11 +3,11 @@
 namespace ECGM\Controller;
 
 
-use ECGM\Exceptions\InvalidValueException;
+use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
-use ECGM\Model\CustomerParameter;
+use ECGM\Model\Parameter;
 use ECGM\Model\Order;
 
 class CustomerParametersCleaningController
@@ -16,7 +16,7 @@ class CustomerParametersCleaningController
     public function cleanCustomerGroups(BaseArray $customerGroups)
     {
         if ($customerGroups->requiredBaseClass() != Customer::class) {
-            throw new InvalidValueException("Required class for customerGroups has to be equal to " . CustomerGroup::class . " but is " . $customerGroups->requiredBaseClass() . ".");
+            throw new InvalidArgumentException("Required class for customerGroups has to be equal to " . CustomerGroup::class . " but is " . $customerGroups->requiredBaseClass() . ".");
         }
 
         $retGroups = new BaseArray(null, CustomerGroup::class);
@@ -40,12 +40,12 @@ class CustomerParametersCleaningController
     /**
      * @param BaseArray $customers
      * @return BaseArray
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
     public function cleanCustomers(BaseArray $customers)
     {
         if ($customers->requiredBaseClass() != Customer::class) {
-            throw new InvalidValueException("Required class for customers has to be equal to " . Customer::class . " but is " . $customers->requiredBaseClass() . ".");
+            throw new InvalidArgumentException("Required class for customers has to be equal to " . Customer::class . " but is " . $customers->requiredBaseClass() . ".");
         }
 
         $cleanedCustomerArray = new BaseArray(null, Customer::class);
@@ -85,7 +85,7 @@ class CustomerParametersCleaningController
 
     /**
      * @param Customer $customer
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
     private function validateCustomerParameters(Customer $customer)
     {
@@ -100,7 +100,7 @@ class CustomerParametersCleaningController
             }
 
             if ($customerOrder->getCustomer()->getParameters()->size() != $expectedSize) {
-                throw new InvalidValueException("Expected parameter size is $expectedSize but the size of parameters in customer " . $customer->getId() . " history are not equal.");
+                throw new InvalidArgumentException("Expected parameter size is $expectedSize but the size of parameters in customer " . $customer->getId() . " history are not equal.");
             }
         }
     }
@@ -112,10 +112,10 @@ class CustomerParametersCleaningController
     private function transformCircularValues(Customer $customer)
     {
 
-        $transformedCustomerParameters = new BaseArray(null, CustomerParameter::class);
+        $transformedCustomerParameters = new BaseArray(null, Parameter::class);
 
         /**
-         * @var CustomerParameter $customerParameter
+         * @var Parameter $customerParameter
          */
         foreach ($customer->getParameters() as $customerParameter) {
             if ($customerParameter->isCircular()) {
@@ -131,14 +131,14 @@ class CustomerParametersCleaningController
     }
 
     /**
-     * @param CustomerParameter $parameter
+     * @param Parameter $parameter
      * @return BaseArray
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
-    private function transformCircularValue(CustomerParameter $parameter)
+    private function transformCircularValue(Parameter $parameter)
     {
         if (!$parameter->isCircular()) {
-            throw  new InvalidValueException("Customer parameter " . $parameter->getId() . " is expected to be circular, but is not.");
+            throw  new InvalidArgumentException("Customer parameter " . $parameter->getId() . " is expected to be circular, but is not.");
         }
 
         $parameterValue = $parameter->getValue();
@@ -149,9 +149,9 @@ class CustomerParametersCleaningController
 
         $parameterValueY = cos(2 * pi() * $parameterValue / $maxValue);
 
-        $ret = new BaseArray(null, CustomerParameter::class);
-        $ret->add(new CustomerParameter($parameter->getId() . "X", $parameterValueX, $parameter->getCustomer()));
-        $ret->add(new CustomerParameter($parameter->getId() . "Y", $parameterValueY, $parameter->getCustomer()));
+        $ret = new BaseArray(null, Parameter::class);
+        $ret->add(new Parameter($parameter->getId() . "X", $parameterValueX, $parameter->getCustomer()));
+        $ret->add(new Parameter($parameter->getId() . "Y", $parameterValueY, $parameter->getCustomer()));
 
         return $ret;
     }

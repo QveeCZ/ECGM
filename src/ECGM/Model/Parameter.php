@@ -2,9 +2,9 @@
 namespace ECGM\Model;
 
 
-use ECGM\Exceptions\InvalidValueException;
+use ECGM\Exceptions\InvalidArgumentException;
 
-class CustomerParameter
+class Parameter
 {
     /**
      * @var mixed
@@ -34,22 +34,22 @@ class CustomerParameter
      * @param Customer $customer
      * @param boolean $isCircular eg hours in day or months in year
      * @param integer $maxValue is parameter is circular maxValue must be set
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
     public function __construct($id, $value, Customer $customer, $isCircular = false, $maxValue = 0)
     {
         $this->id = $id;
 
         if (!is_numeric($value)) {
-            throw new InvalidValueException("Parameter $value is not numeric and cannot be used.");
+            throw new InvalidArgumentException("Parameter $value is not numeric and cannot be used.");
         }
 
         if($isCircular && !$maxValue){
-            throw new InvalidValueException("When parameter is circular, max valu must be set.");
+            throw new InvalidArgumentException("When parameter is circular, max valu must be set.");
         }
 
         if($isCircular && $value > $maxValue){
-            throw new InvalidValueException("Value $value cannot be greater than max value ($maxValue)");
+            throw new InvalidArgumentException("Value $value cannot be greater than max value ($maxValue)");
         }
 
         $this->customer = $customer;

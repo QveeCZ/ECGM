@@ -66,7 +66,7 @@ class Order
      */
     public function addProduct(OrderProduct $product){
         $product->setOrder($this);
-        $this->products->add($product, $product->getId());
+        $this->products->add($product);
     }
 
     /**

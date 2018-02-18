@@ -2,7 +2,7 @@
 namespace ECGM\Model;
 
 
-use ECGM\Exceptions\InvalidValueException;
+use ECGM\Exceptions\InvalidArgumentException;
 
 class Customer
 {
@@ -29,7 +29,7 @@ class Customer
      */
     public function __construct($id, CustomerGroup $group)
     {
-        $this->parameters = new BaseArray(null, CustomerParameter::class);
+        $this->parameters = new BaseArray(null, Parameter::class);
         $this->history = new BaseArray(null, Order::class);
         $this->id = $id;
         $this->group = $group;
@@ -45,12 +45,12 @@ class Customer
 
     /**
      * @param BaseArray $parameters
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
     public function setParameters(BaseArray $parameters)
     {
-        if($parameters->requiredBaseClass() != CustomerParameter::class){
-            throw new InvalidValueException("Base class has to be equal to " . CustomerParameter::class . " but is " . $parameters->requiredBaseClass() . ".");
+        if($parameters->requiredBaseClass() != Parameter::class){
+            throw new InvalidArgumentException("Base class has to be equal to " . Parameter::class . " but is " . $parameters->requiredBaseClass() . ".");
         }
         $this->parameters = $parameters;
     }
@@ -63,12 +63,24 @@ class Customer
         return $this->parameters;
     }
 
+
+    public function getParametersAsSimpleArray(){
+        $ret = array();
+        /**
+         * @var Parameter $parameter
+         */
+        foreach ($this->parameters as $parameter){
+            $ret[] = $parameter->getValue();
+        }
+        return $ret;
+    }
+
     /**
-     * @param CustomerParameter $parameter
+     * @param Parameter $parameter
      */
-    public function addParameter(CustomerParameter $parameter){
+    public function addParameter(Parameter $parameter){
         $parameter->setCustomer($this);
-        $this->parameters->add($parameter, $parameter->getId());
+        $this->parameters->add($parameter);
     }
 
     /**
@@ -80,12 +92,12 @@ class Customer
 
     /**
      * @param BaseArray $history
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
     public function setHistory(BaseArray $history)
     {
         if($history->requiredBaseClass() != Order::class){
-            throw new InvalidValueException("Base class has to be equal to " . Order::class . " but is " . $history->requiredBaseClass() . ".");
+            throw new InvalidArgumentException("Base class has to be equal to " . Order::class . " but is " . $history->requiredBaseClass() . ".");
         }
 
         $this->history = $history;
@@ -104,7 +116,7 @@ class Customer
      */
     public function addOrder(Order $order){
         $order->setCustomer($this);
-        $this->history->add($order, $order->getId());
+        $this->history->add($order);
     }
 
     /**

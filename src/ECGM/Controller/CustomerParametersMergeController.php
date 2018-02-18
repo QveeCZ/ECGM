@@ -2,11 +2,12 @@
 namespace ECGM\Controller;
 
 
-use ECGM\Exceptions\InvalidValueException;
+use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
-use ECGM\Model\CustomerParameter;
+use ECGM\Model\Parameter;
 use ECGM\Model\Order;
+use ECGM\Util\MathFunctions;
 
 class CustomerParametersMergeController
 {
@@ -15,20 +16,20 @@ class CustomerParametersMergeController
      * @param BaseArray $customerHistory
      * @param Customer $customer
      * @return BaseArray
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
     public function mergeCustomerHistory(BaseArray $customerHistory, Customer $customer){
 
         if($customerHistory->requiredBaseClass() != Order::class){
-            throw new InvalidValueException("Required class for customers has to be equal to " . Order::class . " but is " . $customerHistory->requiredBaseClass() . ".");
+            throw new InvalidArgumentException("Required class for customers has to be equal to " . Order::class . " but is " . $customerHistory->requiredBaseClass() . ".");
         }
 
-        $parameters = new BaseArray(null, CustomerParameter::class);
+        $parameters = new BaseArray(null, Parameter::class);
 
         $historyMatrix = $this->transformHistoryParameterMatrix($customerHistory);
 
         for ($i = 0; $i < count($historyMatrix); $i++) {
-            $parameters->add(new CustomerParameter($i + 1, $this->mergeTransformedParameters($historyMatrix[$i]), $customer));
+            $parameters->add(new Parameter($i + 1, $this->mergeTransformedParameters($historyMatrix[$i]), $customer));
         }
 
 
@@ -52,7 +53,7 @@ class CustomerParametersMergeController
             $order = $history->getObj($i);
             for ($j = 0; $j < $order->getCustomer()->getParameters()->size(); $j++) {
                 /**
-                 * @var CustomerParameter $parameter
+                 * @var Parameter $parameter
                  */
                 $parameter = $order->getCustomer()->getParameters()->getObj($j);
                 $row[] = $parameter->getValue();
@@ -85,7 +86,7 @@ class CustomerParametersMergeController
     private function mergeTransformedParameters($parameters)
     {
 
-        $median = SharedStaticFunctionsController::arrayMedian($parameters);
+        $median = MathFunctions::arrayMedian($parameters);
         $zScores = $this->getModifietZScore($parameters, $median);
         $weightedSum = 0;
         $weightSum = 0;
@@ -112,7 +113,7 @@ class CustomerParametersMergeController
     private function getModifietZScore($parameters, $median)
     {
         if (is_null($median)) {
-            $median = SharedStaticFunctionsController::arrayMedian($parameters);
+            $median = MathFunctions::arrayMedian($parameters);
         }
 
         //Using MAD
@@ -140,7 +141,7 @@ class CustomerParametersMergeController
     private function getMAD($parameters, $median = null)
     {
         if (is_null($median)) {
-            $median = SharedStaticFunctionsController::arrayMedian($parameters);
+            $median = MathFunctions::arrayMedian($parameters);
         }
 
         $absMedianDiffs = array();
@@ -149,7 +150,7 @@ class CustomerParametersMergeController
             $absMedianDiffs[] = abs($parameter - $median);
         }
 
-        return SharedStaticFunctionsController::arrayMedian($absMedianDiffs);
+        return MathFunctions::arrayMedian($absMedianDiffs);
     }
 
     /**
@@ -160,7 +161,7 @@ class CustomerParametersMergeController
     private function getMeanAD($parameters, $median = null)
     {
         if (is_null($median)) {
-            $median = SharedStaticFunctionsController::arrayMedian($parameters);
+            $median = MathFunctions::arrayMedian($parameters);
         }
 
         $n = count($parameters);

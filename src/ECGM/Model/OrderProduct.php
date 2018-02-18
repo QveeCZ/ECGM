@@ -2,7 +2,7 @@
 namespace ECGM\Model;
 
 
-use ECGM\Exceptions\InvalidValueException;
+use ECGM\Exceptions\InvalidArgumentException;
 
 class OrderProduct
 {
@@ -34,16 +34,16 @@ class OrderProduct
      * @param float $price
      * @param integer $amount
      * @param float $discount
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
     public function __construct($id, $price, $amount = 1, $discount = 0.0)
     {
         if(!is_numeric($price) || !is_numeric($discount) || !is_numeric($amount)){
-            throw  new InvalidValueException("Price, amount or discount are not numeric.");
+            throw  new InvalidArgumentException("Price, amount or discount are not numeric.");
         }
 
         if($amount < 1){
-            throw  new InvalidValueException("Amount cannot be lower than 1, but is " . $amount . ".");
+            throw  new InvalidArgumentException("Amount cannot be lower than 1, but is " . $amount . ".");
         }
 
         $this->id = $id;

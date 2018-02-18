@@ -3,37 +3,37 @@
 namespace ECGM\Model;
 
 
-use ECGM\Exceptions\InvalidValueException;
+use ECGM\Exceptions\InvalidArgumentException;
 
 class BaseArray implements \Iterator
 {
     /**
      * @var integer $size
      */
-    private $size;
+    protected $size;
     /**
      * @var array
      */
-    private $list;
+    protected $list;
     /**
      * @var integer
      */
-    private $position;
+    protected $position;
     /**
      * @var string if specified and valid classname, only instances or children of this class will be allowed into array
      */
-    private $requiredBaseClass;
+    protected $requiredBaseClass;
 
     /**
      * BaseArray constructor.
      * @param BaseArray|null $baseArray
      * @param string|null $requiredBaseClass
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
     public function __construct(BaseArray $baseArray = null, $requiredBaseClass = null)
     {
         if (is_null($baseArray) && !is_null($requiredBaseClass) && !class_exists($requiredBaseClass)) {
-            throw new InvalidValueException("Required class " . $requiredBaseClass . " is invalid.");
+            throw new InvalidArgumentException("Required class " . $requiredBaseClass . " is invalid.");
         }
 
         if (is_null($baseArray)) {
@@ -51,12 +51,12 @@ class BaseArray implements \Iterator
 
     /**
      * @param mixed $obj
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
     public function add($obj)
     {
         if (!$this->isValid($obj)) {
-            throw new InvalidValueException("Object " . get_class($obj) . " is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
+            throw new InvalidArgumentException("Object " . get_class($obj) . " is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
         }
 
         $this->list[] = $obj;
@@ -97,12 +97,12 @@ class BaseArray implements \Iterator
 
     /**
      * @param BaseArray $baseArray
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
     public function merge(BaseArray $baseArray)
     {
         if ($this->requiredBaseClass != $baseArray->requiredBaseClass) {
-            throw new InvalidValueException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $this->requiredBaseClass . ".");
+            throw new InvalidArgumentException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $this->requiredBaseClass . ".");
         }
         $this->list = array_merge($this->list, $baseArray->list);
         $this->size += $baseArray->size;
@@ -125,6 +125,31 @@ class BaseArray implements \Iterator
         if (is_numeric($index) && $index < $this->size()) {
             unset($this->list[$index]);
             $this->size--;
+        }
+    }
+
+    public function removeByObject($obj)
+    {
+        $this->isValid($obj);
+
+        if (($key = array_search($obj, $this->list)) !== false) {
+            unset($this->list[$key]);
+            $this->size--;
+        }
+    }
+
+    /**
+     * @param BaseArray $baseArray
+     * @throws InvalidArgumentException
+     */
+    public function removeAll(BaseArray $baseArray)
+    {
+        if ($this->requiredBaseClass != $baseArray->requiredBaseClass) {
+            throw new InvalidArgumentException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $this->requiredBaseClass . ".");
+        }
+
+        foreach ($baseArray as $obj) {
+            $this->removeByObject($obj);
         }
     }
 
@@ -179,36 +204,49 @@ class BaseArray implements \Iterator
     /**
      *
      */
-    public function rewind() {
+    public function rewind()
+    {
         $this->position = 0;
     }
 
     /**
      * @return mixed
      */
-    public function current() {
+    public function current()
+    {
         return $this->list[$this->position];
     }
 
     /**
      * @return int
      */
-    public function key() {
+    public function key()
+    {
         return $this->position;
     }
 
     /**
      *
      */
-    public function next() {
+    public function next()
+    {
         ++$this->position;
     }
 
     /**
      * @return bool
      */
-    public function valid() {
+    public function valid()
+    {
         return isset($this->list[$this->position]);
+    }
+
+    /**
+     * @return int
+     */
+    public function nextKey()
+    {
+        return $this->size() + 1;
     }
 
     //Private functions
@@ -217,7 +255,7 @@ class BaseArray implements \Iterator
      * @param mixed $obj
      * @return bool
      */
-    private function isValid($obj)
+    protected function isValid($obj)
     {
         if (is_null($this->requiredBaseClass)) {
             return true;
@@ -232,12 +270,12 @@ class BaseArray implements \Iterator
 
     /**
      * @param array $list
-     * @throws InvalidValueException
+     * @throws InvalidArgumentException
      */
-    private function isListValid($list)
+    protected function isListValid($list)
     {
         if (!is_array($list)) {
-            throw new InvalidValueException("Parameter is not an array.");
+            throw new InvalidArgumentException("Parameter is not an array.");
         }
 
         $listCount = count($list);
@@ -245,7 +283,7 @@ class BaseArray implements \Iterator
         for ($i = 0; $i < $listCount; $i++) {
             $obj = $list[$i];
             if (!$this->isValid($obj)) {
-                throw new InvalidValueException("Object " . get_class($obj) . " on position " . $i . " in array is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
+                throw new InvalidArgumentException("Object " . get_class($obj) . " on position " . $i . " in array is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
             }
         }
     }

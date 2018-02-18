@@ -1,8 +1,8 @@
 <?php
+
 namespace ECGM\Model;
 
-
-use ECGM\Exceptions\InvalidValueException;
+use ECGM\Exceptions\InvalidArgumentException;
 
 class CustomerGroup
 {
@@ -14,15 +14,29 @@ class CustomerGroup
      * @var BaseArray
      */
     private $customers;
+    /**
+     * @var BaseArray
+     */
+    private $parameters;
 
     /**
      * CustomerGroup constructor.
      * @param mixed $id
      */
-    public function __construct($id)
+    public function __construct($id, BaseArray $parameters = null)
     {
         $this->id = $id;
         $this->customers = new BaseArray(null, Customer::class);
+
+        if ($parameters && $parameters->requiredBaseClass() != Parameter::class) {
+            throw new InvalidArgumentException("Required class for parameters array has to be equal to " . Parameter::class . " but is " . $parameters->requiredBaseClass() . ".");
+        }
+
+        if ($parameters) {
+            $this->parameters = $parameters;
+        } else {
+            $this->parameters = new BaseArray(null, Parameter::class);
+        }
     }
 
     /**
@@ -38,13 +52,8 @@ class CustomerGroup
      */
     public function setCustomers(BaseArray $customers)
     {
-        if($customers->requiredBaseClass() != Customer::class){
-            throw new InvalidValueException("Required class for customerArray has to be equal to " . Customer::class . " but is " . $customers->requiredBaseClass() . ".");
-        }
-
-        $this->customers = $customers;
+        $this->customers->set($customers);
     }
-
 
 
     /**
@@ -58,16 +67,76 @@ class CustomerGroup
     /**
      * @param Customer $customer
      */
-    public function addCustomer(Customer $customer){
+    public function addCustomer(Customer $customer)
+    {
         $customer->setGroup($this);
         $this->customers->add($customer);
     }
 
     /**
+     * @param BaseArray $customers
+     */
+    public function mergeCustomers(BaseArray $customers)
+    {
+        foreach ($customers as $customer) {
+            $this->addCustomer($customer);
+        }
+    }
+
+    /**
      * @param $customerId
      */
-    public function removeOrder($customerId){
+    public function removeCustomer($customerId)
+    {
         $this->customers->remove($customerId);
     }
+
+    /**
+     * @param BaseArray $customers
+     */
+    public function removeCustomers(BaseArray $customers)
+    {
+        /**
+         * @var Customer $customer
+         */
+        foreach ($customers as $customer) {
+            $customer->setGroup(null);
+            $this->customers->removeByObject($customer);
+        }
+    }
+
+    /**
+     * @return BaseArray
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param Customer $customer
+     */
+    public function addParameter(Parameter $parameter)
+    {
+        $this->parameters->add($parameter);
+    }
+
+    /**
+     * @param $parameterId
+     */
+    public function removeParameter($parameterId)
+    {
+        $this->parameters->remove($parameterId);
+    }
+
+    /**
+     * @param BaseArray $parameters
+     * @throws InvalidArgumentException
+     */
+    public function setParameters(BaseArray $parameters)
+    {
+        $this->parameters->set($parameters);
+    }
+
 
 }

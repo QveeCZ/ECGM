@@ -1,11 +1,10 @@
 <?php
-
-namespace ECGM\Controller;
+namespace ECGM\Util;
 
 
 use ECGM\Exceptions\UndefinedException;
 
-class SharedStaticFunctionsController
+class MathFunctions
 {
     public static function arrayMedian($array)
     {

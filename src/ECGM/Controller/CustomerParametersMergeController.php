@@ -1,12 +1,13 @@
 <?php
+
 namespace ECGM\Controller;
 
 
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
-use ECGM\Model\Parameter;
 use ECGM\Model\Order;
+use ECGM\Model\Parameter;
 use ECGM\Util\MathFunctions;
 
 class CustomerParametersMergeController
@@ -18,9 +19,10 @@ class CustomerParametersMergeController
      * @return BaseArray
      * @throws InvalidArgumentException
      */
-    public function mergeCustomerHistory(BaseArray $customerHistory, Customer $customer){
+    public function mergeCustomerHistory(BaseArray $customerHistory, Customer $customer)
+    {
 
-        if($customerHistory->requiredBaseClass() != Order::class){
+        if ($customerHistory->requiredBaseClass() != Order::class) {
             throw new InvalidArgumentException("Required class for customers has to be equal to " . Order::class . " but is " . $customerHistory->requiredBaseClass() . ".");
         }
 
@@ -185,7 +187,7 @@ class CustomerParametersMergeController
 
         $hatU = abs($hatU);
 
-        if(-$hatU == $parameter){
+        if (-$hatU == $parameter) {
             $hatU += 1;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Model;
 
 
@@ -44,18 +45,6 @@ class Customer
     }
 
     /**
-     * @param BaseArray $parameters
-     * @throws InvalidArgumentException
-     */
-    public function setParameters(BaseArray $parameters)
-    {
-        if($parameters->requiredBaseClass() != Parameter::class){
-            throw new InvalidArgumentException("Base class has to be equal to " . Parameter::class . " but is " . $parameters->requiredBaseClass() . ".");
-        }
-        $this->parameters = $parameters;
-    }
-
-    /**
      * @return BaseArray
      */
     public function getParameters()
@@ -63,13 +52,25 @@ class Customer
         return $this->parameters;
     }
 
+    /**
+     * @param BaseArray $parameters
+     * @throws InvalidArgumentException
+     */
+    public function setParameters(BaseArray $parameters)
+    {
+        if ($parameters->requiredBaseClass() != Parameter::class) {
+            throw new InvalidArgumentException("Base class has to be equal to " . Parameter::class . " but is " . $parameters->requiredBaseClass() . ".");
+        }
+        $this->parameters = $parameters;
+    }
 
-    public function getParametersAsSimpleArray(){
+    public function getParametersAsSimpleArray()
+    {
         $ret = array();
         /**
          * @var Parameter $parameter
          */
-        foreach ($this->parameters as $parameter){
+        foreach ($this->parameters as $parameter) {
             $ret[] = $parameter->getValue();
         }
         return $ret;
@@ -78,7 +79,8 @@ class Customer
     /**
      * @param Parameter $parameter
      */
-    public function addParameter(Parameter $parameter){
+    public function addParameter(Parameter $parameter)
+    {
         $parameter->setCustomer($this);
         $this->parameters->add($parameter);
     }
@@ -86,21 +88,9 @@ class Customer
     /**
      * @param $parameterId
      */
-    public function removeParameter($parameterId){
-        $this->parameters->remove($parameterId);
-    }
-
-    /**
-     * @param BaseArray $history
-     * @throws InvalidArgumentException
-     */
-    public function setHistory(BaseArray $history)
+    public function removeParameter($parameterId)
     {
-        if($history->requiredBaseClass() != Order::class){
-            throw new InvalidArgumentException("Base class has to be equal to " . Order::class . " but is " . $history->requiredBaseClass() . ".");
-        }
-
-        $this->history = $history;
+        $this->parameters->remove($parameterId);
     }
 
     /**
@@ -112,9 +102,23 @@ class Customer
     }
 
     /**
+     * @param BaseArray $history
+     * @throws InvalidArgumentException
+     */
+    public function setHistory(BaseArray $history)
+    {
+        if ($history->requiredBaseClass() != Order::class) {
+            throw new InvalidArgumentException("Base class has to be equal to " . Order::class . " but is " . $history->requiredBaseClass() . ".");
+        }
+
+        $this->history = $history;
+    }
+
+    /**
      * @param Order $order
      */
-    public function addOrder(Order $order){
+    public function addOrder(Order $order)
+    {
         $order->setCustomer($this);
         $this->history->add($order);
     }
@@ -122,7 +126,8 @@ class Customer
     /**
      * @param $orderId
      */
-    public function removeOrder($orderId){
+    public function removeOrder($orderId)
+    {
         $this->history->remove($orderId);
     }
 

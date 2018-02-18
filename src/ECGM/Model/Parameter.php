@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Model;
 
 
@@ -44,11 +45,11 @@ class Parameter
             throw new InvalidArgumentException("Parameter $value is not numeric and cannot be used.");
         }
 
-        if($isCircular && !$maxValue){
+        if ($isCircular && !$maxValue) {
             throw new InvalidArgumentException("When parameter is circular, max valu must be set.");
         }
 
-        if($isCircular && $value > $maxValue){
+        if ($isCircular && $value > $maxValue) {
             throw new InvalidArgumentException("Value $value cannot be greater than max value ($maxValue)");
         }
 

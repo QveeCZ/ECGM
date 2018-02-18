@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Model;
 
 
@@ -64,7 +65,8 @@ class Order
     /**
      * @param OrderProduct $product
      */
-    public function addProduct(OrderProduct $product){
+    public function addProduct(OrderProduct $product)
+    {
         $product->setOrder($this);
         $this->products->add($product);
     }
@@ -72,7 +74,8 @@ class Order
     /**
      * @param $productId
      */
-    public function removeProduct($productId){
+    public function removeProduct($productId)
+    {
         $this->products->remove($productId);
     }
 

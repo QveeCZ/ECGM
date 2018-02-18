@@ -7,8 +7,8 @@ use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
-use ECGM\Model\Parameter;
 use ECGM\Model\Order;
+use ECGM\Model\Parameter;
 
 class CustomerParametersCleaningController
 {

@@ -48,15 +48,6 @@ class CustomerGroup
     }
 
     /**
-     * @param BaseArray $customers
-     */
-    public function setCustomers(BaseArray $customers)
-    {
-        $this->customers->set($customers);
-    }
-
-
-    /**
      * @return BaseArray
      */
     public function getCustomers()
@@ -65,12 +56,11 @@ class CustomerGroup
     }
 
     /**
-     * @param Customer $customer
+     * @param BaseArray $customers
      */
-    public function addCustomer(Customer $customer)
+    public function setCustomers(BaseArray $customers)
     {
-        $customer->setGroup($this);
-        $this->customers->add($customer);
+        $this->customers->set($customers);
     }
 
     /**
@@ -81,6 +71,15 @@ class CustomerGroup
         foreach ($customers as $customer) {
             $this->addCustomer($customer);
         }
+    }
+
+    /**
+     * @param Customer $customer
+     */
+    public function addCustomer(Customer $customer)
+    {
+        $customer->setGroup($this);
+        $this->customers->add($customer);
     }
 
     /**
@@ -114,6 +113,15 @@ class CustomerGroup
     }
 
     /**
+     * @param BaseArray $parameters
+     * @throws InvalidArgumentException
+     */
+    public function setParameters(BaseArray $parameters)
+    {
+        $this->parameters->set($parameters);
+    }
+
+    /**
      * @param Customer $customer
      */
     public function addParameter(Parameter $parameter)
@@ -127,15 +135,6 @@ class CustomerGroup
     public function removeParameter($parameterId)
     {
         $this->parameters->remove($parameterId);
-    }
-
-    /**
-     * @param BaseArray $parameters
-     * @throws InvalidArgumentException
-     */
-    public function setParameters(BaseArray $parameters)
-    {
-        $this->parameters->set($parameters);
     }
 
 

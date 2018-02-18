@@ -75,11 +75,11 @@ class KmeansPlusPlus
     public function solve($nbGroups)
     {
 
-        if(!$this->groups->size() && $nbGroups != $this->groups->size()){
+        if (!$this->groups->size() && $nbGroups != $this->groups->size()) {
             throw new InvalidArgumentException("Required number of groups $nbGroups is not equal to set number of groups " . $this->groups->size() . ".");
         }
 
-        if(!$this->groups->size()){
+        if (!$this->groups->size()) {
             $this->groups = $this->initializeGroups($nbGroups);
         }
 
@@ -160,6 +160,55 @@ class KmeansPlusPlus
     }
 
     /**
+     * @param BaseArray $p1
+     * @param BaseArray $p2
+     * @return float
+     * @throws InvalidArgumentException
+     */
+    protected function getDistance(BaseArray $p1, BaseArray $p2)
+    {
+        if ($p1->requiredBaseClass() != Parameter::class) {
+            throw new InvalidArgumentException("Required class for parameters array has to be equal to " . Parameter::class . " but is " . $p1->requiredBaseClass() . ".");
+        }
+
+        if ($p2->requiredBaseClass() != Parameter::class) {
+            throw new InvalidArgumentException("Required class for parameters array has to be equal to " . Parameter::class . " but is " . $p2->requiredBaseClass() . ".");
+        }
+
+        $distance = 0;
+        for ($n = 0; $n < $this->dimension; $n++) {
+            $difference = $p1->getObj($n) - $p2->getObj($n);
+            $distance += $difference ^ 2;
+        }
+
+        return sqrt($distance);
+    }
+
+    /**
+     * @param Customer $c1
+     * @return CustomerGroup|mixed|null
+     */
+    protected function getClosest(Customer $c1)
+    {
+
+        $minDistance = PHP_INT_MAX;
+        $closestGroup = $this->groups->getObj(0);
+
+        /**
+         * @var CustomerGroup $group
+         */
+        foreach ($this->groups as $group) {
+            $distance = $this->getDistance($c1->getParameters(), $group->getParameters());
+            if ($distance < $minDistance) {
+                $minDistance = $distance;
+                $closestGroup = $group;
+            }
+        }
+
+        return $closestGroup;
+    }
+
+    /**
      * @return bool
      */
     protected function iterate()
@@ -218,55 +267,6 @@ class KmeansPlusPlus
         }
 
         return $continue;
-    }
-
-    /**
-     * @param BaseArray $p1
-     * @param BaseArray $p2
-     * @return float
-     * @throws InvalidArgumentException
-     */
-    protected function getDistance(BaseArray $p1, BaseArray $p2)
-    {
-        if ($p1->requiredBaseClass() != Parameter::class) {
-            throw new InvalidArgumentException("Required class for parameters array has to be equal to " . Parameter::class . " but is " . $p1->requiredBaseClass() . ".");
-        }
-
-        if ($p2->requiredBaseClass() != Parameter::class) {
-            throw new InvalidArgumentException("Required class for parameters array has to be equal to " . Parameter::class . " but is " . $p2->requiredBaseClass() . ".");
-        }
-
-        $distance = 0;
-        for ($n = 0; $n < $this->dimension; $n++) {
-            $difference = $p1->getObj($n) - $p2->getObj($n);
-            $distance += $difference ^ 2;
-        }
-
-        return sqrt($distance);
-    }
-
-    /**
-     * @param Customer $c1
-     * @return CustomerGroup|mixed|null
-     */
-    protected function getClosest(Customer $c1)
-    {
-
-        $minDistance = PHP_INT_MAX;
-        $closestGroup = $this->groups->getObj(0);
-
-        /**
-         * @var CustomerGroup $group
-         */
-        foreach ($this->groups as $group) {
-            $distance = $this->getDistance($c1->getParameters(), $group->getParameters());
-            if ($distance < $minDistance) {
-                $minDistance = $distance;
-                $closestGroup = $group;
-            }
-        }
-
-        return $closestGroup;
     }
 
     /**

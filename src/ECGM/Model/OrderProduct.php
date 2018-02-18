@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Model;
 
 
@@ -38,11 +39,11 @@ class OrderProduct
      */
     public function __construct($id, $price, $amount = 1, $discount = 0.0)
     {
-        if(!is_numeric($price) || !is_numeric($discount) || !is_numeric($amount)){
+        if (!is_numeric($price) || !is_numeric($discount) || !is_numeric($amount)) {
             throw  new InvalidArgumentException("Price, amount or discount are not numeric.");
         }
 
-        if($amount < 1){
+        if ($amount < 1) {
             throw  new InvalidArgumentException("Amount cannot be lower than 1, but is " . $amount . ".");
         }
 

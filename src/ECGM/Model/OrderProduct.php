@@ -32,6 +32,10 @@ class OrderProduct
      * @var Order
      */
     private $order;
+    /**
+     * @var BaseArray $complements
+     */
+    private $complements;
 
     /**
      * OrderProduct constructor.
@@ -60,6 +64,7 @@ class OrderProduct
         $this->price = $price;
         $this->discount = $discount;
         $this->expiration = $expiration;
+        $this->complements = new BaseArray(null, OrderProduct::class);
     }
 
     /**
@@ -156,6 +161,22 @@ class OrderProduct
     public function setOrder($order)
     {
         $this->order = $order;
+    }
+
+    /**
+     * @return BaseArray
+     */
+    public function getComplements()
+    {
+        return $this->complements;
+    }
+
+    /**
+     * @param BaseArray $complements
+     */
+    public function setComplements($complements)
+    {
+        $this->complements->set($complements);
     }
 
 

@@ -17,15 +17,21 @@ class Order
      * @var BaseArray
      */
     private $products;
+    /**
+     * @var \DateTime $orderDate
+     */
+    private $orderDate;
 
     /**
      * Order constructor.
-     * @param mixed $id
+     * @param $id
      * @param BaseArray $parameters
+     * @param \DateTime $orderDate
      */
-    public function __construct($id, BaseArray $parameters)
+    public function __construct($id, BaseArray $parameters, \DateTime $orderDate)
     {
         $this->id = $id;
+        $this->orderDate = $orderDate;
         $this->customerParameters = new BaseArray(null, Parameter::class);
         $this->customerParameters->set($parameters);
         $this->products = new BaseArray(null, OrderProduct::class);
@@ -37,6 +43,14 @@ class Order
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getOrderDate()
+    {
+        return $this->orderDate;
     }
 
     /**

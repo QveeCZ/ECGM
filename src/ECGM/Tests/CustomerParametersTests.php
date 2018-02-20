@@ -50,7 +50,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
         $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
 
-        $history->add(new Order(1, $customerHistoryParameters));
+        $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         //pps2
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
@@ -60,7 +60,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
         $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
 
-        $history->add(new Order(1, $customerHistoryParameters));
+        $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         //pps3
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
@@ -70,7 +70,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
         $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
 
-        $history->add(new Order(1, $customerHistoryParameters));
+        $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         //pps4
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
@@ -80,7 +80,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 35.320802, $customer));
         $customerHistoryParameters->add(new Parameter(5, 25.138551, $customer));
 
-        $history->add(new Order(1, $customerHistoryParameters));
+        $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         //pps5
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
@@ -90,7 +90,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
         $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
 
-        $history->add(new Order(1, $customerHistoryParameters));
+        $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         //pps6
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
@@ -100,7 +100,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
         $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
 
-        $history->add(new Order(1, $customerHistoryParameters));
+        $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         $customer->setHistory($history);
 

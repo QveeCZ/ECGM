@@ -12,7 +12,7 @@ class Order
     /**
      * @var Customer
      */
-    private $customer;
+    private $customerParameters;
     /**
      * @var BaseArray
      */
@@ -21,12 +21,13 @@ class Order
     /**
      * Order constructor.
      * @param mixed $id
-     * @param Customer $customer
+     * @param BaseArray $parameters
      */
-    public function __construct($id, Customer $customer)
+    public function __construct($id, BaseArray $parameters)
     {
         $this->id = $id;
-        $this->customer = $customer;
+        $this->customerParameters = new BaseArray(null, Parameter::class);
+        $this->customerParameters->set($parameters);
         $this->products = new BaseArray(null, OrderProduct::class);
     }
 
@@ -39,19 +40,19 @@ class Order
     }
 
     /**
-     * @return Customer
+     * @return BaseArray
      */
-    public function getCustomer()
+    public function getCustomerParameters()
     {
-        return $this->customer;
+        return $this->customerParameters;
     }
 
     /**
-     * @param Customer $customer
+     * @param BaseArray $customerParameters
      */
-    public function setCustomer($customer)
+    public function setCustomerParameters(BaseArray $customerParameters)
     {
-        $this->customer = $customer;
+        $this->customerParameters->set($customerParameters);
     }
 
     /**

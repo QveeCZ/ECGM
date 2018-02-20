@@ -25,6 +25,10 @@ class OrderProduct
      */
     private $amount;
     /**
+     * @var integer
+     */
+    private $expiration;
+    /**
      * @var Order
      */
     private $order;
@@ -33,23 +37,29 @@ class OrderProduct
      * OrderProduct constructor.
      * @param $id
      * @param float $price
+     * @param integer $expiration
      * @param integer $amount
      * @param float $discount
      * @throws InvalidArgumentException
      */
-    public function __construct($id, $price, $amount = 1, $discount = 0.0)
+    public function __construct($id, $price, $expiration, $amount = 1, $discount = 0.0)
     {
-        if (!is_numeric($price) || !is_numeric($discount) || !is_numeric($amount)) {
-            throw  new InvalidArgumentException("Price, amount or discount are not numeric.");
+        if (!is_numeric($price) || !is_numeric($discount) || !is_numeric($amount) || !is_numeric($expiration)) {
+            throw  new InvalidArgumentException("Price, expiration, amount or discount are not numeric.");
         }
 
         if ($amount < 1) {
             throw  new InvalidArgumentException("Amount cannot be lower than 1, but is " . $amount . ".");
         }
 
+        if ($expiration < 0) {
+            throw  new InvalidArgumentException("Expiration cannot be lower than 0, but is " . $amount . ".");
+        }
+
         $this->id = $id;
         $this->price = $price;
         $this->discount = $discount;
+        $this->expiration = $expiration;
     }
 
     /**
@@ -61,11 +71,27 @@ class OrderProduct
     }
 
     /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return float
      */
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
     }
 
     /**
@@ -77,11 +103,43 @@ class OrderProduct
     }
 
     /**
+     * @param float $discount
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+    }
+
+    /**
      * @return int
      */
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * @param int $amount
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExpiration()
+    {
+        return $this->expiration;
+    }
+
+    /**
+     * @param int $expiration
+     */
+    public function setExpiration($expiration)
+    {
+        $this->expiration = $expiration;
     }
 
     /**

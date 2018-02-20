@@ -50,9 +50,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
         $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
 
-        $historicalCustomer = new Customer(1, new CustomerGroup(1));
-        $historicalCustomer->setParameters($customerHistoryParameters);
-        $history->add(new Order(1, $historicalCustomer));
+        $history->add(new Order(1, $customerHistoryParameters));
 
         //pps2
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
@@ -62,9 +60,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
         $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
 
-        $historicalCustomer = new Customer(1, new CustomerGroup(1));
-        $historicalCustomer->setParameters($customerHistoryParameters);
-        $history->add(new Order(1, $historicalCustomer));
+        $history->add(new Order(1, $customerHistoryParameters));
 
         //pps3
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
@@ -74,9 +70,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
         $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
 
-        $historicalCustomer = new Customer(1, new CustomerGroup(1));
-        $historicalCustomer->setParameters($customerHistoryParameters);
-        $history->add(new Order(1, $historicalCustomer));
+        $history->add(new Order(1, $customerHistoryParameters));
 
         //pps4
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
@@ -86,9 +80,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 35.320802, $customer));
         $customerHistoryParameters->add(new Parameter(5, 25.138551, $customer));
 
-        $historicalCustomer = new Customer(1, new CustomerGroup(1));
-        $historicalCustomer->setParameters($customerHistoryParameters);
-        $history->add(new Order(1, $historicalCustomer));
+        $history->add(new Order(1, $customerHistoryParameters));
 
         //pps5
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
@@ -98,9 +90,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
         $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
 
-        $historicalCustomer = new Customer(1, new CustomerGroup(1));
-        $historicalCustomer->setParameters($customerHistoryParameters);
-        $history->add(new Order(1, $historicalCustomer));
+        $history->add(new Order(1, $customerHistoryParameters));
 
         //pps6
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
@@ -110,9 +100,7 @@ class CustomerParametersTests extends TestCase
         $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
         $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
 
-        $historicalCustomer = new Customer(1, new CustomerGroup(1));
-        $historicalCustomer->setParameters($customerHistoryParameters);
-        $history->add(new Order(1, $historicalCustomer));
+        $history->add(new Order(1, $customerHistoryParameters));
 
         $customer->setHistory($history);
 
@@ -165,7 +153,7 @@ class CustomerParametersTests extends TestCase
             for ($j = 0; $j < 8; $j++) {
                 echo $j;
                 $expected = $expecteds[$number];
-                $this->assertEquals($expected[$j], round($this->cleanedCustomer->getHistory()->getObj($number)->getCustomer()->getParameters()->getObj($j)->getValue(), 3));
+                $this->assertEquals($expected[$j], round($this->cleanedCustomer->getHistory()->getObj($number)->getCustomerParameters()->getObj($j)->getValue(), 3));
                 echo " - OK\n";
             }
             echo "\npps" . ($number + 1) . " OK.\n\n";

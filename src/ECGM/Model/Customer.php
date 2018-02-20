@@ -119,7 +119,7 @@ class Customer
      */
     public function addOrder(Order $order)
     {
-        $order->setCustomer($this);
+        $order->setCustomerParameters($this);
         $this->history->add($order);
     }
 

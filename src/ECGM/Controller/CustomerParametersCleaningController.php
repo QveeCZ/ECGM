@@ -71,7 +71,7 @@ class CustomerParametersCleaningController
          * @var Order $order
          */
         foreach ($customer->getHistory() as $order) {
-            $order->setCustomer($this->transformCircularValues($order->getCustomer()));
+            $order->setCustomerParameters($this->transformCircularValues($order->getCustomerParameters()));
             $transformedHistory->add($order);
         }
         $customer->setHistory($transformedHistory);
@@ -96,20 +96,20 @@ class CustomerParametersCleaningController
          */
         foreach ($customer->getHistory() as $customerOrder) {
             if (is_null($expectedSize)) {
-                $expectedSize = $customerOrder->getCustomer()->getParameters()->size();
+                $expectedSize = $customerOrder->getCustomerParameters()->size();
             }
 
-            if ($customerOrder->getCustomer()->getParameters()->size() != $expectedSize) {
+            if ($customerOrder->getCustomerParameters()->size() != $expectedSize) {
                 throw new InvalidArgumentException("Expected parameter size is $expectedSize but the size of parameters in customer " . $customer->getId() . " history are not equal.");
             }
         }
     }
 
     /**
-     * @param Customer $customer
-     * @return Customer
+     * @param BaseArray $parameters
+     * @return BaseArray
      */
-    private function transformCircularValues(Customer $customer)
+    private function transformCircularValues(BaseArray $parameters)
     {
 
         $transformedCustomerParameters = new BaseArray(null, Parameter::class);
@@ -117,7 +117,7 @@ class CustomerParametersCleaningController
         /**
          * @var Parameter $customerParameter
          */
-        foreach ($customer->getParameters() as $customerParameter) {
+        foreach ($parameters as $customerParameter) {
             if ($customerParameter->isCircular()) {
                 $transformedCustomerParameters->merge($this->transformCircularValue($customerParameter));
             } else {
@@ -125,9 +125,7 @@ class CustomerParametersCleaningController
             }
         }
 
-        $customer->setParameters($transformedCustomerParameters);
-
-        return $customer;
+        return $transformedCustomerParameters;
     }
 
     /**

@@ -53,11 +53,11 @@ class CustomerParametersMergeController
              * @var Order $order
              */
             $order = $history->getObj($i);
-            for ($j = 0; $j < $order->getCustomer()->getParameters()->size(); $j++) {
+            for ($j = 0; $j < $order->getCustomerParameters()->size(); $j++) {
                 /**
                  * @var Parameter $parameter
                  */
-                $parameter = $order->getCustomer()->getParameters()->getObj($j);
+                $parameter = $order->getCustomerParameters()->getObj($j);
                 $row[] = $parameter->getValue();
             }
             $matrix[] = $row;

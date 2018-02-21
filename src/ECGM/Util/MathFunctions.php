@@ -3,7 +3,9 @@
 namespace ECGM\Util;
 
 
+use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Exceptions\UndefinedException;
+use ECGM\Model\BaseArray;
 
 class MathFunctions
 {
@@ -24,5 +26,26 @@ class MathFunctions
         }
 
         return $median;
+    }
+
+    /**
+     * @param BaseArray $v1
+     * @param BaseArray $v2
+     * @return float
+     * @throws InvalidArgumentException
+     */
+    public static function euclideanDistance(BaseArray $v1, BaseArray $v2)
+    {
+        if ($v1->size() != $v2->size()) {
+            throw new InvalidArgumentException("Vector v1 size " . $v1->size() . " is not equal to vector v2 size " . $v2->size());
+        }
+
+        $distance = 0;
+        for ($n = 0; $n < $v1->size(); $n++) {
+            $difference = $v1->getObj($n) - $v2->getObj($n);
+            $distance += $difference ^ 2;
+        }
+
+        return sqrt($distance);
     }
 }

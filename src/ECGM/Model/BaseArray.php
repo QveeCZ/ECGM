@@ -5,7 +5,7 @@ namespace ECGM\Model;
 
 use ECGM\Exceptions\InvalidArgumentException;
 
-class BaseArray implements \Iterator
+class BaseArray implements \Iterator, \Countable
 {
     /**
      * @var integer $size
@@ -20,7 +20,7 @@ class BaseArray implements \Iterator
      */
     protected $position;
     /**
-     * @var string if specified and valid classname, only instances or children of this class will be allowed into array
+     * @var string if specified and valid classname, only instances of this class will be allowed into array
      */
     protected $requiredBaseClass;
 
@@ -36,6 +36,10 @@ class BaseArray implements \Iterator
             throw new InvalidArgumentException("Required class " . $requiredBaseClass . " is invalid.");
         }
 
+        if (!is_null($baseArray) && !is_null($requiredBaseClass) && $requiredBaseClass != $baseArray->requiredBaseClass()) {
+            throw new InvalidArgumentException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $this->requiredBaseClass . ".");
+        }
+
         if (is_null($baseArray)) {
             $this->list = array();
             $this->size = 0;
@@ -47,6 +51,14 @@ class BaseArray implements \Iterator
             $this->requiredBaseClass = $baseArray->requiredBaseClass;
             $this->position = $baseArray->position;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function requiredBaseClass()
+    {
+        return $this->requiredBaseClass;
     }
 
     /**
@@ -126,6 +138,10 @@ class BaseArray implements \Iterator
      */
     public function set(BaseArray $baseArray)
     {
+        if ($this->requiredBaseClass && $this->requiredBaseClass != $baseArray->requiredBaseClass()) {
+            throw new InvalidArgumentException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $this->requiredBaseClass . ".");
+        }
+
         $this->list = $baseArray->list;
         $this->size = $baseArray->size;
         $this->requiredBaseClass = $baseArray->requiredBaseClass;
@@ -206,6 +222,8 @@ class BaseArray implements \Iterator
         return !$this->size;
     }
 
+    //Iterator functions
+
     /**
      * @param integer $index
      * @return mixed|null
@@ -220,22 +238,12 @@ class BaseArray implements \Iterator
         return $this->list[$index];
     }
 
-    //Iterator functions
-
     /**
      * @return array
      */
     public function get()
     {
         return $this->list;
-    }
-
-    /**
-     * @return string
-     */
-    public function requiredBaseClass()
-    {
-        return $this->requiredBaseClass;
     }
 
     /**
@@ -288,4 +296,17 @@ class BaseArray implements \Iterator
         return $this->size() + 1;
     }
 
+    /**
+     * Count elements of an object
+     * @link http://php.net/manual/en/countable.count.php
+     * @return int The custom count as an integer.
+     * </p>
+     * <p>
+     * The return value is cast to an integer.
+     * @since 5.1.0
+     */
+    public function count()
+    {
+        return $this->size();
+    }
 }

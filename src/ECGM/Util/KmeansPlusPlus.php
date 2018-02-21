@@ -40,15 +40,10 @@ class KmeansPlusPlus
 
     /**
      * @param BaseArray $groups
-     * @throws InvalidArgumentException
      */
     public function setGroups(BaseArray $groups)
     {
-        if ($groups->requiredBaseClass() != CustomerGroup::class) {
-            throw new InvalidArgumentException("Required class for parameters array has to be equal to " . CustomerGroup::class . " but is " . $groups->requiredBaseClass() . ".");
-        }
-
-        $this->groups = $groups;
+        $this->groups->set($groups);
     }
 
     /**
@@ -175,13 +170,8 @@ class KmeansPlusPlus
             throw new InvalidArgumentException("Required class for parameters array has to be equal to " . Parameter::class . " but is " . $p2->requiredBaseClass() . ".");
         }
 
-        $distance = 0;
-        for ($n = 0; $n < $this->dimension; $n++) {
-            $difference = $p1->getObj($n) - $p2->getObj($n);
-            $distance += $difference ^ 2;
-        }
+        return MathFunctions::euclideanDistance($p1, $p2);
 
-        return sqrt($distance);
     }
 
     /**

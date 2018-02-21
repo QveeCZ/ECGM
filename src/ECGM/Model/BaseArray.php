@@ -85,7 +85,7 @@ class BaseArray implements \Iterator, \Countable
             return true;
         }
 
-        if (!is_a(!$obj, $this->requiredBaseClass)) {
+        if (!is_a($obj, $this->requiredBaseClass)) {
             return false;
         }
 

@@ -55,6 +55,13 @@ class KmeansPlusPlus
     }
 
     /**
+     * @param BaseArray $customers
+     */
+    public function setCustomers(BaseArray $customers){
+        $this->customers->set($customers);
+    }
+
+    /**
      * @return int
      */
     public function getDimension()

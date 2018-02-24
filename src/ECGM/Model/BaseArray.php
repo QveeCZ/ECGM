@@ -81,7 +81,7 @@ class BaseArray implements \Iterator, \Countable
      */
     protected function isValid($obj)
     {
-        if (is_null($this->requiredBaseClass)) {
+        if (is_null($this->requiredBaseClass) || !$this->requiredBaseClass) {
             return true;
         }
 
@@ -135,6 +135,7 @@ class BaseArray implements \Iterator, \Countable
 
     /**
      * @param BaseArray $baseArray
+     * @throws InvalidArgumentException
      */
     public function set(BaseArray $baseArray)
     {
@@ -177,6 +178,7 @@ class BaseArray implements \Iterator, \Countable
     {
         if (is_numeric($index) && $index < $this->size()) {
             unset($this->list[$index]);
+            $this->list = array_values($this->list);
             $this->size--;
         }
     }
@@ -210,6 +212,7 @@ class BaseArray implements \Iterator, \Countable
 
         if (($key = array_search($obj, $this->list)) !== false) {
             unset($this->list[$key]);
+            $this->list = array_values($this->list);
             $this->size--;
         }
     }
@@ -247,7 +250,7 @@ class BaseArray implements \Iterator, \Countable
     }
 
     /**
-     *
+     * @inheritdoc
      */
     public function rewind()
     {
@@ -255,7 +258,7 @@ class BaseArray implements \Iterator, \Countable
     }
 
     /**
-     * @return mixed
+     * @inheritdoc
      */
     public function current()
     {
@@ -263,7 +266,7 @@ class BaseArray implements \Iterator, \Countable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function key()
     {
@@ -271,7 +274,7 @@ class BaseArray implements \Iterator, \Countable
     }
 
     /**
-     *
+     * @inheritdoc
      */
     public function next()
     {
@@ -297,16 +300,19 @@ class BaseArray implements \Iterator, \Countable
     }
 
     /**
-     * Count elements of an object
-     * @link http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
-     * @since 5.1.0
+     * @inheritdoc
      */
     public function count()
     {
         return $this->size();
+    }
+
+    public function __toString()
+    {
+        $str = "Size: " . $this->size() . "\n";
+        $str .= "Values\n[\n";
+        $str .= implode(";\n", $this->list);
+        $str .= "\n]\n";
+        return $str;
     }
 }

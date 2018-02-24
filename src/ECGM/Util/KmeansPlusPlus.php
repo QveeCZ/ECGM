@@ -77,7 +77,7 @@ class KmeansPlusPlus
     public function solve($nbGroups)
     {
 
-        if (!$this->groups->size() && $nbGroups != $this->groups->size()) {
+        if ($this->groups->size() && $nbGroups != $this->groups->size()) {
             throw new InvalidArgumentException("Required number of groups $nbGroups is not equal to set number of groups " . $this->groups->size() . ".");
         }
 
@@ -119,10 +119,10 @@ class KmeansPlusPlus
             $this->customers->next();
         }
 
-        $groups->add(new CustomerGroup($this->groups->nextKey(), $this->customers->current()->getParameters()));
+        $groups->add(new CustomerGroup($groups->nextKey(), new BaseArray($this->customers->current()->getParameters(), Parameter::class)));
 
         // retains the distances between points and their closest clusters
-        $distances = new \SplObjectStorage();
+        $distances = array();
 
         // create k clusters
         for ($i = 1; $i < $clusterNumber; $i++) {
@@ -134,12 +134,12 @@ class KmeansPlusPlus
              * @var Customer $customer
              */
             foreach ($this->customers as $customer) {
-                $distance = $this->getDistance($customer->getParameters(), $this->getClosest($customer)->getParameters());
+                $distance = $this->getDistance($customer->getParameters(), $this->getClosest($customer, $groups)->getParameters());
                 $sum += $distances[$customer->getId()] = $distance;
             }
 
             // choose a new random point using a weighted probability distribution
-            $sum = rand(0, $sum);
+            $sum = rand(0, intval($sum));
 
             foreach ($this->customers as $customer) {
 
@@ -147,7 +147,7 @@ class KmeansPlusPlus
                     continue;
                 }
 
-                $groups->add(new CustomerGroup($this->groups->nextKey(), $customer->getParameters()));
+                $groups->add(new CustomerGroup($groups->nextKey(), new BaseArray($customer->getParameters(), Parameter::class)));
                 break;
             }
         }
@@ -177,24 +177,25 @@ class KmeansPlusPlus
             throw new InvalidArgumentException("Required class for parameters array has to be equal to " . Parameter::class . " but is " . $p2->requiredBaseClass() . ".");
         }
 
-        return MathFunctions::euclideanDistance($p1, $p2);
+        return MathFunctions::euclideanDistance($this->getCustomerParametersAsBaseArray($p1), $this->getCustomerParametersAsBaseArray($p2));
 
     }
 
     /**
      * @param Customer $c1
+     * @param BaseArray $groups
      * @return CustomerGroup|mixed|null
      */
-    protected function getClosest(Customer $c1)
+    protected function getClosest(Customer $c1, BaseArray $groups)
     {
 
         $minDistance = PHP_INT_MAX;
-        $closestGroup = $this->groups->getObj(0);
+        $closestGroup = $groups->getObj(0);
 
         /**
          * @var CustomerGroup $group
          */
-        foreach ($this->groups as $group) {
+        foreach ($groups as $group) {
             $distance = $this->getDistance($c1->getParameters(), $group->getParameters());
             if ($distance < $minDistance) {
                 $minDistance = $distance;
@@ -223,7 +224,8 @@ class KmeansPlusPlus
          * @var CustomerGroup $group
          */
         foreach ($this->groups as $group) {
-            $detach[$group->getId()] = $attach[$group->getId()] = new BaseArray(null, Customer::class);
+            $detach[$group->getId()]  = new BaseArray(null, Customer::class);
+            $attach[$group->getId()] = new BaseArray(null, Customer::class);
         }
 
         // calculate proximity amongst points and clusters
@@ -239,7 +241,7 @@ class KmeansPlusPlus
             foreach ($group->getCustomers() as $customer) {
 
                 // find the closest cluster
-                $closest = $this->getClosest($customer);
+                $closest = $this->getClosest($customer, $this->groups);
 
                 // move the point from its old cluster to its closest
                 if ($closest->getId() !== $group->getId()) {
@@ -249,7 +251,6 @@ class KmeansPlusPlus
                 }
             }
         }
-
         /**
          * Two foreach cycles are required for right replacing customer group with new one
          *
@@ -258,6 +259,7 @@ class KmeansPlusPlus
         foreach ($this->groups as $group) {
             $group->mergeCustomers($attach[$group->getId()]);
         }
+
         foreach ($this->groups as $group) {
             $group->getCustomers()->removeAll($detach[$group->getId()]);
             $group->setParameters($this->updateCentroid($group));
@@ -272,8 +274,8 @@ class KmeansPlusPlus
      */
     protected function updateCentroid(CustomerGroup $group)
     {
-
-        if (!$count = $group->getCustomers()->size()) {
+        $count = $group->getCustomers()->size();
+        if (!$count) {
             return $group->getParameters();
         }
 
@@ -285,14 +287,32 @@ class KmeansPlusPlus
          */
         foreach ($group->getCustomers() as $customer) {
             for ($i = 0; $i < $this->dimension; $i++) {
-                $centroid[$i] += $customer->getParameters()->getObj($i);
+                $centroid[$i] += $customer->getParameters()->getObj($i)->getValue();
             }
         }
 
         for ($i = 0; $i < $this->dimension; $i++) {
-            $newCenter->add($centroid->coordinates[$i] / $count);
+            $newCenter->add(new Parameter($newCenter->nextKey(), $centroid[$i] / $count));
         }
 
         return $newCenter;
+    }
+
+    /**
+     * @param BaseArray $parameters
+     * @return BaseArray
+     */
+    public function getCustomerParametersAsBaseArray(BaseArray $parameters)
+    {
+        $parameters = new BaseArray($parameters, Parameter::class);
+
+        $ret = new BaseArray();
+        /**
+         * @var Parameter $parameter
+         */
+        foreach ($parameters as $parameter) {
+            $ret->add($parameter->getValue());
+        }
+        return $ret;
     }
 }

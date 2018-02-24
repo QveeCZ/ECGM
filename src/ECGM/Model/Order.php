@@ -94,4 +94,12 @@ class Order
         $this->products->remove($productId);
     }
 
+    public function __toString()
+    {
+        $str = "Order: " . $this->getId() . "\n";
+        $str .= "Customer parameters:\n" . $this->getCustomerParameters()->__toString() . "\n";
+        $str .= "Products:\n" . $this->getProducts()->__toString();
+        return $str;
+    }
+
 }

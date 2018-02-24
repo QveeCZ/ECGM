@@ -138,4 +138,12 @@ class CustomerGroup
     }
 
 
+    public function __toString()
+    {
+        $str = "Group: " . $this->getId() . "\n";
+        $str .="Parameters\n{\n" . $this->getParameters()->__toString() . "}\n";
+        $str .="Customers\n{\n" . $this->getCustomers()->__toString() . "}";
+        return $str;
+    }
+
 }

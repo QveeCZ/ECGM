@@ -26,9 +26,10 @@ class Customer
 
     /**
      * Customer constructor.
-     * @param mixed $id
+     * @param $id
+     * @param CustomerGroup $group
      */
-    public function __construct($id, CustomerGroup $group)
+    public function __construct($id, CustomerGroup $group = null)
     {
         $this->parameters = new BaseArray(null, Parameter::class);
         $this->history = new BaseArray(null, Order::class);
@@ -119,7 +120,7 @@ class Customer
      */
     public function addOrder(Order $order)
     {
-        $order->setCustomerParameters($this);
+        $order->setCustomerParameters($this->getParameters());
         $this->history->add($order);
     }
 
@@ -145,6 +146,13 @@ class Customer
     public function setGroup($group)
     {
         $this->group = $group;
+    }
+
+    public function __toString()
+    {
+        $str = "Customer " .$this->getId() . "\n";
+        $str .= "Parameters: " . implode(", ", $this->getParametersAsSimpleArray());
+        return $str;
     }
 
 }

@@ -32,12 +32,11 @@ class Parameter
      * CustomerParameter constructor.
      * @param mixed $id
      * @param float $value
-     * @param Customer $customer
      * @param boolean $isCircular eg hours in day or months in year
      * @param integer $maxValue is parameter is circular maxValue must be set
      * @throws InvalidArgumentException
      */
-    public function __construct($id, $value, Customer $customer, $isCircular = false, $maxValue = 0)
+    public function __construct($id, $value, $isCircular = false, $maxValue = 0)
     {
         $this->id = $id;
 
@@ -53,7 +52,6 @@ class Parameter
             throw new InvalidArgumentException("Value $value cannot be greater than max value ($maxValue)");
         }
 
-        $this->customer = $customer;
         $this->value = $value;
         $this->isCircular = ($isCircular) ? true : false;
         $this->maxValue = $maxValue;
@@ -106,6 +104,11 @@ class Parameter
     public function setCustomer($customer)
     {
         $this->customer = $customer;
+    }
+
+    public function __toString()
+    {
+        return strval($this->getValue());
     }
 
 }

@@ -43,7 +43,7 @@ class MathFunctions
         $distance = 0;
         for ($n = 0; $n < $v1->size(); $n++) {
             $difference = $v1->getObj($n) - $v2->getObj($n);
-            $distance += $difference ^ 2;
+            $distance += pow($difference, 2);
         }
 
         return sqrt($distance);

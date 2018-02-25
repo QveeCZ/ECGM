@@ -7,6 +7,7 @@ use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\Parameter;
 use ECGM\Util\KmeansPlusPlus;
+use ECGM\Util\SilhouetteAnalysis;
 use PHPUnit\Framework\TestCase;
 
 class CustomerGroupingTests extends TestCase
@@ -31,13 +32,14 @@ class CustomerGroupingTests extends TestCase
 
     public function testGrouping()
     {
+        echo "\n\nGrouping test\n\n";
+
         $kmeansPlusPlus = new KmeansPlusPlus($this->parameterDimension);
         $customer = $this->getCustomers();
         $kmeansPlusPlus->setCustomers($customer);
         $groups = $kmeansPlusPlus->solve($this->initialK);
         echo $groups->__toString();
     }
-
 
     protected function getCustomers()
     {
@@ -61,6 +63,23 @@ class CustomerGroupingTests extends TestCase
             $customer->addParameter(new Parameter(uniqid(), rand($this->parameterRules[$i]['min'], $this->parameterRules[$i]['max'])));
         }
         return $customer;
+    }
+
+    public function testSilhouette()
+    {
+
+        echo "\n\nSilhouette test\n\n";
+
+        $kmeansPlusPlus = new KmeansPlusPlus($this->parameterDimension);
+        $customer = $this->getCustomers();
+        $kmeansPlusPlus->setCustomers($customer);
+        $groups = $kmeansPlusPlus->solve($this->initialK);
+
+
+        $silhouetteAnalysis = new SilhouetteAnalysis();
+        $silhouette = $silhouetteAnalysis->getAverageSilhouetteWidth($groups);
+
+        echo "Average silhouette width: " . $silhouette;
     }
 
 }

@@ -39,20 +39,13 @@ class OrderProduct extends Product
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getAmount()
+    public function __toString()
     {
-        return $this->amount;
-    }
+        $str = parent::__toString();
+        $str .= ", Order: " . $this->getOrder()->getId() . ", ";
+        $str .= "Amount: " . $this->getAmount();
 
-    /**
-     * @param int $amount
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
+        return $str;
     }
 
     /**
@@ -71,14 +64,20 @@ class OrderProduct extends Product
         $this->order = $order;
     }
 
-
-    public function __toString()
+    /**
+     * @return int
+     */
+    public function getAmount()
     {
-        $str = parent::__toString();
-        $str .= ", Order: " . $this->getOrder()->getId() . ", ";
-        $str .= "Amount: " . $this->getAmount();
+        return $this->amount;
+    }
 
-        return $str;
+    /**
+     * @param int $amount
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
     }
 
 }

@@ -45,7 +45,7 @@ class Parameter
         }
 
         if ($isCircular && !$maxValue) {
-            throw new InvalidArgumentException("When parameter is circular, max valu must be set.");
+            throw new InvalidArgumentException("When parameter is circular, max value must be set.");
         }
 
         if ($isCircular && $value > $maxValue) {
@@ -64,14 +64,6 @@ class Parameter
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->value;
     }
 
     /**
@@ -109,6 +101,14 @@ class Parameter
     public function __toString()
     {
         return strval($this->getValue());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 
 }

@@ -31,21 +31,6 @@ class FileWriter
     }
 
     /**
-     * @param array $data
-     * @throws InvalidArgumentException
-     */
-    public function putLineToCSV($data)
-    {
-        if(!is_array($data)){
-            throw new InvalidArgumentException("Parameter is not an array.");
-        }
-
-        $fp = fopen($this->fileName, 'a');
-        fputcsv($fp, $data);
-        fclose($fp);
-    }
-
-    /**
      * @param string $dir
      */
     protected function makeDir($dir)
@@ -53,5 +38,20 @@ class FileWriter
         if (!file_exists($dir)) {
             mkdir($dir, 0755, true);
         }
+    }
+
+    /**
+     * @param array $data
+     * @throws InvalidArgumentException
+     */
+    public function putLineToCSV($data)
+    {
+        if (!is_array($data)) {
+            throw new InvalidArgumentException("Parameter is not an array.");
+        }
+
+        $fp = fopen($this->fileName, 'a');
+        fputcsv($fp, $data);
+        fclose($fp);
     }
 }

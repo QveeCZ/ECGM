@@ -57,7 +57,8 @@ class KmeansPlusPlus
     /**
      * @param BaseArray $customers
      */
-    public function setCustomers(BaseArray $customers){
+    public function setCustomers(BaseArray $customers)
+    {
         $this->customers->set($customers);
     }
 
@@ -156,7 +157,7 @@ class KmeansPlusPlus
          * @var CustomerGroup $firstGroup
          */
         $firstGroup = $groups->getObj(0);
-        $firstGroup->getCustomers()->merge($this->customers);
+        $firstGroup->mergeCustomers($this->customers);
 
         return $groups;
     }
@@ -179,6 +180,24 @@ class KmeansPlusPlus
 
         return MathFunctions::euclideanDistance($this->getCustomerParametersAsBaseArray($p1), $this->getCustomerParametersAsBaseArray($p2));
 
+    }
+
+    /**
+     * @param BaseArray $parameters
+     * @return BaseArray
+     */
+    public function getCustomerParametersAsBaseArray(BaseArray $parameters)
+    {
+        $parameters = new BaseArray($parameters, Parameter::class);
+
+        $ret = new BaseArray();
+        /**
+         * @var Parameter $parameter
+         */
+        foreach ($parameters as $parameter) {
+            $ret->add($parameter->getValue());
+        }
+        return $ret;
     }
 
     /**
@@ -224,7 +243,7 @@ class KmeansPlusPlus
          * @var CustomerGroup $group
          */
         foreach ($this->groups as $group) {
-            $detach[$group->getId()]  = new BaseArray(null, Customer::class);
+            $detach[$group->getId()] = new BaseArray(null, Customer::class);
             $attach[$group->getId()] = new BaseArray(null, Customer::class);
         }
 
@@ -296,23 +315,5 @@ class KmeansPlusPlus
         }
 
         return $newCenter;
-    }
-
-    /**
-     * @param BaseArray $parameters
-     * @return BaseArray
-     */
-    public function getCustomerParametersAsBaseArray(BaseArray $parameters)
-    {
-        $parameters = new BaseArray($parameters, Parameter::class);
-
-        $ret = new BaseArray();
-        /**
-         * @var Parameter $parameter
-         */
-        foreach ($parameters as $parameter) {
-            $ret->add($parameter->getValue());
-        }
-        return $ret;
     }
 }

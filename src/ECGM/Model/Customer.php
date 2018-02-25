@@ -38,46 +38,6 @@ class Customer
     }
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return BaseArray
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * @param BaseArray $parameters
-     * @throws InvalidArgumentException
-     */
-    public function setParameters(BaseArray $parameters)
-    {
-        if ($parameters->requiredBaseClass() != Parameter::class) {
-            throw new InvalidArgumentException("Base class has to be equal to " . Parameter::class . " but is " . $parameters->requiredBaseClass() . ".");
-        }
-        $this->parameters = $parameters;
-    }
-
-    public function getParametersAsSimpleArray()
-    {
-        $ret = array();
-        /**
-         * @var Parameter $parameter
-         */
-        foreach ($this->parameters as $parameter) {
-            $ret[] = $parameter->getValue();
-        }
-        return $ret;
-    }
-
-    /**
      * @param Parameter $parameter
      */
     public function addParameter(Parameter $parameter)
@@ -125,6 +85,26 @@ class Customer
     }
 
     /**
+     * @return BaseArray
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param BaseArray $parameters
+     * @throws InvalidArgumentException
+     */
+    public function setParameters(BaseArray $parameters)
+    {
+        if ($parameters->requiredBaseClass() != Parameter::class) {
+            throw new InvalidArgumentException("Base class has to be equal to " . Parameter::class . " but is " . $parameters->requiredBaseClass() . ".");
+        }
+        $this->parameters = $parameters;
+    }
+
+    /**
      * @param $orderId
      */
     public function removeOrder($orderId)
@@ -150,9 +130,31 @@ class Customer
 
     public function __toString()
     {
-        $str = "Customer " .$this->getId() . "\n";
-        $str .= "Parameters: " . implode(", ", $this->getParametersAsSimpleArray());
+        $str = "Customer " . $this->getId() . "\n";
+        $str .= "Parameters: " . implode(", ", $this->getParametersAsSimpleArray()) . "\n";
+        $groupId = (isset($this->group) && $this->group) ? $this->group->getId() : "none";
+        $str .= "Group: " . $groupId;
         return $str;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getParametersAsSimpleArray()
+    {
+        $ret = array();
+        /**
+         * @var Parameter $parameter
+         */
+        foreach ($this->parameters as $parameter) {
+            $ret[] = $parameter->getValue();
+        }
+        return $ret;
     }
 
 }

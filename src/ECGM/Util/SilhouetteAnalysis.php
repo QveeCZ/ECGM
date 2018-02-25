@@ -104,7 +104,7 @@ class SilhouetteAnalysis
         $innerGroup = $targetCustomer->getGroup();
         $outerGroups = clone $groups;
 
-        $groups->removeByObject($innerGroup);
+        $outerGroups->removeByObject($innerGroup);
 
         $innerDistance = $this->getInnerGroupDistance($targetCustomer, $innerGroup);
         $neighbourDistance = $this->getNeighbouringGroupDistance($targetCustomer, $outerGroups);
@@ -139,6 +139,7 @@ class SilhouetteAnalysis
      */
     protected function getCustomersDistanceSum(Customer $targetCustomer, BaseArray $customers)
     {
+
         $customers = new BaseArray($customers, Customer::class);
         $distanceSum = 0;
 
@@ -187,7 +188,7 @@ class SilhouetteAnalysis
      */
     protected function addToFile($silhouette)
     {
-        if($this->verbose){
+        if ($this->verbose) {
             $this->fileWriter->putLineToCSV(array($silhouette));
         }
     }

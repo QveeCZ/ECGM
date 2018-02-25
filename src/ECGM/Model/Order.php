@@ -38,43 +38,11 @@ class Order
     }
 
     /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getOrderDate()
     {
         return $this->orderDate;
-    }
-
-    /**
-     * @return BaseArray
-     */
-    public function getCustomerParameters()
-    {
-        return $this->customerParameters;
-    }
-
-    /**
-     * @param BaseArray $customerParameters
-     */
-    public function setCustomerParameters(BaseArray $customerParameters)
-    {
-        $this->customerParameters->set($customerParameters);
-    }
-
-    /**
-     * @return BaseArray
-     */
-    public function getProducts()
-    {
-        return $this->products;
     }
 
     /**
@@ -100,6 +68,38 @@ class Order
         $str .= "Customer parameters:\n" . $this->getCustomerParameters()->__toString() . "\n";
         $str .= "Products:\n" . $this->getProducts()->__toString();
         return $str;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return BaseArray
+     */
+    public function getCustomerParameters()
+    {
+        return $this->customerParameters;
+    }
+
+    /**
+     * @param BaseArray $customerParameters
+     */
+    public function setCustomerParameters(BaseArray $customerParameters)
+    {
+        $this->customerParameters->set($customerParameters);
+    }
+
+    /**
+     * @return BaseArray
+     */
+    public function getProducts()
+    {
+        return $this->products;
     }
 
 }

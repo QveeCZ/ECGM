@@ -76,7 +76,7 @@ class CustomerParametersCleaningController
         }
         $customer->setHistory($transformedHistory);
 
-        $customer->setParameters($this->getMergedCustomerParameters($customer->getHistory(), $customer));
+        $customer->setParameters($this->getMergedCustomerParameters($customer->getHistory()));
 
         return $customer;
     }
@@ -159,10 +159,10 @@ class CustomerParametersCleaningController
      * @param Customer $customer
      * @return BaseArray
      */
-    private function getMergedCustomerParameters(BaseArray $history, Customer $customer)
+    private function getMergedCustomerParameters(BaseArray $history)
     {
         $parameterMergeConstroller = new CustomerParametersMergeController();
-        return $parameterMergeConstroller->mergeCustomerHistory($history, $customer);
+        return $parameterMergeConstroller->mergeCustomerHistory($history);
     }
 
 }

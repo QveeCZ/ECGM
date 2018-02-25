@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Model;
 
 
@@ -33,6 +34,13 @@ class CurrentProduct extends Product
         $this->ppc = $ppc;
     }
 
+    public function __toString()
+    {
+        $str = parent::__toString();
+        $str .= ", PPC: " . $this->getPpc();
+        return $str;
+    }
+
     /**
      * @return mixed
      */
@@ -47,12 +55,5 @@ class CurrentProduct extends Product
     public function setPpc($ppc)
     {
         $this->ppc = $ppc;
-    }
-
-    public function __toString()
-    {
-        $str = parent::__toString();
-        $str .= ", PPC: " . $this->getPpc();
-        return $str;
     }
 }

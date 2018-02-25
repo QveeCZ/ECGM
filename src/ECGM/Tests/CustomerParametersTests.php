@@ -44,61 +44,61 @@ class CustomerParametersTests extends TestCase
 
         //pps1
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
-        $customerHistoryParameters->add(new Parameter(1, 4, $customer, true, 12));
-        $customerHistoryParameters->add(new Parameter(2, 5, $customer, true, 7));
-        $customerHistoryParameters->add(new Parameter(3, 11, $customer, true, 24));
-        $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
-        $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
+        $customerHistoryParameters->add(new Parameter(1, 4, true, 12));
+        $customerHistoryParameters->add(new Parameter(2, 5, true, 7));
+        $customerHistoryParameters->add(new Parameter(3, 11, true, 24));
+        $customerHistoryParameters->add(new Parameter(4, 49.652456));
+        $customerHistoryParameters->add(new Parameter(5, 16.259766));
 
         $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         //pps2
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
-        $customerHistoryParameters->add(new Parameter(1, 6, $customer, true, 12));
-        $customerHistoryParameters->add(new Parameter(2, 6, $customer, true, 7));
-        $customerHistoryParameters->add(new Parameter(3, 12, $customer, true, 24));
-        $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
-        $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
+        $customerHistoryParameters->add(new Parameter(1, 6, true, 12));
+        $customerHistoryParameters->add(new Parameter(2, 6, true, 7));
+        $customerHistoryParameters->add(new Parameter(3, 12, true, 24));
+        $customerHistoryParameters->add(new Parameter(4, 49.652456));
+        $customerHistoryParameters->add(new Parameter(5, 16.259766));
 
         $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         //pps3
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
-        $customerHistoryParameters->add(new Parameter(1, 8, $customer, true, 12));
-        $customerHistoryParameters->add(new Parameter(2, 1, $customer, true, 7));
-        $customerHistoryParameters->add(new Parameter(3, 9, $customer, true, 24));
-        $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
-        $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
+        $customerHistoryParameters->add(new Parameter(1, 8, true, 12));
+        $customerHistoryParameters->add(new Parameter(2, 1, true, 7));
+        $customerHistoryParameters->add(new Parameter(3, 9, true, 24));
+        $customerHistoryParameters->add(new Parameter(4, 49.652456));
+        $customerHistoryParameters->add(new Parameter(5, 16.259766));
 
         $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         //pps4
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
-        $customerHistoryParameters->add(new Parameter(1, 10, $customer, true, 12));
-        $customerHistoryParameters->add(new Parameter(2, 2, $customer, true, 7));
-        $customerHistoryParameters->add(new Parameter(3, 13, $customer, true, 24));
-        $customerHistoryParameters->add(new Parameter(4, 35.320802, $customer));
-        $customerHistoryParameters->add(new Parameter(5, 25.138551, $customer));
+        $customerHistoryParameters->add(new Parameter(1, 10, true, 12));
+        $customerHistoryParameters->add(new Parameter(2, 2, true, 7));
+        $customerHistoryParameters->add(new Parameter(3, 13, true, 24));
+        $customerHistoryParameters->add(new Parameter(4, 35.320802));
+        $customerHistoryParameters->add(new Parameter(5, 25.138551));
 
         $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         //pps5
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
-        $customerHistoryParameters->add(new Parameter(1, 11, $customer, true, 12));
-        $customerHistoryParameters->add(new Parameter(2, 6, $customer, true, 7));
-        $customerHistoryParameters->add(new Parameter(3, 10, $customer, true, 24));
-        $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
-        $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
+        $customerHistoryParameters->add(new Parameter(1, 11, true, 12));
+        $customerHistoryParameters->add(new Parameter(2, 6, true, 7));
+        $customerHistoryParameters->add(new Parameter(3, 10, true, 24));
+        $customerHistoryParameters->add(new Parameter(4, 49.652456));
+        $customerHistoryParameters->add(new Parameter(5, 16.259766));
 
         $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 
         //pps6
         $customerHistoryParameters = new BaseArray(null, Parameter::class);
-        $customerHistoryParameters->add(new Parameter(1, 12, $customer, true, 12));
-        $customerHistoryParameters->add(new Parameter(2, 1, $customer, true, 7));
-        $customerHistoryParameters->add(new Parameter(3, 23, $customer, true, 24));
-        $customerHistoryParameters->add(new Parameter(4, 49.652456, $customer));
-        $customerHistoryParameters->add(new Parameter(5, 16.259766, $customer));
+        $customerHistoryParameters->add(new Parameter(1, 12, true, 12));
+        $customerHistoryParameters->add(new Parameter(2, 1, true, 7));
+        $customerHistoryParameters->add(new Parameter(3, 23, true, 24));
+        $customerHistoryParameters->add(new Parameter(4, 49.652456));
+        $customerHistoryParameters->add(new Parameter(5, 16.259766));
 
         $history->add(new Order(1, $customerHistoryParameters, new \DateTime()));
 

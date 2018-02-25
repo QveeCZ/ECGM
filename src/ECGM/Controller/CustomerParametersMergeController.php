@@ -5,7 +5,6 @@ namespace ECGM\Controller;
 
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Model\BaseArray;
-use ECGM\Model\Customer;
 use ECGM\Model\Order;
 use ECGM\Model\Parameter;
 use ECGM\Util\MathFunctions;
@@ -15,11 +14,10 @@ class CustomerParametersMergeController
 
     /**
      * @param BaseArray $customerHistory
-     * @param Customer $customer
      * @return BaseArray
      * @throws InvalidArgumentException
      */
-    public function mergeCustomerHistory(BaseArray $customerHistory, Customer $customer)
+    public function mergeCustomerHistory(BaseArray $customerHistory)
     {
 
         if ($customerHistory->requiredBaseClass() != Order::class) {
@@ -31,7 +29,7 @@ class CustomerParametersMergeController
         $historyMatrix = $this->transformHistoryParameterMatrix($customerHistory);
 
         for ($i = 0; $i < count($historyMatrix); $i++) {
-            $parameters->add(new Parameter($i + 1, $this->mergeTransformedParameters($historyMatrix[$i]), $customer));
+            $parameters->add(new Parameter($i + 1, $this->mergeTransformedParameters($historyMatrix[$i])));
         }
 
 

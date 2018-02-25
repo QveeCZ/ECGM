@@ -40,30 +40,6 @@ class CustomerGroup
     }
 
     /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return BaseArray
-     */
-    public function getCustomers()
-    {
-        return $this->customers;
-    }
-
-    /**
-     * @param BaseArray $customers
-     */
-    public function setCustomers(BaseArray $customers)
-    {
-        $this->customers->set($customers);
-    }
-
-    /**
      * @param BaseArray $customers
      */
     public function mergeCustomers(BaseArray $customers)
@@ -105,6 +81,38 @@ class CustomerGroup
     }
 
     /**
+     * @param Customer $customer
+     */
+    public function addParameter(Parameter $parameter)
+    {
+        $this->parameters->add($parameter);
+    }
+
+    /**
+     * @param $parameterId
+     */
+    public function removeParameter($parameterId)
+    {
+        $this->parameters->remove($parameterId);
+    }
+
+    public function __toString()
+    {
+        $str = "Group: " . $this->getId() . "\n";
+        $str .= "Parameters\n{\n" . $this->getParameters()->__toString() . "}\n";
+        $str .= "Customers\n{\n" . $this->getCustomers()->__toString() . "}";
+        return $str;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @return BaseArray
      */
     public function getParameters()
@@ -122,28 +130,19 @@ class CustomerGroup
     }
 
     /**
-     * @param Customer $customer
+     * @return BaseArray
      */
-    public function addParameter(Parameter $parameter)
+    public function getCustomers()
     {
-        $this->parameters->add($parameter);
+        return $this->customers;
     }
 
     /**
-     * @param $parameterId
+     * @param BaseArray $customers
      */
-    public function removeParameter($parameterId)
+    public function setCustomers(BaseArray $customers)
     {
-        $this->parameters->remove($parameterId);
-    }
-
-
-    public function __toString()
-    {
-        $str = "Group: " . $this->getId() . "\n";
-        $str .="Parameters\n{\n" . $this->getParameters()->__toString() . "}\n";
-        $str .="Customers\n{\n" . $this->getCustomers()->__toString() . "}";
-        return $str;
+        $this->customers->set($customers);
     }
 
 }

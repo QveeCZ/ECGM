@@ -44,7 +44,11 @@ class CustomerGroup
      */
     public function mergeCustomers(BaseArray $customers)
     {
+        /**
+         * @var Customer $customer
+         */
         foreach ($customers as $customer) {
+            $customer->setGroup($this);
             $this->addCustomer($customer);
         }
     }
@@ -59,11 +63,11 @@ class CustomerGroup
     }
 
     /**
-     * @param $customerId
+     * @param Customer $customer
      */
-    public function removeCustomer($customerId)
+    public function removeCustomer(Customer $customer)
     {
-        $this->customers->remove($customerId);
+        $this->customers->removeByObject($customer);
     }
 
     /**

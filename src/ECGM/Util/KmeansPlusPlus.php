@@ -87,7 +87,7 @@ class KmeansPlusPlus
         }
 
         if ($this->groups->size() == 1) {
-            return $this->groups->getObj(0);
+            return $this->groups;
         }
 
         do {
@@ -178,24 +178,24 @@ class KmeansPlusPlus
             throw new InvalidArgumentException("Required class for parameters array has to be equal to " . Parameter::class . " but is " . $p2->requiredBaseClass() . ".");
         }
 
-        return MathFunctions::euclideanDistance($this->getCustomerParametersAsBaseArray($p1), $this->getCustomerParametersAsBaseArray($p2));
+        return MathFunctions::euclideanDistance($this->getCustomerParametersAsArray($p1), $this->getCustomerParametersAsArray($p2));
 
     }
 
     /**
      * @param BaseArray $parameters
-     * @return BaseArray
+     * @return array
      */
-    public function getCustomerParametersAsBaseArray(BaseArray $parameters)
+    public function getCustomerParametersAsArray(BaseArray $parameters)
     {
         $parameters = new BaseArray($parameters, Parameter::class);
 
-        $ret = new BaseArray();
+        $ret = array();
         /**
          * @var Parameter $parameter
          */
         foreach ($parameters as $parameter) {
-            $ret->add($parameter->getValue());
+            $ret[] = $parameter->getValue();
         }
         return $ret;
     }
@@ -276,11 +276,11 @@ class KmeansPlusPlus
          * @var CustomerGroup $group
          */
         foreach ($this->groups as $group) {
-            $group->mergeCustomers($attach[$group->getId()]);
+            $group->removeCustomers($detach[$group->getId()]);
         }
 
         foreach ($this->groups as $group) {
-            $group->getCustomers()->removeAll($detach[$group->getId()]);
+            $group->mergeCustomers($attach[$group->getId()]);
             $group->setParameters($this->updateCentroid($group));
         }
 

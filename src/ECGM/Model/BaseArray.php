@@ -23,7 +23,6 @@ class BaseArray implements \Iterator, \Countable
      * @var string if specified and valid classname, only instances of this class will be allowed into array
      */
     protected $requiredBaseClass;
-
     /**
      * BaseArray constructor.
      * @param BaseArray|null $baseArray
@@ -35,11 +34,9 @@ class BaseArray implements \Iterator, \Countable
         if (is_null($baseArray) && !is_null($requiredBaseClass) && !class_exists($requiredBaseClass)) {
             throw new InvalidArgumentException("Required class " . $requiredBaseClass . " is invalid.");
         }
-
         if (!is_null($baseArray) && !is_null($requiredBaseClass) && $requiredBaseClass != $baseArray->requiredBaseClass()) {
             throw new InvalidArgumentException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $this->requiredBaseClass . ".");
         }
-
         if (is_null($baseArray)) {
             $this->list = array();
             $this->size = 0;
@@ -52,7 +49,6 @@ class BaseArray implements \Iterator, \Countable
             $this->position = $baseArray->position;
         }
     }
-
     /**
      * @return string
      */
@@ -60,7 +56,6 @@ class BaseArray implements \Iterator, \Countable
     {
         return $this->requiredBaseClass;
     }
-
     /**
      * @param mixed $obj
      * @throws InvalidArgumentException
@@ -70,11 +65,9 @@ class BaseArray implements \Iterator, \Countable
         if (!$this->isValid($obj)) {
             throw new InvalidArgumentException("Object " . get_class($obj) . " is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
         }
-
         $this->list[] = $obj;
         $this->size++;
     }
-
     /**
      * @param mixed $obj
      * @return bool
@@ -84,14 +77,11 @@ class BaseArray implements \Iterator, \Countable
         if (is_null($this->requiredBaseClass) || !$this->requiredBaseClass) {
             return true;
         }
-
         if (!is_a($obj, $this->requiredBaseClass)) {
             return false;
         }
-
         return true;
     }
-
     /**
      * @param array $list
      */
@@ -102,7 +92,6 @@ class BaseArray implements \Iterator, \Countable
         $this->size = count($list);
         $this->position = 0;
     }
-
     /**
      * @param array $list
      * @throws InvalidArgumentException
@@ -112,9 +101,7 @@ class BaseArray implements \Iterator, \Countable
         if (!is_array($list)) {
             throw new InvalidArgumentException("Parameter is not an array.");
         }
-
         $listCount = count($list);
-
         for ($i = 0; $i < $listCount; $i++) {
             $obj = $list[$i];
             if (!$this->isValid($obj)) {
@@ -122,7 +109,6 @@ class BaseArray implements \Iterator, \Countable
             }
         }
     }
-
     /**
      * @param $list
      */
@@ -132,7 +118,6 @@ class BaseArray implements \Iterator, \Countable
         $this->list = array_merge($this->list, $list);
         $this->size += count($list);
     }
-
     /**
      * @param BaseArray $baseArray
      * @throws InvalidArgumentException
@@ -142,13 +127,11 @@ class BaseArray implements \Iterator, \Countable
         if ($this->requiredBaseClass && $this->requiredBaseClass != $baseArray->requiredBaseClass()) {
             throw new InvalidArgumentException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $this->requiredBaseClass . ".");
         }
-
         $this->list = $baseArray->list;
         $this->size = $baseArray->size;
         $this->requiredBaseClass = $baseArray->requiredBaseClass;
         $this->position = $baseArray->position;
     }
-
     /**
      * @param BaseArray $baseArray
      * @throws InvalidArgumentException
@@ -161,7 +144,6 @@ class BaseArray implements \Iterator, \Countable
         $this->list = array_merge($this->list, $baseArray->list);
         $this->size += $baseArray->size;
     }
-
     /**
      *
      */
@@ -170,7 +152,6 @@ class BaseArray implements \Iterator, \Countable
         $this->list = array();
         $this->size = 0;
     }
-
     /**
      * @param integer $index
      */
@@ -182,7 +163,6 @@ class BaseArray implements \Iterator, \Countable
             $this->size--;
         }
     }
-
     /**
      * @return integer
      */
@@ -190,7 +170,6 @@ class BaseArray implements \Iterator, \Countable
     {
         return $this->size;
     }
-
     /**
      * @param BaseArray $baseArray
      * @throws InvalidArgumentException
@@ -200,23 +179,19 @@ class BaseArray implements \Iterator, \Countable
         if ($this->requiredBaseClass != $baseArray->requiredBaseClass) {
             throw new InvalidArgumentException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $this->requiredBaseClass . ".");
         }
-
         foreach ($baseArray as $obj) {
             $this->removeByObject($obj);
         }
     }
-
     public function removeByObject($obj)
     {
         $this->isValid($obj);
-
         if (($key = array_search($obj, $this->list)) !== false) {
             unset($this->list[$key]);
             $this->list = array_values($this->list);
             $this->size--;
         }
     }
-
     /**
      * @return bool
      */
@@ -224,23 +199,18 @@ class BaseArray implements \Iterator, \Countable
     {
         return !$this->size;
     }
-
     //Iterator functions
-
     /**
      * @param integer $index
      * @return mixed|null
      */
     public function getObj($index)
     {
-
         if (!is_numeric($index) || $index > $this->size() - 1 || $index < 0) {
             return null;
         }
-
         return $this->list[$index];
     }
-
     /**
      * @return array
      */
@@ -248,7 +218,6 @@ class BaseArray implements \Iterator, \Countable
     {
         return $this->list;
     }
-
     /**
      * @inheritdoc
      */
@@ -256,7 +225,6 @@ class BaseArray implements \Iterator, \Countable
     {
         $this->position = 0;
     }
-
     /**
      * @inheritdoc
      */
@@ -264,7 +232,6 @@ class BaseArray implements \Iterator, \Countable
     {
         return $this->list[$this->position];
     }
-
     /**
      * @inheritdoc
      */
@@ -272,7 +239,6 @@ class BaseArray implements \Iterator, \Countable
     {
         return $this->position;
     }
-
     /**
      * @inheritdoc
      */
@@ -280,9 +246,7 @@ class BaseArray implements \Iterator, \Countable
     {
         ++$this->position;
     }
-
     //Private functions
-
     /**
      * @return bool
      */
@@ -290,7 +254,6 @@ class BaseArray implements \Iterator, \Countable
     {
         return isset($this->list[$this->position]);
     }
-
     /**
      * @return int
      */
@@ -298,7 +261,6 @@ class BaseArray implements \Iterator, \Countable
     {
         return $this->size() + 1;
     }
-
     /**
      * @inheritdoc
      */
@@ -306,7 +268,6 @@ class BaseArray implements \Iterator, \Countable
     {
         return $this->size();
     }
-
     public function __toString()
     {
         $str = "Size: " . $this->size() . "\n";

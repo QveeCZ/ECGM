@@ -29,20 +29,47 @@ class MathFunctions
     }
 
     /**
-     * @param BaseArray $v1
-     * @param BaseArray $v2
+     * @param array $v1
+     * @param array $v2
      * @return float
      * @throws InvalidArgumentException
      */
-    public static function euclideanDistance(BaseArray $v1, BaseArray $v2)
+    public static function euclideanDistance($v1, $v2)
     {
-        if ($v1->size() != $v2->size()) {
-            throw new InvalidArgumentException("Vector v1 size " . $v1->size() . " is not equal to vector v2 size " . $v2->size());
+
+        $dimension = count($v1);
+
+        if ($dimension != count($v2)) {
+            throw new InvalidArgumentException("Vector v1 size " . $dimension . " is not equal to vector v2 size " . count($v2));
         }
 
         $distance = 0;
-        for ($n = 0; $n < $v1->size(); $n++) {
-            $difference = $v1->getObj($n) - $v2->getObj($n);
+        for ($n = 0; $n < $dimension; $n++) {
+            $difference = $v1[$n] - $v2[$n];
+            $distance += pow($difference, 2);
+        }
+
+        return $distance;
+    }
+
+    /**
+     * @param array $v1
+     * @param array $v2
+     * @return float
+     * @throws InvalidArgumentException
+     */
+    public static function euclideanDistancePrecise($v1, $v2)
+    {
+
+        $dimension = count($v1);
+
+        if ($dimension != count($v2)) {
+            throw new InvalidArgumentException("Vector v1 size " . $dimension . " is not equal to vector v2 size " . count($v2));
+        }
+
+        $distance = 0;
+        for ($n = 0; $n < $dimension; $n++) {
+            $difference = $v1[$n] - $v2[$n];
             $distance += pow($difference, 2);
         }
 

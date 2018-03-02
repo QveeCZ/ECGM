@@ -3,6 +3,7 @@
 namespace ECGM\Tests;
 
 
+use ECGM\Controller\CustomerGroupingController;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\Parameter;
@@ -13,8 +14,8 @@ use PHPUnit\Framework\TestCase;
 class CustomerGroupingTests extends TestCase
 {
 
-    private $parameterDimension = 2;
-    private $customerNum = 20;
+    private $parameterDimension = 10;
+    private $customerNum = 1000;
     private $initialK = 2;
     private $parameterRules;
 
@@ -24,10 +25,23 @@ class CustomerGroupingTests extends TestCase
         parent::__construct($name, $data, $dataName);
 
         for ($i = 0; $i < $this->parameterDimension; $i++) {
-            $min = rand(0, 60);
-            $max = rand($min + 1, $min + 60);
+            $min = rand(1, 303);
+            $max = rand($min + 1, $min + 600);
             $this->parameterRules[] = array('min' => $min, 'max' => $max);
         }
+    }
+
+    public function testComplete()
+    {
+        echo "\n\nComplete test\n\n";
+
+        $customerGrouping = new CustomerGroupingController($this->parameterDimension, $this->initialK, true);
+
+        $customer = $this->getCustomers();
+
+        $groupNum = $customerGrouping->groupCustomers($customer)->size();
+
+        echo "Group number $groupNum\n\n";
     }
 
     public function testGrouping()
@@ -74,7 +88,6 @@ class CustomerGroupingTests extends TestCase
         $customer = $this->getCustomers();
         $kmeansPlusPlus->setCustomers($customer);
         $groups = $kmeansPlusPlus->solve($this->initialK);
-
 
         $silhouetteAnalysis = new SilhouetteAnalysis();
         $silhouette = $silhouetteAnalysis->getAverageSilhouetteWidth($groups);

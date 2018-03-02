@@ -19,20 +19,33 @@ class CustomerGroupingController
      * @var integer
      */
     protected $k;
+    /**
+     * @var boolean
+     */
+    protected $verbose;
 
     /**
      * CustomerGroupingController constructor.
      * @param integer $dimension
      * @param integer $initK
+     * @param boolean $verbose
      * @throws InvalidArgumentException
      */
-    public function __construct($dimension, $initK)
+    public function __construct($dimension, $initK, $verbose = false)
     {
         if (!is_numeric($dimension) || $dimension < 1) {
             throw new InvalidArgumentException("Dimension $dimension is invalid.");
         }
 
+        $this->dimension = $dimension;
+
+        if (!is_numeric($initK) || $initK < 1) {
+            throw new InvalidArgumentException("Initial K $initK is invalid.");
+        }
+
         $this->k = $initK;
+
+        $this->verbose = ($verbose) ? true : false;
     }
 
     /**
@@ -44,26 +57,34 @@ class CustomerGroupingController
     {
 
         $prevSilhouette = PHP_INT_MIN;
-        $silhouette = 0;
+        $silhouette = PHP_INT_MIN + 1;
 
         $groups = new BaseArray(null, CustomerGroup::class);
 
-        while ($prevSilhouette > $silhouette) {
-            $groups = $this->getGroups($customers, $initialGroups);
+        while ($prevSilhouette < $silhouette) {
+            if($this->verbose){
+                echo "K-" . $this->k . ".\n";
+            }
+            $groups = $this->getGroups($this->k, $customers, $initialGroups);
             $prevSilhouette = $silhouette;
             $silhouette = $this->getSilhouette($groups);
             $this->k += 1;
+        }
+
+        if($this->verbose){
+            echo "Silhouette $silhouette, Prev silhouette $prevSilhouette.\n";
         }
 
         return $groups;
     }
 
     /**
+     * @param integer $k
      * @param BaseArray $customers
      * @param BaseArray|null $groups
      * @return BaseArray|mixed|null
      */
-    protected function getGroups(BaseArray $customers, BaseArray $groups = null)
+    protected function getGroups($k, BaseArray $customers, BaseArray $groups = null)
     {
         $customers = new BaseArray($customers, Customer::class);
         $groups = new BaseArray($groups, CustomerGroup::class);
@@ -75,7 +96,7 @@ class CustomerGroupingController
 
         $kmeansPlusPlus->setCustomers($customers);
 
-        return $kmeansPlusPlus->solve($this->k);
+        return $kmeansPlusPlus->solve($k);
     }
 
     /**

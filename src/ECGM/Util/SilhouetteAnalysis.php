@@ -9,6 +9,11 @@ use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
 
+/**
+ *
+ * Class SilhouetteAnalysis
+ * @package ECGM\Util
+ */
 class SilhouetteAnalysis
 {
     /**
@@ -85,7 +90,7 @@ class SilhouetteAnalysis
          */
         foreach ($customers as $customer) {
             $silhouette = $this->getCustomerSilhouette($customer, $groups);
-            $this->addToFile($silhouette);
+            $this->addToFile($silhouette, $customer->getGroup()->getId());
             $silhouettes[] = $silhouette;
         }
 
@@ -93,6 +98,12 @@ class SilhouetteAnalysis
     }
 
     /**
+     * Interpretation:
+     * 0.71 - 1.00 -- x is strongly binded to given group
+     * 0.51 - 0.70 -- x is well binded to given group
+     * 0.26 - 0.50 -- x is weakly binded to given group
+     * -1.00 - 0.25 -- x is probably badly placed in given group
+     *
      * @param Customer $targetCustomer
      * @param BaseArray $groups
      * @return float
@@ -102,12 +113,16 @@ class SilhouetteAnalysis
         $groups = new BaseArray($groups, CustomerGroup::class);
 
         $innerGroup = $targetCustomer->getGroup();
-        $outerGroups = clone $groups;
+        $outerGroups = new BaseArray($groups, CustomerGroup::class);
 
         $outerGroups->removeByObject($innerGroup);
 
         $innerDistance = $this->getInnerGroupDistance($targetCustomer, $innerGroup);
         $neighbourDistance = $this->getNeighbouringGroupDistance($targetCustomer, $outerGroups);
+
+        if(!(max($innerDistance, $neighbourDistance))){
+            echo $innerGroup->__toString();
+        }
 
         $silhouette = ($neighbourDistance - $innerDistance) / (max($innerDistance, $neighbourDistance));
 
@@ -126,10 +141,11 @@ class SilhouetteAnalysis
             throw new InvalidArgumentException("Customer has bad or undefined group.");
         }
 
-        $wGroup = clone $group;
-        $wGroup->removeCustomer($targetCustomer->getId());
+        $wGroup = new CustomerGroup($group->getId());
+        $wGroup->setCustomers($group->getCustomers());
+        $wGroup->removeCustomer($targetCustomer);
 
-        return $this->getCustomersDistanceSum($targetCustomer, $group->getCustomers());
+        return $this->getCustomersDistanceSum($targetCustomer, $wGroup->getCustomers());
     }
 
     /**
@@ -143,16 +159,15 @@ class SilhouetteAnalysis
         $customers = new BaseArray($customers, Customer::class);
         $distanceSum = 0;
 
-        $targetCustomerParameters = new BaseArray();
-        $targetCustomerParameters->setList($targetCustomer->getParametersAsSimpleArray());
+        if($customers->size() == 0){
+            return 0;
+        }
 
         /**
          * @var Customer $customer
          */
         foreach ($customers as $customer) {
-            $customerParameters = new BaseArray();
-            $customerParameters->setList($customer->getParametersAsSimpleArray());
-            $distanceSum += MathFunctions::euclideanDistance($targetCustomerParameters, $customerParameters);
+            $distanceSum += MathFunctions::euclideanDistance($targetCustomer->getParametersAsSimpleArray(), $customer->getParametersAsSimpleArray());
         }
 
         return $distanceSum / $customers->size();
@@ -167,6 +182,11 @@ class SilhouetteAnalysis
     protected function getNeighbouringGroupDistance(Customer $targetCustomer, BaseArray $groups)
     {
         $groups = new BaseArray($groups, CustomerGroup::class);
+
+        if($groups->size() == 0){
+            return PHP_INT_MAX;
+        }
+
         $outerDistances = array();
 
         /**
@@ -185,11 +205,13 @@ class SilhouetteAnalysis
 
     /**
      * @param integer|float $silhouette
+     * @param mixed $group
      */
-    protected function addToFile($silhouette)
+    protected function addToFile($silhouette, $group)
     {
+
         if ($this->verbose) {
-            $this->fileWriter->putLineToCSV(array($silhouette));
+            $this->fileWriter->putLineToCSV(array($silhouette, $group));
         }
     }
 

@@ -50,7 +50,7 @@ class FileWriter
             throw new InvalidArgumentException("Parameter is not an array.");
         }
 
-        $fp = fopen($this->fileName, 'a');
+        $fp = fopen($this->dir . "/" . ltrim($this->fileName, "/"), 'a');
         fputcsv($fp, $data);
         fclose($fp);
     }

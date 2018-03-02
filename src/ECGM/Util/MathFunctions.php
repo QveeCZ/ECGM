@@ -5,7 +5,6 @@ namespace ECGM\Util;
 
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Exceptions\UndefinedException;
-use ECGM\Model\BaseArray;
 
 class MathFunctions
 {
@@ -45,8 +44,7 @@ class MathFunctions
 
         $distance = 0;
         for ($n = 0; $n < $dimension; $n++) {
-            $difference = $v1[$n] - $v2[$n];
-            $distance += pow($difference, 2);
+            $distance += pow($v1[$n] - $v2[$n], 2);
         }
 
         return $distance;
@@ -69,10 +67,25 @@ class MathFunctions
 
         $distance = 0;
         for ($n = 0; $n < $dimension; $n++) {
-            $difference = $v1[$n] - $v2[$n];
-            $distance += pow($difference, 2);
+            $distance += pow($v1[$n] - $v2[$n], 2);
         }
 
         return sqrt($distance);
+    }
+
+    public static function manhattanDistance($v1, $v2)
+    {
+        $dimension = count($v1);
+
+        if ($dimension != count($v2)) {
+            throw new InvalidArgumentException("Vector v1 size " . $dimension . " is not equal to vector v2 size " . count($v2));
+        }
+
+        $sum = 0;
+        for ($i = 0; $i < $dimension; $i++) {
+            $sum += abs($v1[$i] - $v2[$i]);
+        }
+
+        return $sum;
     }
 }

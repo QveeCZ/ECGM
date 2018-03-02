@@ -9,13 +9,12 @@ use ECGM\Model\Customer;
 use ECGM\Model\Parameter;
 use ECGM\Util\KmeansPlusPlus;
 use ECGM\Util\SilhouetteAnalysis;
-use PHPUnit\Framework\TestCase;
 
-class CustomerGroupingTests extends TestCase
+class CustomerGroupingTests extends MiscTests
 {
 
     private $parameterDimension = 10;
-    private $customerNum = 1000;
+    private $customerNum = 10000;
     private $initialK = 2;
     private $parameterRules;
 
@@ -42,6 +41,7 @@ class CustomerGroupingTests extends TestCase
         $groupNum = $customerGrouping->groupCustomers($customer)->size();
 
         echo "Group number $groupNum\n\n";
+        echo self::$splitLine;
     }
 
     public function testGrouping()
@@ -51,8 +51,31 @@ class CustomerGroupingTests extends TestCase
         $kmeansPlusPlus = new KmeansPlusPlus($this->parameterDimension);
         $customer = $this->getCustomers();
         $kmeansPlusPlus->setCustomers($customer);
+        $kmeansPlusPlus->solve($this->initialK);
+        echo "Complete\n\n";
+        echo self::$splitLine;
+    }
+
+    public function testSilhouette()
+    {
+
+        echo "\n\nSilhouette test\n\n";
+
+        $kmeansPlusPlus = new KmeansPlusPlus($this->parameterDimension);
+        $customer = $this->getCustomers();
+        $kmeansPlusPlus->setCustomers($customer);
+        $time = microtime(true);
+        echo $time . "\n";
         $groups = $kmeansPlusPlus->solve($this->initialK);
-        echo $groups->__toString();
+        echo "Kmeans: " . (microtime(true) - $time) . "\n";
+        $time = microtime(true);
+
+        $silhouetteAnalysis = new SilhouetteAnalysis();
+        $silhouette = $silhouetteAnalysis->getAverageSilhouetteWidth($groups);
+        echo "Silhouette: " . (microtime(true) - $time) . "\n";
+
+        echo "Average silhouette width: " . $silhouette;
+        echo self::$splitLine;
     }
 
     protected function getCustomers()
@@ -77,22 +100,6 @@ class CustomerGroupingTests extends TestCase
             $customer->addParameter(new Parameter(uniqid(), rand($this->parameterRules[$i]['min'], $this->parameterRules[$i]['max'])));
         }
         return $customer;
-    }
-
-    public function testSilhouette()
-    {
-
-        echo "\n\nSilhouette test\n\n";
-
-        $kmeansPlusPlus = new KmeansPlusPlus($this->parameterDimension);
-        $customer = $this->getCustomers();
-        $kmeansPlusPlus->setCustomers($customer);
-        $groups = $kmeansPlusPlus->solve($this->initialK);
-
-        $silhouetteAnalysis = new SilhouetteAnalysis();
-        $silhouette = $silhouetteAnalysis->getAverageSilhouetteWidth($groups);
-
-        echo "Average silhouette width: " . $silhouette;
     }
 
 }

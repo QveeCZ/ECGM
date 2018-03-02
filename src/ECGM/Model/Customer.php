@@ -16,6 +16,13 @@ class Customer
      */
     private $parameters;
     /**
+     * @var array
+     *
+     * Parameters as simple array
+     *
+     */
+    private $simpleParams;
+    /**
      * @var BaseArray
      */
     private $history;
@@ -44,6 +51,7 @@ class Customer
     {
         $parameter->setCustomer($this);
         $this->parameters->add($parameter);
+        $this->populateSimpleParams();
     }
 
     /**
@@ -52,6 +60,7 @@ class Customer
     public function removeParameter($parameterId)
     {
         $this->parameters->remove($parameterId);
+        $this->populateSimpleParams();
     }
 
     /**
@@ -102,6 +111,7 @@ class Customer
             throw new InvalidArgumentException("Base class has to be equal to " . Parameter::class . " but is " . $parameters->requiredBaseClass() . ".");
         }
         $this->parameters = $parameters;
+        $this->populateSimpleParams();
     }
 
     /**
@@ -128,15 +138,6 @@ class Customer
         $this->group = $group;
     }
 
-    public function __toString()
-    {
-        $str = "Customer " . $this->getId() . "\n";
-        $str .= "Parameters: " . implode(", ", $this->getParametersAsSimpleArray()) . "\n";
-        $groupId = (isset($this->group) && $this->group) ? $this->group->getId() : "none";
-        $str .= "Group: " . $groupId;
-        return $str;
-    }
-
     /**
      * @return int
      */
@@ -147,14 +148,27 @@ class Customer
 
     public function getParametersAsSimpleArray()
     {
-        $ret = array();
+        return $this->simpleParams;
+    }
+
+    public function __toString()
+    {
+        $str = "Customer " . $this->getId() . "\n";
+        $str .= "Parameters: " . implode(", ", $this->getParametersAsSimpleArray()) . "\n";
+        $groupId = (isset($this->group) && $this->group) ? $this->group->getId() : "none";
+        $str .= "Group: " . $groupId;
+        return $str;
+    }
+
+
+    protected function populateSimpleParams(){
+
+        $this->simpleParams = array();
         /**
          * @var Parameter $parameter
          */
         foreach ($this->parameters as $parameter) {
-            $ret[] = $parameter->getValue();
+            $this->simpleParams[] = $parameter->getValue();
         }
-        return $ret;
     }
-
 }

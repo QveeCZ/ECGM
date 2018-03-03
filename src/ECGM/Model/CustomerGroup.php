@@ -18,10 +18,19 @@ class CustomerGroup
      * @var BaseArray
      */
     private $parameters;
+    /**
+     * @var array
+     *
+     * Parameters as simple array
+     *
+     */
+    private $simpleParams;
 
     /**
      * CustomerGroup constructor.
-     * @param mixed $id
+     * @param $id
+     * @param BaseArray|null $parameters
+     * @throws InvalidArgumentException
      */
     public function __construct($id, BaseArray $parameters = null)
     {
@@ -85,11 +94,12 @@ class CustomerGroup
     }
 
     /**
-     * @param Customer $customer
+     * @param Parameter $parameter
      */
     public function addParameter(Parameter $parameter)
     {
         $this->parameters->add($parameter);
+        $this->populateSimpleParams();
     }
 
     /**
@@ -98,6 +108,7 @@ class CustomerGroup
     public function removeParameter($parameterId)
     {
         $this->parameters->remove($parameterId);
+        $this->populateSimpleParams();
     }
 
     public function __toString()
@@ -124,6 +135,11 @@ class CustomerGroup
         return $this->parameters;
     }
 
+    public function getParametersAsSimpleArray()
+    {
+        return $this->simpleParams;
+    }
+
     /**
      * @param BaseArray $parameters
      * @throws InvalidArgumentException
@@ -131,6 +147,7 @@ class CustomerGroup
     public function setParameters(BaseArray $parameters)
     {
         $this->parameters->set($parameters);
+        $this->populateSimpleParams();
     }
 
     /**
@@ -147,6 +164,18 @@ class CustomerGroup
     public function setCustomers(BaseArray $customers)
     {
         $this->customers->set($customers);
+    }
+
+
+    protected function populateSimpleParams(){
+
+        $this->simpleParams = array();
+        /**
+         * @var Parameter $parameter
+         */
+        foreach ($this->parameters as $parameter) {
+            $this->simpleParams[] = $parameter->getValue();
+        }
     }
 
 }

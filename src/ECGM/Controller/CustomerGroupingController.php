@@ -7,6 +7,7 @@ use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
 use ECGM\Util\KmeansPlusPlus;
+use ECGM\Util\MathFunctions;
 use ECGM\Util\SilhouetteAnalysis;
 
 class CustomerGroupingController
@@ -23,15 +24,20 @@ class CustomerGroupingController
      * @var boolean
      */
     protected $verbose;
+    /**
+     * @var boolean
+     */
+    protected $autoKAdjustment;
 
     /**
      * CustomerGroupingController constructor.
      * @param integer $dimension
      * @param integer $initK
-     * @param boolean $verbose
+     * @param bool $autoKAdjustment
+     * @param bool $verbose
      * @throws InvalidArgumentException
      */
-    public function __construct($dimension, $initK, $verbose = false)
+    public function __construct($dimension, $initK, $autoKAdjustment = true, $verbose = false)
     {
         if (!is_numeric($dimension) || $dimension < 1) {
             throw new InvalidArgumentException("Dimension $dimension is invalid.");
@@ -46,6 +52,7 @@ class CustomerGroupingController
         $this->k = $initK;
 
         $this->verbose = ($verbose) ? true : false;
+        $this->autoKAdjustment = ($autoKAdjustment) ? true : false;
     }
 
     /**
@@ -62,20 +69,86 @@ class CustomerGroupingController
         $groups = new BaseArray(null, CustomerGroup::class);
 
         while ($prevSilhouette < $silhouette) {
-            if($this->verbose){
+            if ($this->verbose) {
                 echo "K-" . $this->k . ".\n";
             }
             $groups = $this->getGroups($this->k, $customers, $initialGroups);
+
+            if (!$this->autoKAdjustment) {
+                break;
+            }
+
             $prevSilhouette = $silhouette;
             $silhouette = $this->getSilhouette($groups);
             $this->k += 1;
         }
 
-        if($this->verbose){
+        if ($this->verbose && $this->autoKAdjustment) {
             echo "Silhouette $silhouette, Prev silhouette $prevSilhouette.\n";
         }
 
         return $groups;
+    }
+
+    /**
+     * @param Customer $customer
+     * @param BaseArray $groups
+     * @return Customer
+     * @throws InvalidArgumentException
+     */
+    public function assignToGroup(Customer $customer, BaseArray $groups)
+    {
+        if($customer->getGroup()){
+            throw new InvalidArgumentException("Customer has already assigned group " . $customer->getGroup()->getId() . ".");
+        }
+
+        $groups = new BaseArray($groups, CustomerGroup::class);
+
+        $customer->setGroup($this->getBestGroup($customer, $groups));
+
+        return $customer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDimension()
+    {
+        return $this->dimension;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getK()
+    {
+        return $this->k;
+    }
+
+    /**
+     * @param Customer $customer
+     * @param BaseArray $groups
+     * @return CustomerGroup|null
+     */
+    protected function getBestGroup(Customer $customer, BaseArray $groups)
+    {
+        $groups = new BaseArray($groups, CustomerGroup::class);
+
+        $dist = PHP_INT_MAX;
+        $bestGroup = null;
+
+        /**
+         * @var CustomerGroup $group
+         */
+        foreach ($groups as $group){
+            $currDist = MathFunctions::euclideanDistance($customer->getParametersAsSimpleArray(), $group->getParametersAsSimpleArray());
+            if($dist > $currDist){
+                $dist = $currDist;
+                $bestGroup = $group;
+            }
+        }
+
+        return $bestGroup;
     }
 
     /**
@@ -108,22 +181,6 @@ class CustomerGroupingController
         $groups = new BaseArray($groups, CustomerGroup::class);
         $silhouetteAnalysis = new SilhouetteAnalysis();
         return $silhouetteAnalysis->getAverageSilhouetteWidth($groups);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDimension()
-    {
-        return $this->dimension;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getK()
-    {
-        return $this->k;
     }
 
 }

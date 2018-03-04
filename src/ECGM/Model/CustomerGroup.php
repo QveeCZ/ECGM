@@ -9,22 +9,22 @@ class CustomerGroup
     /**
      * @var mixed
      */
-    private $id;
+    protected $id;
     /**
      * @var BaseArray
      */
-    private $customers;
+    protected $customers;
     /**
      * @var BaseArray
      */
-    private $parameters;
+    protected $parameters;
     /**
      * @var array
      *
      * Parameters as simple array
      *
      */
-    private $simpleParams;
+    protected $simpleParams;
 
     /**
      * CustomerGroup constructor.

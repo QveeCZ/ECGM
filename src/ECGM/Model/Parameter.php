@@ -10,23 +10,23 @@ class Parameter
     /**
      * @var mixed
      */
-    private $id;
+    protected $id;
     /**
      * @var mixed
      */
-    private $value;
+    protected $value;
     /**
      * @var Customer
      */
-    private $customer;
+    protected $customer;
     /**
      * @var boolean
      */
-    private $isCircular;
+    protected $isCircular;
     /**
      * @var integer
      */
-    private $maxValue;
+    protected $maxValue;
 
     /**
      * CustomerParameter constructor.

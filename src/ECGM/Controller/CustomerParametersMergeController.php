@@ -4,12 +4,13 @@ namespace ECGM\Controller;
 
 
 use ECGM\Exceptions\InvalidArgumentException;
+use ECGM\Int\CustomerParametersMergeInterface;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Order;
 use ECGM\Model\Parameter;
 use ECGM\Util\MathFunctions;
 
-class CustomerParametersMergeController
+class CustomerParametersMergeController implements CustomerParametersMergeInterface
 {
 
     /**
@@ -40,7 +41,7 @@ class CustomerParametersMergeController
      * @param BaseArray $history
      * @return array
      */
-    private function transformHistoryParameterMatrix(BaseArray $history)
+    protected function transformHistoryParameterMatrix(BaseArray $history)
     {
 
         $matrix = array();
@@ -68,7 +69,7 @@ class CustomerParametersMergeController
      * @param array $matrix
      * @return array
      */
-    private function transposeMatrix($matrix)
+    protected function transposeMatrix($matrix)
     {
         $transposedMatrix = array();
         foreach ($matrix as $row => $columns) {
@@ -83,7 +84,7 @@ class CustomerParametersMergeController
      * @param array $parameters
      * @return float|int
      */
-    private function mergeTransformedParameters($parameters)
+    protected function mergeTransformedParameters($parameters)
     {
 
         $median = MathFunctions::arrayMedian($parameters);
@@ -110,7 +111,7 @@ class CustomerParametersMergeController
      * @param float $median
      * @return array
      */
-    private function getModifietZScore($parameters, $median)
+    protected function getModifietZScore($parameters, $median)
     {
         if (is_null($median)) {
             $median = MathFunctions::arrayMedian($parameters);
@@ -138,7 +139,7 @@ class CustomerParametersMergeController
      * @param float|null $median
      * @return float|int
      */
-    private function getMAD($parameters, $median = null)
+    protected function getMAD($parameters, $median = null)
     {
         if (is_null($median)) {
             $median = MathFunctions::arrayMedian($parameters);
@@ -158,7 +159,7 @@ class CustomerParametersMergeController
      * @param float|null $median
      * @return float|int
      */
-    private function getMeanAD($parameters, $median = null)
+    protected function getMeanAD($parameters, $median = null)
     {
         if (is_null($median)) {
             $median = MathFunctions::arrayMedian($parameters);
@@ -179,7 +180,7 @@ class CustomerParametersMergeController
      * @param float $hatU
      * @return mixed
      */
-    private function getParameterWeight($parameter, $hatU)
+    protected function getParameterWeight($parameter, $hatU)
     {
         $c = 1.28;
 

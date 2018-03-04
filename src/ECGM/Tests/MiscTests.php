@@ -8,6 +8,7 @@ use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
 use ECGM\Model\Parameter;
+use ECGM\Model\Product;
 use PHPUnit\Framework\TestCase;
 
 class MiscTests extends TestCase
@@ -32,6 +33,11 @@ class MiscTests extends TestCase
         //Validate non numeric CustomerParameter value
         $this->expectException(InvalidArgumentException::class);
         new Parameter(1, "fasfaf", new Customer(12, new CustomerGroup(1)));
+
+        //Validate Product expiration type
+        $this->expectException(InvalidArgumentException::class);
+        new Product(132, 20, 11, 20);
+
 
         echo "Invalid value exceptions OK";
         echo self::$splitLine;

@@ -3,49 +3,41 @@
 namespace ECGM\Model;
 
 
-use ECGM\Exceptions\InvalidArgumentException;
+use ECGM\Enum\DateType;
 
-class OrderProduct extends Product
+class OrderProduct extends StrategyProduct
 {
-    /**
-     * @var integer
-     */
-    private $amount;
     /**
      * @var Order
      */
-    private $order;
+    protected $order;
+    /**
+     * @var integer
+     */
+    protected $expiration;
+    /**
+     * @var DateType
+     */
+    protected $expirationDateType;
+    /**
+     * @var BaseArray $complements
+     */
+    protected $complements;
 
     /**
      * OrderProduct constructor.
-     * @param $id
-     * @param float $price
-     * @param int $expiration
+     * @param Product $product
      * @param Order $order
      * @param int $amount
-     * @param float $discount
-     * @throws InvalidArgumentException
      */
-    public function __construct($id, $price, $expiration, Order $order, $amount = 1, $discount = 0.0)
+    public function __construct(Product $product, Order $order, $amount = 0)
     {
-        parent::__construct($id, $price, $expiration, $discount);
+        parent::__construct($product->getId(), $order->getId(), $product->getPrice(), $amount, $product->getDiscount());
 
-        if (!is_numeric($amount)) {
-            throw new InvalidArgumentException("Amount has to be number.");
-        }
-
-        if ($amount < 1) {
-            throw  new InvalidArgumentException("Amount cannot be lower than 1, but is " . $amount . ".");
-        }
-    }
-
-    public function __toString()
-    {
-        $str = parent::__toString();
-        $str .= ", Order: " . $this->getOrder()->getId() . ", ";
-        $str .= "Amount: " . $this->getAmount();
-
-        return $str;
+        $this->order = $order;
+        $this->expiration = $product->getExpiration();
+        $this->expirationDateType = $product->getExpirationDateType();
+        $this->complements = $product->getComplements();
     }
 
     /**
@@ -67,17 +59,51 @@ class OrderProduct extends Product
     /**
      * @return int
      */
-    public function getAmount()
+    public function getExpiration()
     {
-        return $this->amount;
+        return $this->expiration;
     }
 
     /**
-     * @param int $amount
+     * @return DateType
      */
-    public function setAmount($amount)
+    public function getExpirationDateType()
     {
-        $this->amount = $amount;
+        return $this->expirationDateType;
     }
+
+    /**
+     * @return BaseArray
+     */
+    public function getComplements()
+    {
+        return $this->complements;
+    }
+
+    public function __toString()
+    {
+        $str = "";
+        $str .= "ID: " . $this->getId() . ", ";
+        $str .= "Price: " . $this->getPrice() . ", ";
+        $str .= "Expiration: " . $this->getExpiration() . ", ";
+
+        $complements = array();
+
+        /**
+         * @var Product $complement
+         */
+        foreach ($this->complements as $complement) {
+            $complements[] = $complement->getId();
+        }
+
+        $str .= "Complements: [" . implode(", ", $complements) . "]\n";
+
+        $str .= ", Order: " . $this->getOrder()->getId() . ", ";
+        $str .= "Amount: " . $this->getAmount();
+
+        return $str;
+    }
+
+
 
 }

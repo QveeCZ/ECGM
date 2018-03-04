@@ -5,6 +5,7 @@ namespace ECGM\Util;
 
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Exceptions\LogicalException;
+use ECGM\Int\GroupingValidationInterface;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
@@ -14,16 +15,16 @@ use ECGM\Model\CustomerGroup;
  * Class SilhouetteAnalysis
  * @package ECGM\Util
  */
-class SilhouetteAnalysis
+class SilhouetteAnalysis implements GroupingValidationInterface
 {
     /**
      * @var boolean
      */
-    private $verbose;
+    protected $verbose;
     /**
      * @var FileWriter $fileWriter
      */
-    private $fileWriter;
+    protected $fileWriter;
 
     /**
      * SilhouetteAnalysis constructor.
@@ -43,7 +44,15 @@ class SilhouetteAnalysis
      * @param BaseArray $groups
      * @return float|int
      */
-    public function getAverageSilhouetteWidth(BaseArray $groups)
+    public function getGroupingScore(BaseArray $groups){
+        return $this->getAverageSilhouetteWidth($groups);
+    }
+
+    /**
+     * @param BaseArray $groups
+     * @return float|int
+     */
+    protected function getAverageSilhouetteWidth(BaseArray $groups)
     {
         $groups = new BaseArray($groups, CustomerGroup::class);
         $customers = $this->getCustomers($groups);

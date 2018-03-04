@@ -4,15 +4,21 @@ namespace ECGM\Controller;
 
 
 use ECGM\Exceptions\InvalidArgumentException;
+use ECGM\Int\CustomerParametersCleaningInterface;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
 use ECGM\Model\Order;
 use ECGM\Model\Parameter;
 
-class CustomerParametersCleaningController
+class CustomerParametersCleaningController implements CustomerParametersCleaningInterface
 {
 
+    /**
+     * @param BaseArray $customerGroups
+     * @return BaseArray
+     * @throws InvalidArgumentException
+     */
     public function cleanCustomerGroups(BaseArray $customerGroups)
     {
         if ($customerGroups->requiredBaseClass() != Customer::class) {
@@ -31,6 +37,10 @@ class CustomerParametersCleaningController
         return $retGroups;
     }
 
+    /**
+     * @param CustomerGroup $customerGroup
+     * @return CustomerGroup
+     */
     public function cleanCustomerGroup(CustomerGroup $customerGroup)
     {
         $customerGroup->setCustomers($this->cleanCustomers($customerGroup->getCustomers()));
@@ -60,7 +70,10 @@ class CustomerParametersCleaningController
         return $cleanedCustomerArray;
     }
 
-
+    /**
+     * @param Customer $customer
+     * @return Customer
+     */
     public function cleanCustomer(Customer $customer)
     {
 
@@ -81,13 +94,13 @@ class CustomerParametersCleaningController
         return $customer;
     }
 
-    //Private functions
+    //protected functions
 
     /**
      * @param Customer $customer
      * @throws InvalidArgumentException
      */
-    private function validateCustomerParameters(Customer $customer)
+    protected function validateCustomerParameters(Customer $customer)
     {
         $expectedSize = null;
 
@@ -109,7 +122,7 @@ class CustomerParametersCleaningController
      * @param BaseArray $parameters
      * @return BaseArray
      */
-    private function transformCircularValues(BaseArray $parameters)
+    protected function transformCircularValues(BaseArray $parameters)
     {
 
         $transformedCustomerParameters = new BaseArray(null, Parameter::class);
@@ -133,7 +146,7 @@ class CustomerParametersCleaningController
      * @return BaseArray
      * @throws InvalidArgumentException
      */
-    private function transformCircularValue(Parameter $parameter)
+    protected function transformCircularValue(Parameter $parameter)
     {
         if (!$parameter->isCircular()) {
             throw  new InvalidArgumentException("Customer parameter " . $parameter->getId() . " is expected to be circular, but is not.");
@@ -159,7 +172,7 @@ class CustomerParametersCleaningController
      * @param Customer $customer
      * @return BaseArray
      */
-    private function getMergedCustomerParameters(BaseArray $history)
+    protected function getMergedCustomerParameters(BaseArray $history)
     {
         $parameterMergeConstroller = new CustomerParametersMergeController();
         return $parameterMergeConstroller->mergeCustomerHistory($history);

@@ -8,19 +8,19 @@ class Order
     /**
      * @var mixed
      */
-    private $id;
+    protected $id;
     /**
      * @var Customer
      */
-    private $customerParameters;
+    protected $customerParameters;
     /**
      * @var BaseArray
      */
-    private $products;
+    protected $products;
     /**
      * @var \DateTime $orderDate
      */
-    private $orderDate;
+    protected $orderDate;
 
     /**
      * Order constructor.

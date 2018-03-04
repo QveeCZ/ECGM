@@ -3,6 +3,9 @@
 namespace ECGM\Controller;
 
 use ECGM\Exceptions\InvalidArgumentException;
+use ECGM\Int\CustomerGroupingInterface;
+use ECGM\Int\GroupingImplementationInterface;
+use ECGM\Int\GroupingValidationInterface;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
@@ -10,7 +13,7 @@ use ECGM\Util\KmeansPlusPlus;
 use ECGM\Util\MathFunctions;
 use ECGM\Util\SilhouetteAnalysis;
 
-class CustomerGroupingController
+class CustomerGroupingController implements CustomerGroupingInterface
 {
     /**
      * @var integer
@@ -28,6 +31,17 @@ class CustomerGroupingController
      * @var boolean
      */
     protected $autoKAdjustment;
+    
+    /*
+     * @var GroupingValidationInterface
+     */
+    protected $validationClass;
+
+
+    /*
+     * @var GroupingImplementationInterface
+     */
+    protected $groupingClass;
 
     /**
      * CustomerGroupingController constructor.
@@ -53,6 +67,41 @@ class CustomerGroupingController
 
         $this->verbose = ($verbose) ? true : false;
         $this->autoKAdjustment = ($autoKAdjustment) ? true : false;
+        
+        $this->groupingClass = new KmeansPlusPlus($dimension);
+        $this->validationClass = new SilhouetteAnalysis();
+    }
+
+    /**
+     * @return GroupingValidationInterface
+     */
+    public function getValidationClass()
+    {
+        return $this->validationClass;
+    }
+
+    /**
+     * @param GroupingValidationInterface $validationClass
+     */
+    public function setValidationClass(GroupingValidationInterface $validationClass)
+    {
+        $this->validationClass = $validationClass;
+    }
+
+    /**
+     * @return GroupingImplementationInterface
+     */
+    public function getGroupingClass()
+    {
+        return $this->groupingClass;
+    }
+
+    /**
+     * @param GroupingImplementationInterface $groupingClass
+     */
+    public function setGroupingClass(GroupingImplementationInterface $groupingClass)
+    {
+        $this->groupingClass = $groupingClass;
     }
 
     /**
@@ -161,15 +210,14 @@ class CustomerGroupingController
     {
         $customers = new BaseArray($customers, Customer::class);
         $groups = new BaseArray($groups, CustomerGroup::class);
-        $kmeansPlusPlus = new KmeansPlusPlus($this->dimension);
 
         if ($groups->size() > 0) {
-            $kmeansPlusPlus->setGroups($groups);
+            $this->groupingClass->setGroups($groups);
         }
 
-        $kmeansPlusPlus->setCustomers($customers);
+        $this->groupingClass->setCustomers($customers);
 
-        return $kmeansPlusPlus->solve($k);
+        return $this->groupingClass->solve($k);
     }
 
     /**
@@ -179,8 +227,7 @@ class CustomerGroupingController
     protected function getSilhouette(BaseArray $groups)
     {
         $groups = new BaseArray($groups, CustomerGroup::class);
-        $silhouetteAnalysis = new SilhouetteAnalysis();
-        return $silhouetteAnalysis->getAverageSilhouetteWidth($groups);
+        return $this->validationClass->getGroupingScore($groups);
     }
 
 }

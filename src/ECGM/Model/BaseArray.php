@@ -34,8 +34,8 @@ class BaseArray implements \Iterator, \Countable
         if (is_null($baseArray) && !is_null($requiredBaseClass) && !class_exists($requiredBaseClass)) {
             throw new InvalidArgumentException("Required class " . $requiredBaseClass . " is invalid.");
         }
-        if (!is_null($baseArray) && !is_null($requiredBaseClass) && $requiredBaseClass != $baseArray->requiredBaseClass()) {
-            throw new InvalidArgumentException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $this->requiredBaseClass . ".");
+        if (!is_null($baseArray) && !is_null($requiredBaseClass) && !is_a($baseArray->requiredBaseClass(), $requiredBaseClass, true)) {
+            throw new InvalidArgumentException("Required base class " . $baseArray->requiredBaseClass . " of array to be inserted is not equal to " . $requiredBaseClass . ".");
         }
         if (is_null($baseArray)) {
             $this->list = array();
@@ -88,7 +88,7 @@ class BaseArray implements \Iterator, \Countable
     public function setList($list)
     {
         $this->isListValid($list);
-        $this->list = $list;
+        $this->list = array_values($list);
         $this->size = count($list);
         $this->position = 0;
     }
@@ -101,11 +101,10 @@ class BaseArray implements \Iterator, \Countable
         if (!is_array($list)) {
             throw new InvalidArgumentException("Parameter is not an array.");
         }
-        $listCount = count($list);
-        for ($i = 0; $i < $listCount; $i++) {
-            $obj = $list[$i];
-            if (!$this->isValid($obj)) {
-                throw new InvalidArgumentException("Object " . get_class($obj) . " on position " . $i . " in array is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
+
+        foreach ($list as $key => $value) {
+            if (!$this->isValid($value)) {
+                throw new InvalidArgumentException("Object " . get_class($value) . " on position " . $key . " in array is required to be of, or to inherit from class " . $this->requiredBaseClass . " but does not.");
             }
         }
     }
@@ -115,7 +114,7 @@ class BaseArray implements \Iterator, \Countable
     public function mergeList($list)
     {
         $this->isListValid($list);
-        $this->list = array_merge($this->list, $list);
+        $this->list = array_merge($this->list, array_values($list));
         $this->size += count($list);
     }
     /**
@@ -246,7 +245,7 @@ class BaseArray implements \Iterator, \Countable
     {
         ++$this->position;
     }
-    //Private functions
+    //protected functions
     /**
      * @return bool
      */

@@ -3,6 +3,7 @@
 namespace ECGM\Model;
 
 
+use ECGM\Enum\DateType;
 use ECGM\Exceptions\InvalidArgumentException;
 
 class Product
@@ -11,33 +12,38 @@ class Product
     /**
      * @var mixed
      */
-    private $id;
+    protected $id;
     /**
      * @var float
      */
-    private $price;
+    protected $price;
     /**
      * @var float
      */
-    private $discount;
+    protected $discount;
     /**
      * @var integer
      */
-    private $expiration;
+    protected $expiration;
+    /**
+     * @var DateType
+     */
+    protected $expirationDateType;
     /**
      * @var BaseArray $complements
      */
-    private $complements;
+    protected $complements;
 
     /**
      * Product constructor.
-     * @param $id
-     * @param $price
-     * @param $expiration
+     * @param mixed $id
+     * @param float $price
+     * @param integer $expiration
+     * @param integer $expirationDateType
      * @param float $discount
      * @throws InvalidArgumentException
      */
-    public function __construct($id, $price, $expiration, $discount = 0.0)
+    public function __construct($id, $price, $expiration, $expirationDateType = DateType::DAYS, $discount = 0.0)
     {
         if (!is_numeric($price) || !is_numeric($discount) || !is_numeric($expiration)) {
             throw  new InvalidArgumentException("Price, expiration or discount are not numeric.");
@@ -47,11 +53,16 @@ class Product
             throw  new InvalidArgumentException("Expiration cannot be lower than 0, but is " . $expiration . ".");
         }
 
+        if(!DateType::isValidValue($expirationDateType)){
+            throw new InvalidArgumentException("Expiration date type is $expirationDateType, but available values are " . json_encode(DateType::getConstants()) . "." );
+        }
+
         $this->id = $id;
         $this->price = $price;
         $this->discount = $discount;
         $this->expiration = $expiration;
-        $this->complements = new BaseArray(null, Product::class);
+        $this->expirationDateType = $expirationDateType;
+        $this->complements = new BaseArray(null, ProductComplement::class);
     }
 
     /**
@@ -68,29 +79,6 @@ class Product
     public function setComplements($complements)
     {
         $this->complements->set($complements);
-    }
-
-    public function __toString()
-    {
-        $str = "";
-        $str .= "ID: " . $this->getId() . ", ";
-        $str .= "Price: " . $this->getPrice() . ", ";
-        $str .= "Expiration: " . $this->getExpiration() . ", ";
-        $str .= "Discount: " . $this->getDiscount();
-
-        $complements = array();
-
-        /**
-         * @var Product $complement
-         */
-        foreach ($this->complements as $complement) {
-            $complements[] = $complement->getId();
-        }
-
-
-        $str .= "Complements: [" . implode(", ", $complements) . "]\n";
-
-        return $str;
     }
 
     /**
@@ -134,6 +122,22 @@ class Product
     }
 
     /**
+     * @return DateType
+     */
+    public function getExpirationDateType()
+    {
+        return $this->expirationDateType;
+    }
+
+    /**
+     * @param DateType $expirationDateType
+     */
+    public function setExpirationDateType(DateType $expirationDateType)
+    {
+        $this->expirationDateType = $expirationDateType;
+    }
+
+    /**
      * @return float
      */
     public function getDiscount()
@@ -147,6 +151,29 @@ class Product
     public function setDiscount($discount)
     {
         $this->discount = $discount;
+    }
+
+    public function __toString()
+    {
+        $str = "";
+        $str .= "ID: " . $this->getId() . ", ";
+        $str .= "Price: " . $this->getPrice() . ", ";
+        $str .= "Expiration: " . $this->getExpiration() . ", ";
+        $str .= "Discount: " . $this->getDiscount();
+
+        $complements = array();
+
+        /**
+         * @var Product $complement
+         */
+        foreach ($this->complements as $complement) {
+            $complements[] = $complement->getId();
+        }
+
+
+        $str .= "Complements: [" . implode(", ", $complements) . "]\n";
+
+        return $str;
     }
 
 }

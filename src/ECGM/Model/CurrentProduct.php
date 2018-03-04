@@ -3,6 +3,7 @@
 namespace ECGM\Model;
 
 
+use ECGM\Enum\DateType;
 use ECGM\Exceptions\InvalidArgumentException;
 
 class CurrentProduct extends Product
@@ -21,7 +22,7 @@ class CurrentProduct extends Product
      */
     public function __construct($id, $price, $expiration, $ppc, $discount = 0.0)
     {
-        parent::__construct($id, $price, $expiration, $discount);
+        parent::__construct($id, $price, $expiration, DateType::DAYS, $discount);
 
         if (!is_numeric($ppc)) {
             throw new InvalidArgumentException("PRC has to be number.");

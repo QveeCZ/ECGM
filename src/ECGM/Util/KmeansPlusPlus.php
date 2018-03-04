@@ -5,6 +5,7 @@ namespace ECGM\Util;
 
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Exceptions\UndefinedException;
+use ECGM\Int\GroupingImplementationInterface;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
@@ -16,7 +17,7 @@ use ECGM\Model\Parameter;
  * https://github.com/bdelespierre/php-kmeans
  * @package ECGM\Util
  */
-class KmeansPlusPlus
+class KmeansPlusPlus implements GroupingImplementationInterface
 {
     protected $dimension;
     protected $groups;

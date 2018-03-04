@@ -13,10 +13,10 @@ use ECGM\Util\SilhouetteAnalysis;
 class CustomerGroupingTests extends MiscTests
 {
 
-    private $parameterDimension = 10;
-    private $customerNum = 10000;
-    private $initialK = 2;
-    private $parameterRules;
+    protected $parameterDimension = 10;
+    protected $customerNum = 10000;
+    protected $initialK = 2;
+    protected $parameterRules;
 
 
     public function __construct($name = null, array $data = [], $dataName = '')
@@ -71,7 +71,7 @@ class CustomerGroupingTests extends MiscTests
         $time = microtime(true);
 
         $silhouetteAnalysis = new SilhouetteAnalysis();
-        $silhouette = $silhouetteAnalysis->getAverageSilhouetteWidth($groups);
+        $silhouette = $silhouetteAnalysis->getGroupingScore($groups);
         echo "Silhouette: " . (microtime(true) - $time) . "\n";
 
         echo "Average silhouette width: " . $silhouette;

@@ -17,11 +17,11 @@ class CustomerParametersTests extends TestCase
     /**
      * @var Customer
      */
-    private $customer;
+    protected $customer;
     /**
      * @var Customer
      */
-    private $cleanedCustomer;
+    protected $cleanedCustomer;
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {
@@ -34,7 +34,7 @@ class CustomerParametersTests extends TestCase
     /**
      * @return Customer
      */
-    private function prepareTestCustomer()
+    protected function prepareTestCustomer()
     {
 
         $customer = new Customer(1, new CustomerGroup(1));
@@ -111,7 +111,7 @@ class CustomerParametersTests extends TestCase
      * @param Customer $customer
      * @return Customer
      */
-    private function getCleanedCustomer(Customer $customer)
+    protected function getCleanedCustomer(Customer $customer)
     {
         $customerParametersController = new CustomerParametersCleaningController();
 

@@ -10,26 +10,26 @@ class Customer
     /**
      * @var integer
      */
-    private $id;
+    protected $id;
     /**
      * @var BaseArray
      */
-    private $parameters;
+    protected $parameters;
     /**
      * @var array
      *
      * Parameters as simple array
      *
      */
-    private $simpleParams;
+    protected $simpleParams;
     /**
      * @var BaseArray
      */
-    private $history;
+    protected $history;
     /**
      * @var CustomerGroup
      */
-    private $group;
+    protected $group;
 
     /**
      * Customer constructor.

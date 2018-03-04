@@ -4,13 +4,14 @@ namespace ECGM\Controller;
 
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Int\CustomerGroupingInterface;
+use ECGM\Int\DistanceFuncInterface;
 use ECGM\Int\GroupingImplementationInterface;
 use ECGM\Int\GroupingValidationInterface;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
+use ECGM\Util\DistanceFunctions;
 use ECGM\Util\KmeansPlusPlus;
-use ECGM\Util\MathFunctions;
 use ECGM\Util\SilhouetteAnalysis;
 
 class CustomerGroupingController implements CustomerGroupingInterface
@@ -37,11 +38,15 @@ class CustomerGroupingController implements CustomerGroupingInterface
      */
     protected $validationClass;
 
-
     /*
      * @var GroupingImplementationInterface
      */
     protected $groupingClass;
+
+    /**
+     * @var DistanceFuncInterface
+     */
+    protected $distanceFunctions;
 
     /**
      * CustomerGroupingController constructor.
@@ -70,6 +75,10 @@ class CustomerGroupingController implements CustomerGroupingInterface
         
         $this->groupingClass = new KmeansPlusPlus($dimension);
         $this->validationClass = new SilhouetteAnalysis();
+        $this->distanceFunctions = new DistanceFunctions();
+
+        $this->groupingClass->setDistanceFunctions($this->distanceFunctions);
+        $this->groupingClass->setDistanceFunctions($this->distanceFunctions);
     }
 
     /**
@@ -85,6 +94,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
      */
     public function setValidationClass(GroupingValidationInterface $validationClass)
     {
+        $validationClass->setDistanceFunctions($this->distanceFunctions);
         $this->validationClass = $validationClass;
     }
 
@@ -101,7 +111,26 @@ class CustomerGroupingController implements CustomerGroupingInterface
      */
     public function setGroupingClass(GroupingImplementationInterface $groupingClass)
     {
+        $groupingClass->setDistanceFunctions($this->distanceFunctions);
         $this->groupingClass = $groupingClass;
+    }
+
+    /**
+     * @return DistanceFuncInterface
+     */
+    public function getDistanceFunctions()
+    {
+        return $this->distanceFunctions;
+    }
+
+    /**
+     * @param DistanceFuncInterface $distanceFunctions
+     */
+    public function setDistanceFunctions(DistanceFuncInterface $distanceFunctions)
+    {
+        $this->distanceFunctions = $distanceFunctions;
+        $this->groupingClass->setDistanceFunctions($distanceFunctions);
+        $this->groupingClass->setDistanceFunctions($distanceFunctions);
     }
 
     /**
@@ -190,7 +219,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
          * @var CustomerGroup $group
          */
         foreach ($groups as $group){
-            $currDist = MathFunctions::euclideanDistance($customer->getParametersAsSimpleArray(), $group->getParametersAsSimpleArray());
+            $currDist = $this->distanceFunctions->distancePrecise($customer->getParametersAsSimpleArray(), $group->getParametersAsSimpleArray());
             if($dist > $currDist){
                 $dist = $currDist;
                 $bestGroup = $group;

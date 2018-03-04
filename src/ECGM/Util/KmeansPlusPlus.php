@@ -5,6 +5,7 @@ namespace ECGM\Util;
 
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Exceptions\UndefinedException;
+use ECGM\Int\DistanceFuncInterface;
 use ECGM\Int\GroupingImplementationInterface;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
@@ -24,6 +25,11 @@ class KmeansPlusPlus implements GroupingImplementationInterface
     protected $customers;
 
     /**
+     * @var DistanceFuncInterface
+     */
+    protected $distanceFunctions;
+
+    /**
      * KmeansPlusPlus constructor.
      * @param integer $dimension
      * @throws UndefinedException
@@ -37,6 +43,24 @@ class KmeansPlusPlus implements GroupingImplementationInterface
         $this->dimension = $dimension;
         $this->groups = new BaseArray(null, CustomerGroup::class);
         $this->customers = new BaseArray(null, Customer::class);
+
+        $this->distanceFunctions = new DistanceFunctions();
+    }
+
+    /**
+     * @return DistanceFuncInterface
+     */
+    public function getDistanceFunctions()
+    {
+        return $this->distanceFunctions;
+    }
+
+    /**
+     * @param DistanceFuncInterface $distanceFunctions
+     */
+    public function setDistanceFunctions(DistanceFuncInterface $distanceFunctions)
+    {
+        $this->distanceFunctions = $distanceFunctions;
     }
 
     /**
@@ -179,7 +203,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
             throw new InvalidArgumentException("Required class for parameters array has to be equal to " . Parameter::class . " but is " . $p2->requiredBaseClass() . ".");
         }
 
-        return MathFunctions::euclideanDistance($this->getCustomerParametersAsArray($p1), $this->getCustomerParametersAsArray($p2));
+        return $this->distanceFunctions->distancePrecise($this->getCustomerParametersAsArray($p1), $this->getCustomerParametersAsArray($p2));
 
     }
 

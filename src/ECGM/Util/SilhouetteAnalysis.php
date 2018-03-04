@@ -5,6 +5,7 @@ namespace ECGM\Util;
 
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Exceptions\LogicalException;
+use ECGM\Int\DistanceFuncInterface;
 use ECGM\Int\GroupingValidationInterface;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
@@ -27,6 +28,11 @@ class SilhouetteAnalysis implements GroupingValidationInterface
     protected $fileWriter;
 
     /**
+     * @var DistanceFuncInterface
+     */
+    protected $distanceFunctions;
+
+    /**
      * SilhouetteAnalysis constructor.
      * @param bool $verbose
      */
@@ -38,6 +44,22 @@ class SilhouetteAnalysis implements GroupingValidationInterface
             $dateTime = new \DateTime();
             $this->fileWriter = new FileWriter("silhouette_" . $dateTime->format('Y-m-d_H:i:s') . "_" . uniqid() . ".csv");
         }
+    }
+
+    /**
+     * @return DistanceFuncInterface
+     */
+    public function getDistanceFunctions()
+    {
+        return $this->distanceFunctions;
+    }
+
+    /**
+     * @param DistanceFuncInterface $distanceFunctions
+     */
+    public function setDistanceFunctions(DistanceFuncInterface $distanceFunctions)
+    {
+        $this->distanceFunctions = $distanceFunctions;
     }
 
     /**
@@ -171,7 +193,7 @@ class SilhouetteAnalysis implements GroupingValidationInterface
          * @var Customer $customer
          */
         foreach ($customers as $customer) {
-            $distanceSum += MathFunctions::manhattanDistance($targetCustomer->getParametersAsSimpleArray(), $customer->getParametersAsSimpleArray());
+            $distanceSum += $this->distanceFunctions->distanceQuick($targetCustomer->getParametersAsSimpleArray(), $customer->getParametersAsSimpleArray());
         }
 
         return $distanceSum / $customers->size();

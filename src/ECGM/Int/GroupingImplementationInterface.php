@@ -34,4 +34,14 @@ interface GroupingImplementationInterface
      */
     public function solve($nbGroups);
 
+    /**
+     * @return DistanceFuncInterface
+     */
+    public function getDistanceFunctions();
+
+    /**
+     * @param DistanceFuncInterface $distanceFunctions
+     */
+    public function setDistanceFunctions(DistanceFuncInterface $distanceFunctions);
+
 }

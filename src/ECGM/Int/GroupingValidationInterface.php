@@ -11,4 +11,15 @@ interface GroupingValidationInterface
      * @return float|int
      */
     public function getGroupingScore(BaseArray $groups);
+
+
+    /**
+     * @return DistanceFuncInterface
+     */
+    public function getDistanceFunctions();
+
+    /**
+     * @param DistanceFuncInterface $distanceFunctions
+     */
+    public function setDistanceFunctions(DistanceFuncInterface $distanceFunctions);
 }

@@ -1,6 +1,4 @@
-<p align="center"><a href="https://symfony.com" target="_blank">
-    <img src="/logo.png">
-</a></p>
+<p align="center"><img src="/logo.png"></p>
 
 ECGM is a **PHP library** for application of game theory to e-commerce solutions
 

@@ -36,25 +36,38 @@ class CustomerStrategyController implements CustomerStrategyInterface
     /**
      * @param Customer $customer
      * @param BaseArray $currentProducts
+     * @param Order|null $currentOrder
      * @return array
      */
-    public function getCustomerStrategy(Customer $customer, BaseArray $currentProducts)
+    public function getCustomerStrategy(Customer $customer, BaseArray $currentProducts, Order $currentOrder = null)
     {
         $currentProducts = new BaseArray($currentProducts, CurrentProduct::class);
 
-        return $this->guessStrategy($customer, $currentProducts);
+        return $this->guessStrategy($customer, $currentProducts, $currentOrder);
     }
 
     /**
      * @param Customer $customer
      * @param BaseArray $currentProducts
+     * @param Order|null $currentOrder
      * @return array
      */
-    protected function guessStrategy(Customer $customer, BaseArray $currentProducts)
+    protected function guessStrategy(Customer $customer, BaseArray $currentProducts, Order $currentOrder = null)
     {
         $currentProducts = new BaseArray($currentProducts, CurrentProduct::class);
 
-        $purchasedProducts = $this->getPurchasedProducts($customer, $currentProducts);
+        $currentOrderProducts = array();
+
+        if ($currentOrder && $currentOrder->getProducts()->size() > 0) {
+            /**
+             * @var OrderProduct $product
+             */
+            foreach ($currentOrder->getProducts() as $product) {
+                $currentOrderProducts[$product->getId()] = $product->getAmount();
+            }
+        }
+
+        $purchasedProducts = $this->getPurchasedProducts($customer, $currentProducts, $currentOrderProducts);
 
 
         $preStrategy = array();
@@ -108,22 +121,30 @@ class CustomerStrategyController implements CustomerStrategyInterface
     /**
      * @param Customer $customer
      * @param BaseArray $currentProducts
+     * @param array $currentOrderProducts
      * @return array
      */
-    protected function getPurchasedProducts(Customer $customer, BaseArray $currentProducts)
+    protected function getPurchasedProducts(Customer $customer, BaseArray $currentProducts, $currentOrderProducts = array())
     {
         $currentProducts = new BaseArray($currentProducts, CurrentProduct::class);
 
-        $customerPurchasedProducts = $this->getCustomerOrderProductAmounts($customer->getHistory());
+        $customerPurchasedProducts = $this->getCustomerOrderProductAmounts($customer->getHistory(), $currentOrderProducts);
 
-        $groupPurchasedProducts = $this->getCustomerGroupOrderProductAmounts($this->getGroupHistory($customer->getGroup()));
+        $groupPurchasedProducts = $this->getCustomerGroupOrdersProductAmounts($this->getGroupHistory($customer->getGroup()), $currentOrderProducts);
 
         $currentProductAmounts = array();
+
+        $currentOrderProducts = array();
 
         /**
          * @var CurrentProduct $currentProduct
          */
         foreach ($currentProducts as $currentProduct) {
+
+            //if product is already in cart skip
+            if (array_key_exists($currentProduct->getId(), $currentOrderProducts)) {
+                continue;
+            }
 
             $currId = $currentProduct->getId();
 
@@ -133,14 +154,16 @@ class CustomerStrategyController implements CustomerStrategyInterface
 
             $currentProductAmounts[$currId] = array_merge($customerPurchasedProduct, $groupPurchasedProduct);
         }
+
         return $currentProductAmounts;
     }
 
     /**
      * @param BaseArray $history
+     * @param array $currentOrderProducts
      * @return array
      */
-    protected function getCustomerOrderProductAmounts(BaseArray $history)
+    protected function getCustomerOrderProductAmounts(BaseArray $history, $currentOrderProducts = array())
     {
         $history = new BaseArray($history, Order::class);
 
@@ -151,7 +174,7 @@ class CustomerStrategyController implements CustomerStrategyInterface
          */
         foreach ($history as $order) {
 
-            $adjustedProducts = $this->adjustCustomerOrder($order);
+            $adjustedProducts = $this->adjustCustomerOrder($order, $currentOrderProducts);
 
             foreach ($adjustedProducts as $key => $val) {
 
@@ -169,9 +192,10 @@ class CustomerStrategyController implements CustomerStrategyInterface
 
     /**
      * @param Order $order
+     * @param array $currentOrderProducts
      * @return StrategyProduct[]
      */
-    protected function adjustCustomerOrder(Order $order)
+    protected function adjustCustomerOrder(Order $order, $currentOrderProducts = array())
     {
         $now = time();
         $orderDate = $order->getOrderDate()->getTimestamp();
@@ -181,6 +205,8 @@ class CustomerStrategyController implements CustomerStrategyInterface
          * @var StrategyProduct[] $orderProducts
          */
         $orderProducts = array();
+
+        $ps = 0;
 
         /**
          * @var OrderProduct $product
@@ -216,6 +242,16 @@ class CustomerStrategyController implements CustomerStrategyInterface
 
             }
 
+            if (array_key_exists($product->getId(), $currentOrderProducts)) {
+                $ps += ($currentOrderProducts[$product->getId()] < $product->getAmount()) ? $currentOrderProducts[$product->getId()] : $product->getAmount();
+            }
+
+        }
+
+        $oc = max(1, $ps * $this->coefficient);
+
+        foreach ($orderProducts as $key => $orderProduct) {
+            $orderProduct->setAmount($orderProduct->getAmount() * $oc);
         }
 
 
@@ -268,10 +304,12 @@ class CustomerStrategyController implements CustomerStrategyInterface
 
     /**
      * @param BaseArray $history
+     * @param array $currentOrderProducts
      * @return array
      */
-    protected function getCustomerGroupOrderProductAmounts(BaseArray $history)
+    protected function getCustomerGroupOrdersProductAmounts(BaseArray $history, $currentOrderProducts = array())
     {
+
         $history = new BaseArray($history, Order::class);
 
         $orderProducts = array();
@@ -280,17 +318,50 @@ class CustomerStrategyController implements CustomerStrategyInterface
          * @var Order $order
          */
         foreach ($history as $order) {
-            /**
-             * @var OrderProduct $orderProduct
-             */
-            foreach ($order->getProducts() as $orderProduct) {
+            $orderProducts = array_replace_recursive($orderProducts, $this->getCustomerGroupOrderProductAmounts($order, $currentOrderProducts));
+        }
 
-                if (!array_key_exists($orderProduct->getId(), $orderProducts)) {
-                    $orderProducts[$orderProduct->getId()] = array();
-                }
+        return $orderProducts;
+    }
 
-                $orderProducts[$orderProduct->getId()][$order->getId()] = new StrategyProduct($orderProduct->getId(), $order->getId(), $orderProduct->getPrice(), $orderProduct->getAmount());
+    /**
+     * @param Order $order
+     * @param array $currentOrderProducts
+     * @return array
+     */
+    protected function getCustomerGroupOrderProductAmounts(Order $order, $currentOrderProducts = array())
+    {
+
+        $orderProducts = array();
+        $ps = 0;
+
+
+        /**
+         * @var OrderProduct $product
+         */
+        foreach ($order->getProducts() as $product) {
+
+            if (!array_key_exists($product->getId(), $orderProducts)) {
+                $orderProducts[$product->getId()] = array();
             }
+
+            $orderProducts[$product->getId()][$order->getId()] = new StrategyProduct($product->getId(), $order->getId(), $product->getPrice(), $product->getAmount());
+
+
+            if (array_key_exists($product->getId(), $currentOrderProducts)) {
+                $ps += ($currentOrderProducts[$product->getId()] < $product->getAmount()) ? $currentOrderProducts[$product->getId()] : $product->getAmount();
+            }
+
+        }
+
+        $oc = max(1, $ps * $this->coefficient);
+
+
+        /**
+         * @var StrategyProduct[] $product
+         */
+        foreach ($orderProducts as $key => $product) {
+            $product[$order->getId()]->setAmount($product[$order->getId()]->getAmount() * $oc);
         }
 
         return $orderProducts;

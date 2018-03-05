@@ -66,7 +66,8 @@ class SilhouetteAnalysis implements GroupingValidationInterface
      * @param BaseArray $groups
      * @return float|int
      */
-    public function getGroupingScore(BaseArray $groups){
+    public function getGroupingScore(BaseArray $groups)
+    {
         return $this->getAverageSilhouetteWidth($groups);
     }
 
@@ -141,6 +142,10 @@ class SilhouetteAnalysis implements GroupingValidationInterface
      */
     protected function getCustomerSilhouette(Customer $targetCustomer, BaseArray $groups)
     {
+        if ($targetCustomer->getGroup()->getCustomers()->size() == 0) {
+            return 0;
+        }
+
         $groups = new BaseArray($groups, CustomerGroup::class);
 
         $innerGroup = $targetCustomer->getGroup();
@@ -178,6 +183,7 @@ class SilhouetteAnalysis implements GroupingValidationInterface
      * @param Customer $targetCustomer
      * @param BaseArray $customers
      * @return float|int
+     * @throws InvalidArgumentException
      */
     protected function getCustomersDistanceSum(Customer $targetCustomer, BaseArray $customers)
     {
@@ -185,8 +191,8 @@ class SilhouetteAnalysis implements GroupingValidationInterface
         $customers = new BaseArray($customers, Customer::class);
         $distanceSum = 0;
 
-        if($customers->size() == 0){
-            return 0;
+        if ($customers->size() == 0) {
+            throw new InvalidArgumentException("Customer group size is 0.");
         }
 
         /**
@@ -209,10 +215,6 @@ class SilhouetteAnalysis implements GroupingValidationInterface
     {
         $groups = new BaseArray($groups, CustomerGroup::class);
 
-        if($groups->size() == 0){
-            return PHP_INT_MAX;
-        }
-
         $min = PHP_INT_MAX;
 
         /**
@@ -225,7 +227,7 @@ class SilhouetteAnalysis implements GroupingValidationInterface
 
             $outerDistance = $this->getCustomersDistanceSum($targetCustomer, $group->getCustomers());
 
-            if($outerDistance < $min){
+            if ($outerDistance < $min) {
                 $min = $outerDistance;
             }
         }

@@ -24,8 +24,8 @@ class StrategyTests extends MiscTests
 
         $products = new BaseArray(null, CurrentProduct::class);
 
-        $products->add(new CurrentProduct(1, 100, 30, 200));
-        $products->add(new CurrentProduct(2, 200, 30, 161));
+        $products->add(new CurrentProduct(1, 100, 30, 420));
+        $products->add(new CurrentProduct(2, 200, 30, 126));
         $products->add(new CurrentProduct(3, 300, 30, 150));
         $products->add(new CurrentProduct(4, 400, 30, 400));
 
@@ -33,7 +33,7 @@ class StrategyTests extends MiscTests
 
         $strategy = $strategyController->getDealerStrategy($products);
 
-        $expected = array(1 => 200 / 911, 2 => 161 / 911, 3 => 150 / 911, 4 => 400 / 911);
+        $expected = array(1 => 420 / 1096, 2 => 126 / 1096, 3 => 150 / 1096, 4 => 400 / 1096);
 
         $this->assertEquals(count($expected), count($strategy));
 
@@ -64,7 +64,7 @@ class StrategyTests extends MiscTests
         $strategy = $strategyController->getCustomerStrategy($this->getCustomer(), $currentProducts);
 
 
-        $expected = array(1 => 0.219, 2 => 0.475, 3 => 0.162, 4 => 0.144);
+        $expected = array(1 => 0.319, 2 => 0.386, 3 => 0.156, 4 => 0.139);
 
         $this->assertEquals(count($expected), count($strategy));
 
@@ -133,6 +133,7 @@ class StrategyTests extends MiscTests
         $tempProducts->getObj(1)->setComplements($complements);
 
 
+        $customerOrder->addProduct(new OrderProduct($tempProducts->getObj(0), $customerOrder, 3));
         $customerOrder->addProduct(new OrderProduct($tempProducts->getObj(1), $customerOrder, 1));
         $customerOrder->addProduct(new OrderProduct($tempProducts->getObj(2), $customerOrder, 2));
 
@@ -147,7 +148,7 @@ class StrategyTests extends MiscTests
         $tempProducts->getObj(1)->setPrice(250);
         $tempProducts->getObj(2)->setPrice(900);
         $tempProducts->getObj(3)->setPrice(1100);
-        $customerOrder->addProduct(new OrderProduct($tempProducts->getObj(1), $customerOrder, 3));
+        $customerOrder->addProduct(new OrderProduct($tempProducts->getObj(1), $customerOrder, 1));
 
         $customerOrders->add($customerOrder);
 

@@ -5,8 +5,9 @@ namespace ECGM\Model;
 
 use ECGM\Enum\DateType;
 use ECGM\Exceptions\InvalidArgumentException;
+use ECGM\Int\KeyeableValue;
 
-class Product
+class Product implements KeyeableValue
 {
 
     /**
@@ -177,4 +178,11 @@ class Product
         return $str;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getKey()
+    {
+        return $this->getId();
+    }
 }

@@ -18,9 +18,9 @@ abstract class MainInterface
 
     /**
      * Return all products that are currently in sale and should be included in strategy.
-     * Has to return BaseArray ECGM\Model\ActualProduct requiredClass
+     * Has to return BaseArray ECGM\Model\CurrentProduct requiredClass
      *
-     * @return mixed
+     * @return BaseArray
      */
     public abstract function getProducts();
 
@@ -30,5 +30,5 @@ abstract class MainInterface
      * @param CurrentProduct $product
      * @return CurrentProduct
      */
-    public abstract function getProductPPC(CurrentProduct $product);
+    public abstract function setProductPPC(CurrentProduct $product);
 }

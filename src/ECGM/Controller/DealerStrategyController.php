@@ -12,6 +12,7 @@ class DealerStrategyController
     /**
      * @param BaseArray $products
      * @return array
+     * @throws \ECGM\Exceptions\InvalidArgumentException
      */
     public function getDealerStrategy(BaseArray $products)
     {
@@ -42,6 +43,7 @@ class DealerStrategyController
     /**
      * @param BaseArray $products
      * @return int|mixed
+     * @throws \ECGM\Exceptions\InvalidArgumentException
      */
     protected function getPPCSum(BaseArray $products)
     {

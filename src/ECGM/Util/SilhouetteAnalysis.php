@@ -65,6 +65,8 @@ class SilhouetteAnalysis implements GroupingValidationInterface
     /**
      * @param BaseArray $groups
      * @return float|int
+     * @throws InvalidArgumentException
+     * @throws LogicalException
      */
     public function getGroupingScore(BaseArray $groups)
     {
@@ -74,6 +76,8 @@ class SilhouetteAnalysis implements GroupingValidationInterface
     /**
      * @param BaseArray $groups
      * @return float|int
+     * @throws InvalidArgumentException
+     * @throws LogicalException
      */
     protected function getAverageSilhouetteWidth(BaseArray $groups)
     {
@@ -90,6 +94,7 @@ class SilhouetteAnalysis implements GroupingValidationInterface
     /**
      * @param BaseArray $groups
      * @return BaseArray
+     * @throws InvalidArgumentException
      */
     protected function getCustomers(BaseArray $groups)
     {
@@ -108,7 +113,9 @@ class SilhouetteAnalysis implements GroupingValidationInterface
     /**
      * @param BaseArray $customers
      * @param BaseArray $groups
-     * @return integer
+     * @return float|int
+     * @throws InvalidArgumentException
+     * @throws LogicalException
      */
     protected function getSilhouettes(BaseArray $customers, BaseArray $groups)
     {
@@ -139,6 +146,8 @@ class SilhouetteAnalysis implements GroupingValidationInterface
      * @param Customer $targetCustomer
      * @param BaseArray $groups
      * @return float
+     * @throws InvalidArgumentException
+     * @throws LogicalException
      */
     protected function getCustomerSilhouette(Customer $targetCustomer, BaseArray $groups)
     {
@@ -208,7 +217,8 @@ class SilhouetteAnalysis implements GroupingValidationInterface
     /**
      * @param Customer $targetCustomer
      * @param BaseArray $groups
-     * @return mixed
+     * @return float|int
+     * @throws InvalidArgumentException
      * @throws LogicalException
      */
     protected function getNeighbouringGroupDistance(Customer $targetCustomer, BaseArray $groups)
@@ -237,8 +247,9 @@ class SilhouetteAnalysis implements GroupingValidationInterface
     }
 
     /**
-     * @param integer|float $silhouette
-     * @param mixed $group
+     * @param $silhouette
+     * @param $group
+     * @throws InvalidArgumentException
      */
     protected function addToFile($silhouette, $group)
     {

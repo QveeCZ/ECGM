@@ -26,8 +26,8 @@ class CustomerStrategyController implements CustomerStrategyInterface
      */
     public function __construct($coefficient)
     {
-        if (!is_numeric($coefficient)) {
-            throw new InvalidArgumentException("Multiplication coefficient has to be numeric.");
+        if(!is_numeric($coefficient) || $coefficient < 1){
+            throw  new InvalidArgumentException("Multiplication coefficient has to be numeric and > 1, bud is $coefficient.");
         }
 
         $this->coefficient = $coefficient;
@@ -38,6 +38,7 @@ class CustomerStrategyController implements CustomerStrategyInterface
      * @param BaseArray $currentProducts
      * @param Order|null $currentOrder
      * @return array
+     * @throws InvalidArgumentException
      */
     public function getCustomerStrategy(Customer $customer, BaseArray $currentProducts, Order $currentOrder = null)
     {
@@ -51,6 +52,7 @@ class CustomerStrategyController implements CustomerStrategyInterface
      * @param BaseArray $currentProducts
      * @param Order|null $currentOrder
      * @return array
+     * @throws InvalidArgumentException
      */
     protected function guessStrategy(Customer $customer, BaseArray $currentProducts, Order $currentOrder = null)
     {
@@ -95,8 +97,9 @@ class CustomerStrategyController implements CustomerStrategyInterface
 
     /**
      * @param CurrentProduct $currentProduct
-     * @param array $productPurchasesList
-     * @return float
+     * @param $productPurchasesList
+     * @return float|int
+     * @throws InvalidArgumentException
      */
     protected function getProductStrategy(CurrentProduct $currentProduct, $productPurchasesList)
     {
@@ -118,11 +121,13 @@ class CustomerStrategyController implements CustomerStrategyInterface
         return $strategy;
     }
 
+
     /**
      * @param Customer $customer
      * @param BaseArray $currentProducts
      * @param array $currentOrderProducts
      * @return array
+     * @throws InvalidArgumentException
      */
     protected function getPurchasedProducts(Customer $customer, BaseArray $currentProducts, $currentOrderProducts = array())
     {
@@ -162,6 +167,7 @@ class CustomerStrategyController implements CustomerStrategyInterface
      * @param BaseArray $history
      * @param array $currentOrderProducts
      * @return array
+     * @throws InvalidArgumentException
      */
     protected function getCustomerOrderProductAmounts(BaseArray $history, $currentOrderProducts = array())
     {
@@ -281,8 +287,9 @@ class CustomerStrategyController implements CustomerStrategyInterface
 
 
     /**
-     * @param CustomerGroup $group
+     * @param CustomerGroup|null $group
      * @return BaseArray
+     * @throws InvalidArgumentException
      */
     protected function getGroupHistory(CustomerGroup $group = null)
     {
@@ -306,6 +313,7 @@ class CustomerStrategyController implements CustomerStrategyInterface
      * @param BaseArray $history
      * @param array $currentOrderProducts
      * @return array
+     * @throws InvalidArgumentException
      */
     protected function getCustomerGroupOrdersProductAmounts(BaseArray $history, $currentOrderProducts = array())
     {

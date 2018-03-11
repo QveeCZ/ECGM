@@ -33,8 +33,9 @@ class Customer
 
     /**
      * Customer constructor.
-     * @param $id
-     * @param CustomerGroup $group
+     * @param mixed $id
+     * @param CustomerGroup|null $group
+     * @throws InvalidArgumentException
      */
     public function __construct($id, CustomerGroup $group = null)
     {
@@ -46,6 +47,7 @@ class Customer
 
     /**
      * @param Parameter $parameter
+     * @throws InvalidArgumentException
      */
     public function addParameter(Parameter $parameter)
     {
@@ -86,6 +88,7 @@ class Customer
 
     /**
      * @param Order $order
+     * @throws InvalidArgumentException
      */
     public function addOrder(Order $order)
     {

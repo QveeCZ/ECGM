@@ -50,6 +50,7 @@ class CustomerGroup
 
     /**
      * @param BaseArray $customers
+     * @throws InvalidArgumentException
      */
     public function mergeCustomers(BaseArray $customers)
     {
@@ -64,6 +65,7 @@ class CustomerGroup
 
     /**
      * @param Customer $customer
+     * @throws InvalidArgumentException
      */
     public function addCustomer(Customer $customer)
     {
@@ -95,6 +97,7 @@ class CustomerGroup
 
     /**
      * @param Parameter $parameter
+     * @throws InvalidArgumentException
      */
     public function addParameter(Parameter $parameter)
     {
@@ -160,6 +163,7 @@ class CustomerGroup
 
     /**
      * @param BaseArray $customers
+     * @throws InvalidArgumentException
      */
     public function setCustomers(BaseArray $customers)
     {

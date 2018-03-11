@@ -74,7 +74,8 @@ class Product
     }
 
     /**
-     * @param BaseArray $complements
+     * @param $complements
+     * @throws InvalidArgumentException
      */
     public function setComplements($complements)
     {

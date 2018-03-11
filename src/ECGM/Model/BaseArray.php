@@ -82,8 +82,10 @@ class BaseArray implements \Iterator, \Countable
         }
         return true;
     }
+
     /**
-     * @param array $list
+     * @param $list
+     * @throws InvalidArgumentException
      */
     public function setList($list)
     {
@@ -108,8 +110,10 @@ class BaseArray implements \Iterator, \Countable
             }
         }
     }
+
     /**
      * @param $list
+     * @throws InvalidArgumentException
      */
     public function mergeList($list)
     {

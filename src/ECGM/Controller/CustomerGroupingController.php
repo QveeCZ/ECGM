@@ -50,11 +50,12 @@ class CustomerGroupingController implements CustomerGroupingInterface
 
     /**
      * CustomerGroupingController constructor.
-     * @param integer $dimension
-     * @param integer $initK
+     * @param $dimension
+     * @param $initK
      * @param bool $autoKAdjustment
      * @param bool $verbose
      * @throws InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function __construct($dimension, $initK, $autoKAdjustment = true, $verbose = false)
     {
@@ -137,6 +138,8 @@ class CustomerGroupingController implements CustomerGroupingInterface
      * @param BaseArray $customers
      * @param BaseArray|null $initialGroups
      * @return BaseArray|mixed|null
+     * @throws InvalidArgumentException
+     * @throws \ECGM\Exceptions\LogicalException
      */
     public function groupCustomers(BaseArray $customers, BaseArray $initialGroups = null)
     {
@@ -207,6 +210,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
      * @param Customer $customer
      * @param BaseArray $groups
      * @return CustomerGroup|null
+     * @throws InvalidArgumentException
      */
     protected function getBestGroup(Customer $customer, BaseArray $groups)
     {
@@ -230,10 +234,11 @@ class CustomerGroupingController implements CustomerGroupingInterface
     }
 
     /**
-     * @param integer $k
+     * @param $k
      * @param BaseArray $customers
      * @param BaseArray|null $groups
      * @return BaseArray|mixed|null
+     * @throws InvalidArgumentException
      */
     protected function getGroups($k, BaseArray $customers, BaseArray $groups = null)
     {
@@ -252,6 +257,8 @@ class CustomerGroupingController implements CustomerGroupingInterface
     /**
      * @param BaseArray $groups
      * @return float|int
+     * @throws InvalidArgumentException
+     * @throws \ECGM\Exceptions\LogicalException
      */
     protected function getSilhouette(BaseArray $groups)
     {

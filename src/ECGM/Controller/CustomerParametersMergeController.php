@@ -17,6 +17,7 @@ class CustomerParametersMergeController implements CustomerParametersMergeInterf
      * @param BaseArray $customerHistory
      * @return BaseArray
      * @throws InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function mergeCustomerHistory(BaseArray $customerHistory)
     {
@@ -81,8 +82,9 @@ class CustomerParametersMergeController implements CustomerParametersMergeInterf
     }
 
     /**
-     * @param array $parameters
+     * @param $parameters
      * @return float|int
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     protected function mergeTransformedParameters($parameters)
     {
@@ -107,9 +109,10 @@ class CustomerParametersMergeController implements CustomerParametersMergeInterf
     }
 
     /**
-     * @param array $parameters
-     * @param float $median
+     * @param $parameters
+     * @param $median
      * @return array
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     protected function getModifietZScore($parameters, $median)
     {
@@ -135,9 +138,10 @@ class CustomerParametersMergeController implements CustomerParametersMergeInterf
     }
 
     /**
-     * @param array $parameters
-     * @param float|null $median
+     * @param $parameters
+     * @param null $median
      * @return float|int
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     protected function getMAD($parameters, $median = null)
     {
@@ -154,10 +158,12 @@ class CustomerParametersMergeController implements CustomerParametersMergeInterf
         return MathFunctions::arrayMedian($absMedianDiffs);
     }
 
+
     /**
-     * @param array $parameters
-     * @param float|null $median
+     * @param $parameters
+     * @param null $median
      * @return float|int
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     protected function getMeanAD($parameters, $median = null)
     {

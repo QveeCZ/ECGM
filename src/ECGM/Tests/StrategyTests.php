@@ -17,7 +17,9 @@ use ECGM\Model\ProductComplement;
 
 class StrategyTests extends MiscTests
 {
-
+    /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     */
     public function testDealerStrategy()
     {
         echo "Dealer strategy tests\n\n";
@@ -46,6 +48,9 @@ class StrategyTests extends MiscTests
         echo self::$splitLine;
     }
 
+    /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     */
     public function testCustomerStrategy()
     {
 
@@ -63,7 +68,6 @@ class StrategyTests extends MiscTests
 
         $strategy = $strategyController->getCustomerStrategy($this->getCustomer(), $currentProducts);
 
-
         $expected = array(1 => 0.319, 2 => 0.386, 3 => 0.156, 4 => 0.139);
 
         $this->assertEquals(count($expected), count($strategy));
@@ -80,6 +84,7 @@ class StrategyTests extends MiscTests
 
     /**
      * @return Customer
+     * @throws \ECGM\Exceptions\InvalidArgumentException
      */
     private function getCustomer()
     {
@@ -166,6 +171,7 @@ class StrategyTests extends MiscTests
 
     /**
      * @return CustomerGroup
+     * @throws \ECGM\Exceptions\InvalidArgumentException
      */
     private function getGroupHistory()
     {

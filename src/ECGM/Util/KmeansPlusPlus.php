@@ -32,6 +32,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
     /**
      * KmeansPlusPlus constructor.
      * @param integer $dimension
+     * @throws InvalidArgumentException
      * @throws UndefinedException
      */
     public function __construct($dimension)
@@ -65,6 +66,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
 
     /**
      * @param BaseArray $groups
+     * @throws InvalidArgumentException
      */
     public function setGroups(BaseArray $groups)
     {
@@ -73,6 +75,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
 
     /**
      * @param Customer $customer
+     * @throws InvalidArgumentException
      */
     public function addCustomer(Customer $customer)
     {
@@ -81,6 +84,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
 
     /**
      * @param BaseArray $customers
+     * @throws InvalidArgumentException
      */
     public function setCustomers(BaseArray $customers)
     {
@@ -210,6 +214,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
     /**
      * @param BaseArray $parameters
      * @return array
+     * @throws InvalidArgumentException
      */
     public function getCustomerParametersAsArray(BaseArray $parameters)
     {
@@ -229,6 +234,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
      * @param Customer $c1
      * @param BaseArray $groups
      * @return CustomerGroup|mixed|null
+     * @throws InvalidArgumentException
      */
     protected function getClosest(Customer $c1, BaseArray $groups)
     {
@@ -252,6 +258,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
 
     /**
      * @return bool
+     * @throws InvalidArgumentException
      */
     protected function iterate()
     {
@@ -315,6 +322,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
     /**
      * @param CustomerGroup $group
      * @return BaseArray
+     * @throws InvalidArgumentException
      */
     protected function updateCentroid(CustomerGroup $group)
     {

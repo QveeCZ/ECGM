@@ -24,9 +24,10 @@ class Order
 
     /**
      * Order constructor.
-     * @param $id
+     * @param mixed $id
      * @param BaseArray $parameters
      * @param \DateTime $orderDate
+     * @throws \ECGM\Exceptions\InvalidArgumentException
      */
     public function __construct($id, BaseArray $parameters, \DateTime $orderDate)
     {
@@ -47,6 +48,7 @@ class Order
 
     /**
      * @param OrderProduct $product
+     * @throws \ECGM\Exceptions\InvalidArgumentException
      */
     public function addProduct(OrderProduct $product)
     {
@@ -88,6 +90,7 @@ class Order
 
     /**
      * @param BaseArray $customerParameters
+     * @throws \ECGM\Exceptions\InvalidArgumentException
      */
     public function setCustomerParameters(BaseArray $customerParameters)
     {

@@ -6,6 +6,11 @@ use ECGM\Exceptions\UndefinedException;
 
 class MathFunctions
 {
+    /**
+     * @param $array
+     * @return float|int
+     * @throws UndefinedException
+     */
     public static function arrayMedian($array)
     {
         $count = count($array);

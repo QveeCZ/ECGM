@@ -18,6 +18,7 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
      * @param BaseArray $customerGroups
      * @return BaseArray
      * @throws InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function cleanCustomerGroups(BaseArray $customerGroups)
     {
@@ -40,6 +41,8 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
     /**
      * @param CustomerGroup $customerGroup
      * @return CustomerGroup
+     * @throws InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function cleanCustomerGroup(CustomerGroup $customerGroup)
     {
@@ -51,6 +54,7 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
      * @param BaseArray $customers
      * @return BaseArray
      * @throws InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function cleanCustomers(BaseArray $customers)
     {
@@ -73,6 +77,8 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
     /**
      * @param Customer $customer
      * @return Customer
+     * @throws InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function cleanCustomer(Customer $customer)
     {
@@ -121,6 +127,7 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
     /**
      * @param BaseArray $parameters
      * @return BaseArray
+     * @throws InvalidArgumentException
      */
     protected function transformCircularValues(BaseArray $parameters)
     {
@@ -169,8 +176,9 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
 
     /**
      * @param BaseArray $history
-     * @param Customer $customer
      * @return BaseArray
+     * @throws InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     protected function getMergedCustomerParameters(BaseArray $history)
     {

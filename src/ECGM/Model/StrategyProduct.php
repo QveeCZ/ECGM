@@ -98,7 +98,8 @@ class StrategyProduct
         $str = "";
         $str .= "ID: " . $this->getId() . ", ";
         $str .= "Amount: " . $this->getAmount() . ", ";
-        $str .= "Price: " . $this->getPrice();
+        $str .= "Price: " . $this->getPrice() . ", ";
+        $str .= "Discounted price: " . $this->getDiscountedPrice();
         return $str;
     }
 

@@ -48,9 +48,26 @@ class TestMainInterface implements MainInterface
     public function setProductPPC(CurrentProduct $product)
     {
 
-        $ppc = $product->getPrice() - ($product->getPrice() * ($product->getDiscount() / 100));
+        $productRevenue = 0;
 
-        if ($product->getId()) {
+        switch ($product->getId()){
+            case 1:
+                $productRevenue = 420;
+                break;
+            case 2:
+                $productRevenue = 180;
+                break;
+            case 3:
+                $productRevenue = 150;
+                break;
+            case 4:
+                $productRevenue = 400;
+                break;
+        }
+
+        $ppc = ($product->getPrice() - ($product->getPrice() * ($product->getDiscount() / 100))) - ($product->getPrice() - $productRevenue);
+
+        if ($product->getId() == 2) {
             $ppc = $ppc - ($ppc * 0.30);
         }
 

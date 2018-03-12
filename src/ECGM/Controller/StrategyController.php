@@ -4,7 +4,6 @@ namespace ECGM\Controller;
 
 
 use ECGM\Enum\StrategyType;
-use ECGM\Enum\TreshholdType;
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Exceptions\LogicalException;
 use ECGM\Int\CustomerStrategyInterface;
@@ -23,8 +22,6 @@ class StrategyController implements StrategyInterface
     private $dealerStrategyController;
     private $strategyType;
     private $mainInterface;
-    private $strategyTreshhold;
-    private $treshholdType;
 
     /**
      * StrategyController constructor.
@@ -34,30 +31,16 @@ class StrategyController implements StrategyInterface
      * @throws InvalidArgumentException
      * @throws \ReflectionException
      */
-    public function __construct($coefficient, MainInterface $mainInterface, $treshhold = 2, $strategyType = StrategyType::CONSERVATIVE, $treshHoldType = TreshholdType::NUMERIC)
+    public function __construct($coefficient, MainInterface $mainInterface, $strategyType = StrategyType::CONSERVATIVE)
     {
         if (!StrategyType::isValidValue($strategyType)) {
             throw new InvalidArgumentException("Strategy type is $strategyType, but available values are " . json_encode(StrategyType::getConstants()) . ".");
-        }
-
-        if (!TreshholdType::isValidValue($treshHoldType)) {
-            throw new InvalidArgumentException("Treshhold type is $treshHoldType, but available values are " . json_encode(TreshholdType::getConstants()) . ".");
-        }
-
-        if ($treshHoldType == TreshholdType::PERCENTUAL && !((0 <= $treshhold) && ($treshhold <= 100))) {
-            throw new InvalidArgumentException("Percentual treshhold has to be between 0 and 100 but is $treshhold.");
-        }
-
-        if ($treshHoldType == TreshholdType::NUMERIC && $treshhold <= 0) {
-            throw new InvalidArgumentException("Numeric treshhold has to be larger than 0 but is $treshhold.");
         }
 
         $this->mainInterface = $mainInterface;
         $this->customerStrategyController = new CustomerStrategyController($coefficient);
         $this->dealerStrategyController = new DealerStrategyController();
         $this->strategyType = $strategyType;
-        $this->strategyTreshhold = $treshhold;
-        $this->treshholdType = $treshHoldType;
     }
 
     /**
@@ -171,19 +154,10 @@ class StrategyController implements StrategyInterface
     protected function getAggressiveStrategy(Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null)
     {
 
-        if ($this->treshholdType == TreshholdType::PERCENTUAL) {
-            $strategyTreshhold = round($currentProducts->size() * ($this->strategyTreshhold / 100));
-        } else {
-            $strategyTreshhold = $this->strategyTreshhold;
-        }
+        $initialCustomerStrategy = $this->customerStrategyController->getCustomerStrategy($customer, $currentProducts, $currentOrder);
 
-        $initialCustomerStrategy = array_slice($this->customerStrategyController->getCustomerStrategy($customer, $currentProducts, $currentOrder), 0, $strategyTreshhold, true);
+        $testProducts = new AssociativeBaseArray($currentProducts, CurrentProduct::class);
 
-        $testProducts = new AssociativeBaseArray(null, CurrentProduct::class);
-
-        foreach ($initialCustomerStrategy as $key => $value) {
-            $testProducts->add($currentProducts->getObj($key));
-        }
 
         $initialDealerStrategy = $this->dealerStrategyController->getDealerStrategy($testProducts);
 
@@ -192,17 +166,20 @@ class StrategyController implements StrategyInterface
         $initialDistance = $this->getVectorDiff($initialDealerStrategy, $initialCustomerStrategy);
 
 
-        $dealerStrategyKeys = array_keys($this->getPassiveIdealStrategy($initialDealerStrategy, $initialCustomerStrategy));
-        for ($i = 0; $i < count($dealerStrategyKeys) - 1; $i++) {
-            $testProducts->add($this->getMaxDiscountProduct($currentProducts->getObj($dealerStrategyKeys[$i]), $currentProducts->getObj($dealerStrategyKeys[$i + 1])));
+        $prevCustomerStrategy = $initialCustomerStrategy;
+        $customerStrategyKeys = array_keys($initialCustomerStrategy);
+        for ($i = 1; $i < count($customerStrategyKeys); $i++) {
+            $testProducts->add($this->getMaxDiscountProduct($currentProducts->getObj($customerStrategyKeys[$i]), $currentProducts->getObj($customerStrategyKeys[$i - 1])));
 
-            $customerStrategy = array_slice($this->customerStrategyController->getCustomerStrategy($customer, $testProducts, $currentOrder), 0, $strategyTreshhold, true);
+            $customerStrategy = $this->customerStrategyController->getCustomerStrategy($customer, $testProducts, $currentOrder);
 
             arsort($customerStrategy);
 
-            if ($initialDistance <= $this->getVectorDiff($initialDealerStrategy, $customerStrategy)) {
-                $testProducts->add($currentProducts->getObj($dealerStrategyKeys[$i]));
+            if ($initialDistance <= $this->getVectorDiff($initialDealerStrategy, $customerStrategy) || $this->getVectorDiff($prevCustomerStrategy, $customerStrategy) == 0) {
+                $testProducts->add($currentProducts->getObj($customerStrategyKeys[$i]));
             }
+
+            $prevCustomerStrategy = $customerStrategy;
         }
 
         $sortedProducts = new AssociativeBaseArray(null, CurrentProduct::class);
@@ -244,33 +221,47 @@ class StrategyController implements StrategyInterface
 
     /**
      * @param CurrentProduct $product
-     * @param CurrentProduct $nextProduct
+     * @param CurrentProduct $prevProduct
      * @return CurrentProduct
      * @throws InvalidArgumentException
      */
-    protected function getMaxDiscountProduct(CurrentProduct $product, CurrentProduct $nextProduct)
+    protected function getMaxDiscountProduct(CurrentProduct $product, CurrentProduct $prevProduct)
     {
-        $discGuess = 50;
-        $maxDisc = $discGuess;
+
+        if ($product->getId() == 2) {
+            return $product;
+        }
 
         $retProduct = new CurrentProduct($product->getId(), $product->getPrice(), $product->getExpiration(), $product->getPpc(), $product->getDiscount());
 
-        while ($discGuess > 1) {
-            $retProduct->setDiscount($maxDisc);
+        $prevGuess = 0;
+        $guess = 50;
+        $a = 1;
+        $b = 100;
+
+        while (abs($guess - $prevGuess) > 1) {
+            $prevGuess = $guess;
+
+            $retProduct->setDiscount($guess);
             $retProduct = $this->mainInterface->setProductPPC($retProduct);
-            $newPPC = $retProduct->getPpc();
 
-            $discGuess = $discGuess / 2;
-
-            if ($newPPC > $nextProduct->getPpc()) {
-                $maxDisc += $discGuess;
+            if ($retProduct->getPpc() > $prevProduct->getPpc()) {
+                $a = $guess;
             } else {
-                $maxDisc -= $discGuess;
+                $b = $guess;
             }
+
+            $guess = ($a + $b) / 2;
         }
 
-        $retProduct->setDiscount(floor($maxDisc));
+        $retProduct->setDiscount(floor($guess));
+
         $retProduct = $this->mainInterface->setProductPPC($retProduct);
+
+        if ($retProduct->getPpc() == $prevProduct->getPpc()) {
+            $retProduct->setDiscount($retProduct->getDiscount() - 1);
+            $retProduct = $this->mainInterface->setProductPPC($retProduct);
+        }
 
         return $retProduct;
     }

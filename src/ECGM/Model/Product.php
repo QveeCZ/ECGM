@@ -145,6 +145,7 @@ class Product implements KeyeableValue
         $str = "";
         $str .= "ID: " . $this->getId() . ", ";
         $str .= "Price: " . $this->getPrice() . ", ";
+        $str .= "Discounted price: " . $this->getDiscountedPrice() . ", ";
         $str .= "Expiration: " . $this->getExpiration() . ", ";
         $str .= "Discount: " . $this->getDiscount();
 

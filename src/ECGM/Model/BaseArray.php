@@ -294,6 +294,9 @@ class BaseArray implements \Iterator, \Countable
         return $this->size();
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         $str = "Size: " . $this->size() . "\n";

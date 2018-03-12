@@ -31,16 +31,6 @@ class DealerStrategyController
     }
 
     /**
-     * @param CurrentProduct $product
-     * @param integer $ppcSum
-     * @return float
-     */
-    protected function getStrategy(CurrentProduct $product, $ppcSum)
-    {
-        return round($product->getPpc() / $ppcSum, 3);
-    }
-
-    /**
      * @param BaseArray $products
      * @return int|mixed
      * @throws \ECGM\Exceptions\InvalidArgumentException
@@ -59,6 +49,16 @@ class DealerStrategyController
         }
 
         return $ppcSum;
+    }
+
+    /**
+     * @param CurrentProduct $product
+     * @param integer $ppcSum
+     * @return float
+     */
+    protected function getStrategy(CurrentProduct $product, $ppcSum)
+    {
+        return round($product->getPpc() / $ppcSum, 3);
     }
 
 }

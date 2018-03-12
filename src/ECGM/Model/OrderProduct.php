@@ -41,30 +41,6 @@ class OrderProduct extends StrategyProduct
     }
 
     /**
-     * @return Order
-     */
-    public function getOrder()
-    {
-        return $this->order;
-    }
-
-    /**
-     * @param Order $order
-     */
-    public function setOrder($order)
-    {
-        $this->order = $order;
-    }
-
-    /**
-     * @return int
-     */
-    public function getExpiration()
-    {
-        return $this->expiration;
-    }
-
-    /**
      * @return DateType
      */
     public function getExpirationDateType()
@@ -104,6 +80,29 @@ class OrderProduct extends StrategyProduct
         return $str;
     }
 
+    /**
+     * @return int
+     */
+    public function getExpiration()
+    {
+        return $this->expiration;
+    }
+
+    /**
+     * @return Order
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param Order $order
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
 
 
 }

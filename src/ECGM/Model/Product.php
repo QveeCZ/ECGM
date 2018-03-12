@@ -40,9 +40,10 @@ class Product implements KeyeableValue
      * @param mixed $id
      * @param float $price
      * @param integer $expiration
-     * @param integer $expirationDateType
+     * @param int $expirationDateType
      * @param float $discount
      * @throws InvalidArgumentException
+     * @throws \ReflectionException
      */
     public function __construct($id, $price, $expiration, $expirationDateType = DateType::DAYS, $discount = 0.0)
     {
@@ -54,8 +55,8 @@ class Product implements KeyeableValue
             throw  new InvalidArgumentException("Expiration cannot be lower than 0, but is " . $expiration . ".");
         }
 
-        if(!DateType::isValidValue($expirationDateType)){
-            throw new InvalidArgumentException("Expiration date type is $expirationDateType, but available values are " . json_encode(DateType::getConstants()) . "." );
+        if (!DateType::isValidValue($expirationDateType)) {
+            throw new InvalidArgumentException("Expiration date type is $expirationDateType, but available values are " . json_encode(DateType::getConstants()) . ".");
         }
 
         $this->id = $id;
@@ -84,11 +85,11 @@ class Product implements KeyeableValue
     }
 
     /**
-     * @return mixed
+     * @return float|int
      */
-    public function getId()
+    public function getDiscountedPrice()
     {
-        return $this->id;
+        return $this->getPrice() - ($this->getPrice() * ($this->getDiscount() / 100));
     }
 
     /**
@@ -108,19 +109,19 @@ class Product implements KeyeableValue
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getExpiration()
+    public function getDiscount()
     {
-        return $this->expiration;
+        return $this->discount;
     }
 
     /**
-     * @param int $expiration
+     * @param float $discount
      */
-    public function setExpiration($expiration)
+    public function setDiscount($discount)
     {
-        $this->expiration = $expiration;
+        $this->discount = $discount;
     }
 
     /**
@@ -137,22 +138,6 @@ class Product implements KeyeableValue
     public function setExpirationDateType(DateType $expirationDateType)
     {
         $this->expirationDateType = $expirationDateType;
-    }
-
-    /**
-     * @return float
-     */
-    public function getDiscount()
-    {
-        return $this->discount;
-    }
-
-    /**
-     * @param float $discount
-     */
-    public function setDiscount($discount)
-    {
-        $this->discount = $discount;
     }
 
     public function __toString()
@@ -176,6 +161,30 @@ class Product implements KeyeableValue
         $str .= "Complements: [" . implode(", ", $complements) . "]\n";
 
         return $str;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExpiration()
+    {
+        return $this->expiration;
+    }
+
+    /**
+     * @param int $expiration
+     */
+    public function setExpiration($expiration)
+    {
+        $this->expiration = $expiration;
     }
 
     /**

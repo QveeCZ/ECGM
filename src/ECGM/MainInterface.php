@@ -6,7 +6,7 @@ namespace ECGM;
 use ECGM\Model\BaseArray;
 use ECGM\Model\CurrentProduct;
 
-abstract class MainInterface
+interface MainInterface
 {
     /**
      * Return all customers, that should be included in strategy.
@@ -14,7 +14,7 @@ abstract class MainInterface
      *
      * @return BaseArray
      */
-    public abstract function getCustomers();
+    public function getCustomers();
 
     /**
      * Return all products that are currently in sale and should be included in strategy.
@@ -22,7 +22,7 @@ abstract class MainInterface
      *
      * @return BaseArray
      */
-    public abstract function getProducts();
+    public function getProducts();
 
     /**
      * Set desired Product Payoff Coefficient to product
@@ -30,5 +30,5 @@ abstract class MainInterface
      * @param CurrentProduct $product
      * @return CurrentProduct
      */
-    public abstract function setProductPPC(CurrentProduct $product);
+    public function setProductPPC(CurrentProduct $product);
 }

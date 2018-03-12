@@ -32,7 +32,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
      * @var boolean
      */
     protected $autoKAdjustment;
-    
+
     /*
      * @var GroupingValidationInterface
      */
@@ -73,7 +73,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
 
         $this->verbose = ($verbose) ? true : false;
         $this->autoKAdjustment = ($autoKAdjustment) ? true : false;
-        
+
         $this->groupingClass = new KmeansPlusPlus($dimension);
         $this->validationClass = new SilhouetteAnalysis();
         $this->distanceFunctions = new DistanceFunctions();
@@ -172,68 +172,6 @@ class CustomerGroupingController implements CustomerGroupingInterface
     }
 
     /**
-     * @param Customer $customer
-     * @param BaseArray $groups
-     * @return Customer
-     * @throws InvalidArgumentException
-     */
-    public function assignToGroup(Customer $customer, BaseArray $groups)
-    {
-        if($customer->getGroup()){
-            throw new InvalidArgumentException("Customer has already assigned group " . $customer->getGroup()->getId() . ".");
-        }
-
-        $groups = new BaseArray($groups, CustomerGroup::class);
-
-        $customer->setGroup($this->getBestGroup($customer, $groups));
-
-        return $customer;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDimension()
-    {
-        return $this->dimension;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getK()
-    {
-        return $this->k;
-    }
-
-    /**
-     * @param Customer $customer
-     * @param BaseArray $groups
-     * @return CustomerGroup|null
-     * @throws InvalidArgumentException
-     */
-    protected function getBestGroup(Customer $customer, BaseArray $groups)
-    {
-        $groups = new BaseArray($groups, CustomerGroup::class);
-
-        $dist = PHP_INT_MAX;
-        $bestGroup = null;
-
-        /**
-         * @var CustomerGroup $group
-         */
-        foreach ($groups as $group){
-            $currDist = $this->distanceFunctions->distancePrecise($customer->getParametersAsSimpleArray(), $group->getParametersAsSimpleArray());
-            if($dist > $currDist){
-                $dist = $currDist;
-                $bestGroup = $group;
-            }
-        }
-
-        return $bestGroup;
-    }
-
-    /**
      * @param $k
      * @param BaseArray $customers
      * @param BaseArray|null $groups
@@ -264,6 +202,68 @@ class CustomerGroupingController implements CustomerGroupingInterface
     {
         $groups = new BaseArray($groups, CustomerGroup::class);
         return $this->validationClass->getGroupingScore($groups);
+    }
+
+    /**
+     * @param Customer $customer
+     * @param BaseArray $groups
+     * @return Customer
+     * @throws InvalidArgumentException
+     */
+    public function assignToGroup(Customer $customer, BaseArray $groups)
+    {
+        if ($customer->getGroup()) {
+            throw new InvalidArgumentException("Customer has already assigned group " . $customer->getGroup()->getId() . ".");
+        }
+
+        $groups = new BaseArray($groups, CustomerGroup::class);
+
+        $customer->setGroup($this->getBestGroup($customer, $groups));
+
+        return $customer;
+    }
+
+    /**
+     * @param Customer $customer
+     * @param BaseArray $groups
+     * @return CustomerGroup|null
+     * @throws InvalidArgumentException
+     */
+    protected function getBestGroup(Customer $customer, BaseArray $groups)
+    {
+        $groups = new BaseArray($groups, CustomerGroup::class);
+
+        $dist = PHP_INT_MAX;
+        $bestGroup = null;
+
+        /**
+         * @var CustomerGroup $group
+         */
+        foreach ($groups as $group) {
+            $currDist = $this->distanceFunctions->distancePrecise($customer->getParametersAsSimpleArray(), $group->getParametersAsSimpleArray());
+            if ($dist > $currDist) {
+                $dist = $currDist;
+                $bestGroup = $group;
+            }
+        }
+
+        return $bestGroup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDimension()
+    {
+        return $this->dimension;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getK()
+    {
+        return $this->k;
     }
 
 }

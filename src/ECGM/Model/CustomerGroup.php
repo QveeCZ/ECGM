@@ -105,6 +105,18 @@ class CustomerGroup
         $this->populateSimpleParams();
     }
 
+    protected function populateSimpleParams()
+    {
+
+        $this->simpleParams = array();
+        /**
+         * @var Parameter $parameter
+         */
+        foreach ($this->parameters as $parameter) {
+            $this->simpleParams[] = $parameter->getValue();
+        }
+    }
+
     /**
      * @param $parameterId
      */
@@ -138,11 +150,6 @@ class CustomerGroup
         return $this->parameters;
     }
 
-    public function getParametersAsSimpleArray()
-    {
-        return $this->simpleParams;
-    }
-
     /**
      * @param BaseArray $parameters
      * @throws InvalidArgumentException
@@ -170,16 +177,9 @@ class CustomerGroup
         $this->customers->set($customers);
     }
 
-
-    protected function populateSimpleParams(){
-
-        $this->simpleParams = array();
-        /**
-         * @var Parameter $parameter
-         */
-        foreach ($this->parameters as $parameter) {
-            $this->simpleParams[] = $parameter->getValue();
-        }
+    public function getParametersAsSimpleArray()
+    {
+        return $this->simpleParams;
     }
 
 }

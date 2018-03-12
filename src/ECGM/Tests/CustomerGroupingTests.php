@@ -30,6 +30,11 @@ class CustomerGroupingTests extends MiscTests
         }
     }
 
+    /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ECGM\Exceptions\LogicalException
+     * @throws \ECGM\Exceptions\UndefinedException
+     */
     public function testComplete()
     {
         echo "\n\nComplete test\n\n";
@@ -44,6 +49,47 @@ class CustomerGroupingTests extends MiscTests
         echo self::$splitLine;
     }
 
+    /**
+     * @return BaseArray
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     */
+    protected function getCustomers()
+    {
+        $customers = new BaseArray(null, Customer::class);
+        for ($i = 0; $i < $this->customerNum; $i++) {
+            $customers->add($this->getCustomer());
+        }
+        return $customers;
+    }
+
+    /**
+     * @return Customer
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     */
+    protected function getCustomer()
+    {
+        $customer = new Customer(uniqid(), null);
+        $customer = $this->setParameters($customer);
+        return $customer;
+    }
+
+    /**
+     * @param Customer $customer
+     * @return Customer
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     */
+    protected function setParameters(Customer $customer)
+    {
+        for ($i = 0; $i < $this->parameterDimension; $i++) {
+            $customer->addParameter(new Parameter(uniqid(), rand($this->parameterRules[$i]['min'], $this->parameterRules[$i]['max'])));
+        }
+        return $customer;
+    }
+
+    /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
+     */
     public function testGrouping()
     {
         echo "\n\nGrouping test\n\n";
@@ -56,6 +102,11 @@ class CustomerGroupingTests extends MiscTests
         echo self::$splitLine;
     }
 
+    /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ECGM\Exceptions\LogicalException
+     * @throws \ECGM\Exceptions\UndefinedException
+     */
     public function testSilhouette()
     {
 
@@ -76,30 +127,6 @@ class CustomerGroupingTests extends MiscTests
 
         echo "Average silhouette width: " . $silhouette;
         echo self::$splitLine;
-    }
-
-    protected function getCustomers()
-    {
-        $customers = new BaseArray(null, Customer::class);
-        for ($i = 0; $i < $this->customerNum; $i++) {
-            $customers->add($this->getCustomer());
-        }
-        return $customers;
-    }
-
-    protected function getCustomer()
-    {
-        $customer = new Customer(uniqid(), null);
-        $customer = $this->setParameters($customer);
-        return $customer;
-    }
-
-    protected function setParameters(Customer $customer)
-    {
-        for ($i = 0; $i < $this->parameterDimension; $i++) {
-            $customer->addParameter(new Parameter(uniqid(), rand($this->parameterRules[$i]['min'], $this->parameterRules[$i]['max'])));
-        }
-        return $customer;
     }
 
 }

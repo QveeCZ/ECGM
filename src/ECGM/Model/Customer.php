@@ -56,6 +56,18 @@ class Customer
         $this->populateSimpleParams();
     }
 
+    protected function populateSimpleParams()
+    {
+
+        $this->simpleParams = array();
+        /**
+         * @var Parameter $parameter
+         */
+        foreach ($this->parameters as $parameter) {
+            $this->simpleParams[] = $parameter->getValue();
+        }
+    }
+
     /**
      * @param $parameterId
      */
@@ -141,6 +153,15 @@ class Customer
         $this->group = $group;
     }
 
+    public function __toString()
+    {
+        $str = "Customer " . $this->getId() . "\n";
+        $str .= "Parameters: " . implode(", ", $this->getParametersAsSimpleArray()) . "\n";
+        $groupId = (isset($this->group) && $this->group) ? $this->group->getId() : "none";
+        $str .= "Group: " . $groupId;
+        return $str;
+    }
+
     /**
      * @return int
      */
@@ -152,26 +173,5 @@ class Customer
     public function getParametersAsSimpleArray()
     {
         return $this->simpleParams;
-    }
-
-    public function __toString()
-    {
-        $str = "Customer " . $this->getId() . "\n";
-        $str .= "Parameters: " . implode(", ", $this->getParametersAsSimpleArray()) . "\n";
-        $groupId = (isset($this->group) && $this->group) ? $this->group->getId() : "none";
-        $str .= "Group: " . $groupId;
-        return $str;
-    }
-
-
-    protected function populateSimpleParams(){
-
-        $this->simpleParams = array();
-        /**
-         * @var Parameter $parameter
-         */
-        foreach ($this->parameters as $parameter) {
-            $this->simpleParams[] = $parameter->getValue();
-        }
     }
 }

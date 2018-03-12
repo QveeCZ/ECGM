@@ -16,6 +16,10 @@ class MiscTests extends TestCase
 
     public static $splitLine = "\n\n---------------------------------------------------------\n\n";
 
+    /**
+     * @throws InvalidArgumentException
+     * @throws \ReflectionException
+     */
     public function testInvalidValueExceptions()
     {
 

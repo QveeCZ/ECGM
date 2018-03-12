@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Model;
 
 
@@ -25,6 +26,15 @@ class ProductComplement
         $this->price = $product->getPrice();
     }
 
+    public function __toString()
+    {
+
+        $str = "";
+        $str .= "ID: " . $this->getId() . ", ";
+        $str .= "Price: " . $this->getPrice();
+        return $str;
+    }
+
     /**
      * @return mixed
      */
@@ -39,15 +49,6 @@ class ProductComplement
     public function getPrice()
     {
         return $this->price;
-    }
-
-    public function __toString()
-    {
-
-        $str = "";
-        $str .= "ID: " . $this->getId() . ", ";
-        $str .= "Price: " . $this->getPrice();
-        return $str;
     }
 
 }

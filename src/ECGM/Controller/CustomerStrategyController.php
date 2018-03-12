@@ -18,6 +18,7 @@ class CustomerStrategyController implements CustomerStrategyInterface
 {
 
     protected $coefficient;
+    protected $customerPurchasedProducts;
 
     /**
      * CustomerStrategyController constructor.
@@ -26,7 +27,7 @@ class CustomerStrategyController implements CustomerStrategyInterface
      */
     public function __construct($coefficient)
     {
-        if(!is_numeric($coefficient) || $coefficient < 1){
+        if (!is_numeric($coefficient) || $coefficient < 1) {
             throw  new InvalidArgumentException("Multiplication coefficient has to be numeric and > 1, bud is $coefficient.");
         }
 
@@ -96,44 +97,21 @@ class CustomerStrategyController implements CustomerStrategyInterface
     }
 
     /**
-     * @param CurrentProduct $currentProduct
-     * @param $productPurchasesList
-     * @return float|int
-     * @throws InvalidArgumentException
-     */
-    protected function getProductStrategy(CurrentProduct $currentProduct, $productPurchasesList)
-    {
-
-        $productPurchases = new BaseArray(null, StrategyProduct::class);
-        $productPurchases->setList($productPurchasesList);
-
-        $weights = $this->getOrderProductWeights($currentProduct, $productPurchases);
-        $strategy = 0;
-
-        /**
-         * @var StrategyProduct $productPurchase
-         */
-        foreach ($productPurchases as $productPurchase) {
-            $strategy += $productPurchase->getAmount() * $weights[$productPurchase->getOrderId()];
-        }
-
-
-        return $strategy;
-    }
-
-
-    /**
      * @param Customer $customer
      * @param BaseArray $currentProducts
      * @param array $currentOrderProducts
      * @return array
      * @throws InvalidArgumentException
      */
-    protected function getPurchasedProducts(Customer $customer, BaseArray $currentProducts, $currentOrderProducts = array())
+    public function getPurchasedProducts(Customer $customer, BaseArray $currentProducts, $currentOrderProducts = array())
     {
         $currentProducts = new BaseArray($currentProducts, CurrentProduct::class);
 
-        $customerPurchasedProducts = $this->getCustomerOrderProductAmounts($customer->getHistory(), $currentOrderProducts);
+        if (!$this->customerPurchasedProducts) {
+            $this->customerPurchasedProducts = $this->getCustomerOrderProductAmounts($customer->getHistory(), $currentOrderProducts);
+        }
+
+        $customerPurchasedProducts = $this->customerPurchasedProducts;
 
         $groupPurchasedProducts = $this->getCustomerGroupOrdersProductAmounts($this->getGroupHistory($customer->getGroup()), $currentOrderProducts);
 
@@ -285,30 +263,6 @@ class CustomerStrategyController implements CustomerStrategyInterface
         return $ret;
     }
 
-
-    /**
-     * @param CustomerGroup|null $group
-     * @return BaseArray
-     * @throws InvalidArgumentException
-     */
-    protected function getGroupHistory(CustomerGroup $group = null)
-    {
-        $history = new BaseArray(null, Order::class);
-
-        if (is_null($group)) {
-            return $history;
-        }
-
-        /**
-         * @var Customer $customer
-         */
-        foreach ($group->getCustomers() as $customer) {
-            $history->merge($customer->getHistory());
-        }
-
-        return $history;
-    }
-
     /**
      * @param BaseArray $history
      * @param array $currentOrderProducts
@@ -376,6 +330,55 @@ class CustomerStrategyController implements CustomerStrategyInterface
     }
 
     /**
+     * @param CustomerGroup|null $group
+     * @return BaseArray
+     * @throws InvalidArgumentException
+     */
+    protected function getGroupHistory(CustomerGroup $group = null)
+    {
+        $history = new BaseArray(null, Order::class);
+
+        if (is_null($group)) {
+            return $history;
+        }
+
+        /**
+         * @var Customer $customer
+         */
+        foreach ($group->getCustomers() as $customer) {
+            $history->merge($customer->getHistory());
+        }
+
+        return $history;
+    }
+
+    /**
+     * @param CurrentProduct $currentProduct
+     * @param $productPurchasesList
+     * @return float|int
+     * @throws InvalidArgumentException
+     */
+    public function getProductStrategy(CurrentProduct $currentProduct, $productPurchasesList)
+    {
+
+        $productPurchases = new BaseArray(null, StrategyProduct::class);
+        $productPurchases->setList($productPurchasesList);
+
+        $weights = $this->getOrderProductWeights($currentProduct, $productPurchases);
+        $strategy = 0;
+
+        /**
+         * @var StrategyProduct $productPurchase
+         */
+        foreach ($productPurchases as $productPurchase) {
+            $strategy += $productPurchase->getAmount() * $weights[$productPurchase->getOrderId()];
+        }
+
+
+        return $strategy;
+    }
+
+    /**
      * @param CurrentProduct $currProduct
      * @param BaseArray $products
      * @return array
@@ -390,7 +393,7 @@ class CustomerStrategyController implements CustomerStrategyInterface
 
         $weights = array();
 
-        $currProductNormalized = $currProduct->getPrice() / $norm;
+        $currProductNormalized = $currProduct->getDiscountedPrice() / $norm;
 
         /**
          * @var StrategyProduct $strategyProduct
@@ -401,7 +404,7 @@ class CustomerStrategyController implements CustomerStrategyInterface
                 throw new InvalidArgumentException("Current product id " . $currProduct->getId() . " is different from order product id " . $strategyProduct->getId() . ".");
             }
 
-            $orderProductNormalized = $strategyProduct->getPrice() / $norm;
+            $orderProductNormalized = $strategyProduct->getDiscountedPrice() / $norm;
 
             $weights[$strategyProduct->getOrderId()] = 1 / (1 + ($currProductNormalized - $orderProductNormalized));
 

@@ -23,6 +23,14 @@ class CustomerParametersTests extends TestCase
      */
     protected $cleanedCustomer;
 
+    /**
+     * CustomerParametersTests constructor.
+     * @param null $name
+     * @param array $data
+     * @param string $dataName
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
+     */
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         $this->customer = $this->prepareTestCustomer();
@@ -31,8 +39,10 @@ class CustomerParametersTests extends TestCase
         parent::__construct($name, $data, $dataName);
     }
 
+
     /**
      * @return Customer
+     * @throws \ECGM\Exceptions\InvalidArgumentException
      */
     protected function prepareTestCustomer()
     {
@@ -109,7 +119,9 @@ class CustomerParametersTests extends TestCase
 
     /**
      * @param Customer $customer
-     * @return Customer
+     * @return Customer|mixed
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
      */
     protected function getCleanedCustomer(Customer $customer)
     {
@@ -164,6 +176,9 @@ class CustomerParametersTests extends TestCase
         echo MiscTests::$splitLine;
     }
 
+    /**
+     *
+     */
     public function testCustomerParametersTransformation()
     {
 

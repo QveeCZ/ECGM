@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Model;
 
 
@@ -7,6 +8,32 @@ use ECGM\Int\KeyeableValue;
 
 class AssociativeBaseArray extends BaseArray
 {
+
+
+    /**
+     * AssociativeBaseArray constructor.
+     * @param AssociativeBaseArray|null $baseArray
+     * @param null $requiredBaseClass
+     * @throws InvalidArgumentException
+     */
+    public function __construct(AssociativeBaseArray $baseArray = null, $requiredBaseClass = null)
+    {
+
+        parent::__construct($baseArray, $requiredBaseClass);
+
+        if (is_null($baseArray)) {
+            $this->list = array();
+            $this->size = 0;
+            $this->requiredBaseClass = $requiredBaseClass;
+            $this->position = 0;
+        } else {
+            $this->list = $baseArray->list;
+            $this->size = $baseArray->size;
+            $this->requiredBaseClass = $baseArray->requiredBaseClass;
+            $this->position = $baseArray->position;
+        }
+    }
+
     /**
      * @param KeyeableValue $obj
      * @throws InvalidArgumentException
@@ -18,7 +45,19 @@ class AssociativeBaseArray extends BaseArray
         }
 
         $this->list[$obj->getKey()] = $obj;
-        $this->size++;
+        $this->size = count($this->list);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function isValid($obj)
+    {
+        if (!in_array(KeyeableValue::class, class_implements($obj))) {
+            return false;
+        }
+
+        return parent::isValid($obj);
     }
 
     /**
@@ -30,7 +69,7 @@ class AssociativeBaseArray extends BaseArray
         $this->isListValid($list);
         $this->list = array();
 
-        foreach ($list as $obj){
+        foreach ($list as $obj) {
             $this->list[$obj->getKey()] = $obj;
         }
         $this->size = count($this->list);
@@ -43,7 +82,7 @@ class AssociativeBaseArray extends BaseArray
     public function mergeList($list)
     {
         $this->isListValid($list);
-        foreach ($list as $obj){
+        foreach ($list as $obj) {
             $this->list[$obj->getKey()] = $obj;
         }
         $this->size = count($this->list);
@@ -67,7 +106,7 @@ class AssociativeBaseArray extends BaseArray
      */
     public function remove($key)
     {
-        if(array_key_exists($key, $this->list)){
+        if (array_key_exists($key, $this->list)) {
             unset($this->list[$key]);
             $this->size--;
         }
@@ -97,13 +136,83 @@ class AssociativeBaseArray extends BaseArray
     /**
      * @inheritdoc
      */
-    protected function isValid($obj)
+    public function rewind()
     {
-        if (!in_array(KeyeableValue::class, class_implements($obj))) {
-            return false;
-        }
+        reset($this->list);
+        $this->position = key($this->list);
+    }
 
-        return parent::isValid($obj);
+    /**
+     * @inheritdoc
+     */
+    public function current()
+    {
+        return $this->list[$this->position];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function key()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function next()
+    {
+        next($this->list);
+        $this->position = key($this->list);
+    }
+    //protected functions
+
+    /**
+     * @return bool
+     */
+    public function valid()
+    {
+        return isset($this->list[$this->position]);
+    }
+
+    /**
+     * @return int
+     */
+    public function nextKey()
+    {
+        next($this->list);
+        return key($this->list);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function count()
+    {
+        return $this->size();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $str = "Size: " . $this->size() . "\n";
+        $str .= "Values\n[\n";
+        $str .= implode(";\n", $this->array_map_assoc(function ($k, $v) {
+            return "$k => $v";
+        }, $this->list));
+        $str .= "\n]\n";
+        return $str;
+    }
+
+    protected function array_map_assoc($callback, $array)
+    {
+        $r = array();
+        foreach ($array as $key => $value)
+            $r[$key] = $callback($key, $value);
+        return $r;
     }
 
 

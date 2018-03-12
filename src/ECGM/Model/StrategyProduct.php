@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Model;
 
 
@@ -46,17 +47,17 @@ class StrategyProduct
     /**
      * @return mixed
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getOrderId()
     {
         return $this->orderId;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getDiscountedPrice()
+    {
+        return $this->getPrice() - ($this->getPrice() * ($this->getDiscount() / 100));
     }
 
     /**
@@ -73,22 +74,6 @@ class StrategyProduct
     public function setPrice($price)
     {
         $this->price = $price;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    /**
-     * @param int $amount
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
     }
 
     /**
@@ -115,6 +100,30 @@ class StrategyProduct
         $str .= "Amount: " . $this->getAmount() . ", ";
         $str .= "Price: " . $this->getPrice();
         return $str;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param int $amount
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
     }
 
 

@@ -100,10 +100,8 @@ class AggressiveStrategyController implements StrategyInterface
 
         arsort($initialDealerStrategy);
         arsort($initialCustomerStrategy);
-        $initialDistance = $this->getVectorDiff($initialDealerStrategy, $initialCustomerStrategy);
+        $currentStrategyDistance = $this->getVectorDiff($initialDealerStrategy, $initialCustomerStrategy);
 
-
-        $prevCustomerStrategy = $initialCustomerStrategy;
         $customerStrategyKeys = array_keys($initialCustomerStrategy);
         for ($i = 1; $i < count($customerStrategyKeys); $i++) {
             $testProducts->add($this->getMaxDiscountProduct($currentProducts->getObj($customerStrategyKeys[$i]), $currentProducts->getObj($customerStrategyKeys[$i - 1])));
@@ -112,11 +110,13 @@ class AggressiveStrategyController implements StrategyInterface
 
             arsort($customerStrategy);
 
-            if ($initialDistance <= $this->getVectorDiff($initialDealerStrategy, $customerStrategy) || $this->getVectorDiff($prevCustomerStrategy, $customerStrategy) == 0) {
-                $testProducts->add($currentProducts->getObj($customerStrategyKeys[$i]));
-            }
+            $proposedStrategyDistance = $this->getVectorDiff($initialDealerStrategy, $customerStrategy);
 
-            $prevCustomerStrategy = $customerStrategy;
+            if ($currentStrategyDistance <= $proposedStrategyDistance) {
+                $testProducts->add($currentProducts->getObj($customerStrategyKeys[$i]));
+            }else{
+                $currentStrategyDistance = $proposedStrategyDistance;
+            }
         }
 
         $sortedProducts = new AssociativeBaseArray(null, CurrentProduct::class);

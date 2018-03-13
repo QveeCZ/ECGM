@@ -45,8 +45,7 @@ class StrategyController implements StrategyInterface
         }
 
         $this->mainInterface = $mainInterface;
-        $this->customerStrategyController = new CustomerStrategyController($coefficient);
-        $this->dealerStrategyController = new DealerStrategyController();
+        $this->strategyType = $strategyType;
         $this->passiveStrategyController = new PassiveStrategyController($coefficient, $mainInterface);
         $this->conservativeStrategyController = new ConservativeStrategyController($coefficient, $mainInterface);
         $this->aggressiveStrategyController = new AggressiveStrategyController($coefficient, $mainInterface);

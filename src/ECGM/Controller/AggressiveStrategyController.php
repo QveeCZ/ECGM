@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Controller;
 
 use ECGM\Exceptions\InvalidArgumentException;
@@ -19,6 +20,20 @@ class AggressiveStrategyController implements StrategyInterface
     private $customerStrategyController;
     private $dealerStrategyController;
     private $mainInterface;
+
+    /**
+     * StrategyController constructor.
+     * @param $coefficient
+     * @param MainInterface $mainInterface
+     * @throws InvalidArgumentException
+     */
+    public function __construct($coefficient, MainInterface $mainInterface)
+    {
+
+        $this->mainInterface = $mainInterface;
+        $this->customerStrategyController = new CustomerStrategyController($coefficient);
+        $this->dealerStrategyController = new DealerStrategyController();
+    }
 
     /**
      * @return CustomerStrategyController
@@ -53,20 +68,6 @@ class AggressiveStrategyController implements StrategyInterface
     }
 
     /**
-     * StrategyController constructor.
-     * @param $coefficient
-     * @param MainInterface $mainInterface
-     * @throws InvalidArgumentException
-     */
-    public function __construct($coefficient, MainInterface $mainInterface)
-    {
-
-        $this->mainInterface = $mainInterface;
-        $this->customerStrategyController = new CustomerStrategyController($coefficient);
-        $this->dealerStrategyController = new DealerStrategyController();
-    }
-
-    /**
      * @param Customer $customer
      * @param AssociativeBaseArray $currentProducts
      * @param Order|null $currentOrder
@@ -76,7 +77,7 @@ class AggressiveStrategyController implements StrategyInterface
      */
     public function getIdealStrategy(Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null)
     {
-        return $this->getAggressiveStrategy($customer,  $currentProducts,  $currentOrder);
+        return $this->getAggressiveStrategy($customer, $currentProducts, $currentOrder);
     }
 
     /**

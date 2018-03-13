@@ -31,6 +31,28 @@ class StrategyController implements StrategyInterface
     private $mainInterface;
 
     /**
+     * StrategyController constructor.
+     * @param $coefficient
+     * @param MainInterface $mainInterface
+     * @param int $strategyType
+     * @throws InvalidArgumentException
+     * @throws \ReflectionException
+     */
+    public function __construct($coefficient, MainInterface $mainInterface, $strategyType = StrategyType::CONSERVATIVE)
+    {
+        if (!StrategyType::isValidValue($strategyType)) {
+            throw new InvalidArgumentException("Strategy type is $strategyType, but available values are " . json_encode(StrategyType::getConstants()) . ".");
+        }
+
+        $this->mainInterface = $mainInterface;
+        $this->customerStrategyController = new CustomerStrategyController($coefficient);
+        $this->dealerStrategyController = new DealerStrategyController();
+        $this->passiveStrategyController = new PassiveStrategyController($coefficient, $mainInterface);
+        $this->conservativeStrategyController = new ConservativeStrategyController($coefficient, $mainInterface);
+        $this->aggressiveStrategyController = new AggressiveStrategyController($coefficient, $mainInterface);
+    }
+
+    /**
      * @param StrategyInterface $passiveStrategyController
      */
     public function setPassiveStrategyController(StrategyInterface $passiveStrategyController)
@@ -53,30 +75,6 @@ class StrategyController implements StrategyInterface
     {
         $this->aggressiveStrategyController = $aggressiveStrategyController;
     }
-
-
-    /**
-     * StrategyController constructor.
-     * @param $coefficient
-     * @param MainInterface $mainInterface
-     * @param int $strategyType
-     * @throws InvalidArgumentException
-     * @throws \ReflectionException
-     */
-    public function __construct($coefficient, MainInterface $mainInterface, $strategyType = StrategyType::CONSERVATIVE)
-    {
-        if (!StrategyType::isValidValue($strategyType)) {
-            throw new InvalidArgumentException("Strategy type is $strategyType, but available values are " . json_encode(StrategyType::getConstants()) . ".");
-        }
-
-        $this->mainInterface = $mainInterface;
-        $this->customerStrategyController = new CustomerStrategyController($coefficient);
-        $this->dealerStrategyController = new DealerStrategyController();
-        $this->passiveStrategyController = new PassiveStrategyController($coefficient, $mainInterface);
-        $this->conservativeStrategyController = new ConservativeStrategyController($coefficient, $mainInterface);
-        $this->aggressiveStrategyController = new AggressiveStrategyController($coefficient, $mainInterface);
-    }
-
 
     /**
      * @param Customer $customer

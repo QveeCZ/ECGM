@@ -1,4 +1,5 @@
 <?php
+
 namespace ECGM\Controller;
 
 use ECGM\Exceptions\InvalidArgumentException;
@@ -17,6 +18,20 @@ class ConservativeStrategyController implements StrategyInterface
     private $customerStrategyController;
     private $dealerStrategyController;
     private $mainInterface;
+
+    /**
+     * StrategyController constructor.
+     * @param $coefficient
+     * @param MainInterface $mainInterface
+     * @throws InvalidArgumentException
+     */
+    public function __construct($coefficient, MainInterface $mainInterface)
+    {
+
+        $this->mainInterface = $mainInterface;
+        $this->customerStrategyController = new CustomerStrategyController($coefficient);
+        $this->dealerStrategyController = new DealerStrategyController();
+    }
 
     /**
      * @return CustomerStrategyController
@@ -48,20 +63,6 @@ class ConservativeStrategyController implements StrategyInterface
     public function setDealerStrategyController(DealerStrategyInterface $dealerStrategyController)
     {
         $this->dealerStrategyController = $dealerStrategyController;
-    }
-
-    /**
-     * StrategyController constructor.
-     * @param $coefficient
-     * @param MainInterface $mainInterface
-     * @throws InvalidArgumentException
-     */
-    public function __construct($coefficient, MainInterface $mainInterface)
-    {
-
-        $this->mainInterface = $mainInterface;
-        $this->customerStrategyController = new CustomerStrategyController($coefficient);
-        $this->dealerStrategyController = new DealerStrategyController();
     }
 
     /**

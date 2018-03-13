@@ -62,40 +62,6 @@ class StrategyTests extends MiscTests
     }
 
     /**
-     * @throws \ECGM\Exceptions\InvalidArgumentException
-     * @throws \ECGM\Exceptions\LogicalException
-     * @throws \ReflectionException
-     */
-    public function testAggressiveStrategy()
-    {
-
-        echo "Aggressive strategy test\n\n";
-
-        $currentProducts = $this->mainInterface->getProducts();
-
-        $strategyController = new StrategyController(2, $this->mainInterface, StrategyType::AGGRESSIVE);
-
-        $strategy = $strategyController->getIdealStrategy($this->getCustomer(), $currentProducts, null);
-
-        $expected = array(1, 2, 3, 4);
-        $this->assertEquals(count($expected), $strategy->size());
-
-        $i = 0;
-        /**
-         * @var CurrentProduct $value
-         */
-        foreach ($strategy as $value) {
-            echo $value->getId();
-            $this->assertEquals($expected[$i], $value->getId());
-            echo " - OK\n";
-            $i++;
-        }
-
-        echo self::$splitLine;
-
-    }
-
-    /**
      * @return Customer
      * @throws \ECGM\Exceptions\InvalidArgumentException
      */
@@ -292,6 +258,40 @@ class StrategyTests extends MiscTests
         $group->addCustomer($customer);
 
         return $group;
+    }
+
+    /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ECGM\Exceptions\LogicalException
+     * @throws \ReflectionException
+     */
+    public function testAggressiveStrategy()
+    {
+
+        echo "Aggressive strategy test\n\n";
+
+        $currentProducts = $this->mainInterface->getProducts();
+
+        $strategyController = new StrategyController(2, $this->mainInterface, StrategyType::AGGRESSIVE);
+
+        $strategy = $strategyController->getIdealStrategy($this->getCustomer(), $currentProducts, null);
+
+        $expected = array(1, 2, 3, 4);
+        $this->assertEquals(count($expected), $strategy->size());
+
+        $i = 0;
+        /**
+         * @var CurrentProduct $value
+         */
+        foreach ($strategy as $value) {
+            echo $value->getId();
+            $this->assertEquals($expected[$i], $value->getId());
+            echo " - OK\n";
+            $i++;
+        }
+
+        echo self::$splitLine;
+
     }
 
     /**

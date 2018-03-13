@@ -85,46 +85,6 @@ class Product implements KeyeableValue
     }
 
     /**
-     * @return float|int
-     */
-    public function getDiscountedPrice()
-    {
-        return $this->getPrice() - ($this->getPrice() * ($this->getDiscount() / 100));
-    }
-
-    /**
-     * @return float
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * @param float $price
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-    }
-
-    /**
-     * @return float
-     */
-    public function getDiscount()
-    {
-        return $this->discount;
-    }
-
-    /**
-     * @param float $discount
-     */
-    public function setDiscount($discount)
-    {
-        $this->discount = $discount;
-    }
-
-    /**
      * @return DateType
      */
     public function getExpirationDateType()
@@ -170,6 +130,46 @@ class Product implements KeyeableValue
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getDiscountedPrice()
+    {
+        return $this->getPrice() - ($this->getPrice() * ($this->getDiscount() / 100));
+    }
+
+    /**
+     * @return float
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @param float $discount
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
     }
 
     /**

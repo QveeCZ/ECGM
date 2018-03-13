@@ -50,7 +50,7 @@ class TestMainInterface implements MainInterface
 
         $productRevenue = 0;
 
-        switch ($product->getId()){
+        switch ($product->getId()) {
             case 1:
                 $productRevenue = 420;
                 break;

@@ -194,6 +194,7 @@ class ConservativeStrategyController implements StrategyInterface
             $prevGuess = $guess;
 
             $retProduct->setDiscount($guess);
+            $retProduct = $this->mainInterface->setProductPPC($retProduct);
             $testProducts->add($retProduct);
 
             $customerStrategy = $this->customerStrategyController->getCustomerStrategy($customer, $testProducts, $currentOrder);

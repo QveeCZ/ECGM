@@ -209,6 +209,7 @@ class ConservativeStrategyController implements StrategyInterface
         }
 
         $retProduct->setDiscount(ceil($guess));
+        $retProduct = $this->mainInterface->setProductPPC($retProduct);
 
         return $retProduct;
     }

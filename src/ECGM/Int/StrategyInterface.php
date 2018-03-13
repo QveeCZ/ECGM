@@ -14,7 +14,7 @@ interface StrategyInterface
      * @param Customer $customer
      * @param AssociativeBaseArray $currentProducts
      * @param Order|null $currentOrder
-     * @return array|bool
+     * @return AssociativeBaseArray
      * @throws InvalidArgumentException
      */
     public function getIdealStrategy(Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null);

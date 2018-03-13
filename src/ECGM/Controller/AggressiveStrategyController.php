@@ -165,10 +165,6 @@ class AggressiveStrategyController implements StrategyInterface
     protected function getMaxDiscountProduct(CurrentProduct $product, CurrentProduct $prevProduct)
     {
 
-        if ($product->getId() == 2) {
-            return $product;
-        }
-
         $retProduct = new CurrentProduct($product->getId(), $product->getPrice(), $product->getExpiration(), $product->getPpc(), $product->getDiscount());
 
         $prevGuess = 0;

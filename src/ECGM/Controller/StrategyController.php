@@ -7,6 +7,7 @@ use ECGM\Enum\StrategyType;
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Exceptions\LogicalException;
 use ECGM\Int\StrategyInterface;
+use ECGM\Int\StrategyTypeInterface;
 use ECGM\MainInterface;
 use ECGM\Model\AssociativeBaseArray;
 use ECGM\Model\Customer;
@@ -16,19 +17,18 @@ class StrategyController implements StrategyInterface
 {
 
     /**
-     * @var StrategyInterface $passiveStrategyController
+     * @var StrategyTypeInterface $passiveStrategyController
      */
-    private $passiveStrategyController;
+    protected $passiveStrategyController;
     /**
-     * @var StrategyInterface $conservativeStrategyController
+     * @var StrategyTypeInterface $conservativeStrategyController
      */
-    private $conservativeStrategyController;
+    protected $conservativeStrategyController;
     /**
-     * @var StrategyInterface $aggressiveStrategyController
+     * @var StrategyTypeInterface $aggressiveStrategyController
      */
-    private $aggressiveStrategyController;
-    private $strategyType;
-    private $mainInterface;
+    protected $aggressiveStrategyController;
+    protected $mainInterface;
 
     /**
      * StrategyController constructor.
@@ -38,39 +38,35 @@ class StrategyController implements StrategyInterface
      * @throws InvalidArgumentException
      * @throws \ReflectionException
      */
-    public function __construct($coefficient, MainInterface $mainInterface, $strategyType = StrategyType::CONSERVATIVE)
+    public function __construct($coefficient, MainInterface $mainInterface)
     {
-        if (!StrategyType::isValidValue($strategyType)) {
-            throw new InvalidArgumentException("Strategy type is $strategyType, but available values are " . json_encode(StrategyType::getConstants()) . ".");
-        }
 
         $this->mainInterface = $mainInterface;
-        $this->strategyType = $strategyType;
-        $this->passiveStrategyController = new PassiveStrategyController($coefficient, $mainInterface);
-        $this->conservativeStrategyController = new ConservativeStrategyController($coefficient, $mainInterface);
-        $this->aggressiveStrategyController = new AggressiveStrategyController($coefficient, $mainInterface);
+        $this->passiveStrategyController = new PassiveStrategyTypeController($coefficient, $mainInterface);
+        $this->conservativeStrategyController = new ConservativeStrategyTypeController($coefficient, $mainInterface);
+        $this->aggressiveStrategyController = new AggressiveStrategyTypeController($coefficient, $mainInterface);
     }
 
     /**
-     * @param StrategyInterface $passiveStrategyController
+     * @param StrategyTypeInterface $passiveStrategyController
      */
-    public function setPassiveStrategyController(StrategyInterface $passiveStrategyController)
+    public function setPassiveStrategyController(StrategyTypeInterface $passiveStrategyController)
     {
         $this->passiveStrategyController = $passiveStrategyController;
     }
 
     /**
-     * @param StrategyInterface $conservativeStrategyController
+     * @param StrategyTypeInterface $conservativeStrategyController
      */
-    public function setConservativeStrategyController(StrategyInterface $conservativeStrategyController)
+    public function setConservativeStrategyController(StrategyTypeInterface $conservativeStrategyController)
     {
         $this->conservativeStrategyController = $conservativeStrategyController;
     }
 
     /**
-     * @param StrategyInterface $aggressiveStrategyController
+     * @param StrategyTypeInterface $aggressiveStrategyController
      */
-    public function setAggressiveStrategyController(StrategyInterface $aggressiveStrategyController)
+    public function setAggressiveStrategyController(StrategyTypeInterface $aggressiveStrategyController)
     {
         $this->aggressiveStrategyController = $aggressiveStrategyController;
     }
@@ -79,17 +75,23 @@ class StrategyController implements StrategyInterface
      * @param Customer $customer
      * @param AssociativeBaseArray $currentProducts
      * @param Order|null $currentOrder
+     * @param int $strategyType
      * @return AssociativeBaseArray
+     * @throws InvalidArgumentException
      * @throws LogicalException
+     * @throws \ReflectionException
      */
-    public function getIdealStrategy(Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null)
+    public function getStrategy(Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null, $strategyType = StrategyType::CONSERVATIVE)
     {
+        if (!StrategyType::isValidValue($strategyType)) {
+            throw new InvalidArgumentException("Strategy type is $strategyType, but available values are " . json_encode(StrategyType::getConstants()) . ".");
+        }
 
         if ($currentProducts->size() < 2) {
             return $currentProducts;
         }
 
-        switch ($this->strategyType) {
+        switch ($strategyType) {
             case StrategyType::PASSIVE:
                 return $this->passiveStrategyController->getIdealStrategy($customer, $currentProducts, $currentOrder);
             case StrategyType::CONSERVATIVE:
@@ -97,7 +99,7 @@ class StrategyController implements StrategyInterface
             case StrategyType::AGGRESSIVE:
                 return $this->aggressiveStrategyController->getIdealStrategy($customer, $currentProducts, $currentOrder);
             default:
-                throw new LogicalException("Invalid strategy type " . $this->strategyType . ".");
+                throw new LogicalException("Invalid strategy type " . $strategyType . ".");
         }
     }
 }

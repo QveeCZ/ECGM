@@ -5,6 +5,7 @@ namespace ECGM\Controller;
 
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Int\CustomerParametersCleaningInterface;
+use ECGM\Int\CustomerParametersMergeInterface;
 use ECGM\Model\BaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
@@ -13,6 +14,34 @@ use ECGM\Model\Parameter;
 
 class CustomerParametersCleaningController implements CustomerParametersCleaningInterface
 {
+    /**
+     * @var CustomerParametersMergeInterface
+     */
+    protected $customerParametersMergeController;
+
+    /**
+     * CustomerParametersCleaningController constructor.
+     */
+    public function __construct()
+    {
+        $this->customerParametersMergeController = new CustomerParametersMergeController();
+    }
+
+    /**
+     * @return CustomerParametersMergeInterface
+     */
+    public function getCustomerParametersMergeController()
+    {
+        return $this->customerParametersMergeController;
+    }
+
+    /**
+     * @param CustomerParametersMergeInterface $customerParametersMergeController
+     */
+    public function setCustomerParametersMergeController(CustomerParametersMergeInterface $customerParametersMergeController)
+    {
+        $this->customerParametersMergeController = $customerParametersMergeController;
+    }
 
     /**
      * @param BaseArray $customerGroups
@@ -182,8 +211,7 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
      */
     protected function getMergedCustomerParameters(BaseArray $history)
     {
-        $parameterMergeConstroller = new CustomerParametersMergeController();
-        return $parameterMergeConstroller->mergeCustomerHistory($history);
+        return $this->customerParametersMergeController->mergeCustomerHistory($history);
     }
 
 }

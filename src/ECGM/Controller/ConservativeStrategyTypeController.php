@@ -6,20 +6,28 @@ use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Exceptions\LogicalException;
 use ECGM\Int\CustomerStrategyInterface;
 use ECGM\Int\DealerStrategyInterface;
-use ECGM\Int\StrategyInterface;
+use ECGM\Int\StrategyTypeInterface;
 use ECGM\MainInterface;
 use ECGM\Model\AssociativeBaseArray;
 use ECGM\Model\CurrentProduct;
 use ECGM\Model\Customer;
 use ECGM\Model\Order;
 
-class ConservativeStrategyController implements StrategyInterface
+class ConservativeStrategyTypeController implements StrategyTypeInterface
 {
 
-
-    private $customerStrategyController;
-    private $dealerStrategyController;
-    private $mainInterface;
+    /**
+     * @var CustomerStrategyInterface
+     */
+    protected $customerStrategyController;
+    /**
+     * @var DealerStrategyInterface
+     */
+    protected $dealerStrategyController;
+    /**
+     * @var MainInterface
+     */
+    protected $mainInterface;
 
     /**
      * StrategyController constructor.
@@ -36,7 +44,7 @@ class ConservativeStrategyController implements StrategyInterface
     }
 
     /**
-     * @return CustomerStrategyController
+     * @return CustomerStrategyInterface
      */
     public function getCustomerStrategyController()
     {
@@ -52,7 +60,7 @@ class ConservativeStrategyController implements StrategyInterface
     }
 
     /**
-     * @return DealerStrategyController
+     * @return DealerStrategyInterface
      */
     public function getDealerStrategyController()
     {

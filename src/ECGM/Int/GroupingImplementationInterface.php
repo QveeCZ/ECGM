@@ -25,11 +25,6 @@ interface GroupingImplementationInterface
     public function setCustomers(BaseArray $customers);
 
     /**
-     * @return int
-     */
-    public function getDimension();
-
-    /**
      * @param integer $nbGroups
      * @return BaseArray|mixed|null
      */

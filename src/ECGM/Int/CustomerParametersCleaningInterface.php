@@ -16,6 +16,18 @@ use ECGM\Model\CustomerGroup;
 interface CustomerParametersCleaningInterface
 {
 
+
+
+    /**
+     * @return CustomerParametersMergeInterface
+     */
+    public function getCustomerParametersMergeController();
+
+    /**
+     * @param CustomerParametersMergeInterface $customerParametersMergeController
+     */
+    public function setCustomerParametersMergeController(CustomerParametersMergeInterface $customerParametersMergeController);
+
     /**
      * @param BaseArray $customerGroups
      * @return BaseArray

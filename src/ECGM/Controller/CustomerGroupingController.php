@@ -137,7 +137,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
     /**
      * @param BaseArray $customers
      * @param BaseArray|null $initialGroups
-     * @return BaseArray|mixed|null
+     * @return BaseArray
      * @throws InvalidArgumentException
      * @throws \ECGM\Exceptions\LogicalException
      */

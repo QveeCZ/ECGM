@@ -5,20 +5,27 @@ namespace ECGM\Controller;
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Int\CustomerStrategyInterface;
 use ECGM\Int\DealerStrategyInterface;
-use ECGM\Int\StrategyInterface;
+use ECGM\Int\StrategyTypeInterface;
 use ECGM\MainInterface;
 use ECGM\Model\AssociativeBaseArray;
 use ECGM\Model\CurrentProduct;
 use ECGM\Model\Customer;
 use ECGM\Model\Order;
 
-class PassiveStrategyController implements StrategyInterface
+class PassiveStrategyTypeController implements StrategyTypeInterface
 {
-
-
-    private $customerStrategyController;
-    private $dealerStrategyController;
-    private $mainInterface;
+    /**
+     * @var CustomerStrategyInterface
+     */
+    protected $customerStrategyController;
+    /**
+     * @var DealerStrategyInterface
+     */
+    protected $dealerStrategyController;
+    /**
+     * @var MainInterface
+     */
+    protected $mainInterface;
 
     /**
      * StrategyController constructor.
@@ -35,7 +42,7 @@ class PassiveStrategyController implements StrategyInterface
     }
 
     /**
-     * @return CustomerStrategyController
+     * @return CustomerStrategyInterface
      */
     public function getCustomerStrategyController()
     {
@@ -51,7 +58,7 @@ class PassiveStrategyController implements StrategyInterface
     }
 
     /**
-     * @return DealerStrategyController
+     * @return DealerStrategyInterface
      */
     public function getDealerStrategyController()
     {

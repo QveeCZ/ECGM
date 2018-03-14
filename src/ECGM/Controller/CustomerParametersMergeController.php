@@ -10,6 +10,10 @@ use ECGM\Model\Order;
 use ECGM\Model\Parameter;
 use ECGM\Util\MathFunctions;
 
+/**
+ * Class CustomerParametersMergeController
+ * @package ECGM\Controller
+ */
 class CustomerParametersMergeController implements CustomerParametersMergeInterface
 {
 

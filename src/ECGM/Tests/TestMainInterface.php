@@ -3,11 +3,18 @@
 namespace ECGM\Tests;
 
 
+use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\MainInterface;
 use ECGM\Model\AssociativeBaseArray;
 use ECGM\Model\BaseArray;
 use ECGM\Model\CurrentProduct;
+use ECGM\Model\Customer;
+use ECGM\Model\CustomerGroup;
 
+/**
+ * Class TestMainInterface
+ * @package ECGM\Tests
+ */
 class TestMainInterface implements MainInterface
 {
 
@@ -24,7 +31,8 @@ class TestMainInterface implements MainInterface
 
     /**
      * @return AssociativeBaseArray
-     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws InvalidArgumentException
+     * @throws \ReflectionException
      */
     public function getProducts()
     {
@@ -74,5 +82,29 @@ class TestMainInterface implements MainInterface
         $product->setPpc($ppc);
 
         return $product;
+    }
+
+    /**
+     * Return all customers, that have no group and should be included in strategy.
+     * Has to return BaseArray with ECGM\Model\Customer requiredClass
+     *
+     * @return BaseArray
+     * @throws InvalidArgumentException
+     */
+    public function getUngroupedCustomers()
+    {
+        return new BaseArray(null, Customer::class);
+    }
+
+    /**
+     * Return all customer groups, that should be included in strategy.
+     * Has to return BaseArray with ECGM\Model\CustomerGroup requiredClass
+     *
+     * @return BaseArray
+     * @throws InvalidArgumentException
+     */
+    public function getCustomerGroups()
+    {
+        return new BaseArray(null, CustomerGroup::class);
     }
 }

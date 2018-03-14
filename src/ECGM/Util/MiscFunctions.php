@@ -5,6 +5,10 @@ namespace ECGM\Util;
 
 use ECGM\Exceptions\InvalidArgumentException;
 
+/**
+ * Class MiscFunctions
+ * @package ECGM\Util
+ */
 class MiscFunctions
 {
     /**

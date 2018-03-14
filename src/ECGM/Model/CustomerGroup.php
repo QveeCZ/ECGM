@@ -4,6 +4,10 @@ namespace ECGM\Model;
 
 use ECGM\Exceptions\InvalidArgumentException;
 
+/**
+ * Class CustomerGroup
+ * @package ECGM\Model
+ */
 class CustomerGroup
 {
     /**

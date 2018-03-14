@@ -6,19 +6,24 @@ namespace ECGM\Model;
 use ECGM\Enum\DateType;
 use ECGM\Exceptions\InvalidArgumentException;
 
+/**
+ * Class CurrentProduct
+ * @package ECGM\Model
+ */
 class CurrentProduct extends Product
 {
 
     protected $ppc;
 
     /**
-     * OrderProduct constructor.
+     * CurrentProduct constructor.
      * @param $id
-     * @param float $price
-     * @param int $expiration
-     * @param int $ppc
+     * @param $price
+     * @param $expiration
+     * @param $ppc
      * @param float $discount
      * @throws InvalidArgumentException
+     * @throws \ReflectionException
      */
     public function __construct($id, $price, $expiration, $ppc, $discount = 0.0)
     {

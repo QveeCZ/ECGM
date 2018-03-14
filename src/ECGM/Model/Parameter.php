@@ -5,6 +5,10 @@ namespace ECGM\Model;
 
 use ECGM\Exceptions\InvalidArgumentException;
 
+/**
+ * Class Parameter
+ * @package ECGM\Model
+ */
 class Parameter
 {
     /**
@@ -24,7 +28,7 @@ class Parameter
      */
     protected $isCircular;
     /**
-     * @var integer
+     * @var int
      */
     protected $maxValue;
 
@@ -33,7 +37,7 @@ class Parameter
      * @param mixed $id
      * @param float $value
      * @param boolean $isCircular eg hours in day or months in year
-     * @param integer $maxValue is parameter is circular maxValue must be set
+     * @param int $maxValue is parameter is circular maxValue must be set
      * @throws InvalidArgumentException
      */
     public function __construct($id, $value, $isCircular = false, $maxValue = 0)

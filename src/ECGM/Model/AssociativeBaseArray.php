@@ -6,6 +6,10 @@ namespace ECGM\Model;
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Int\KeyeableValue;
 
+/**
+ * Class AssociativeBaseArray
+ * @package ECGM\Model
+ */
 class AssociativeBaseArray extends BaseArray
 {
 

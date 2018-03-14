@@ -2,7 +2,10 @@
 
 namespace ECGM\Model;
 
-
+/**
+ * Class ProductComplement
+ * @package ECGM\Model
+ */
 class ProductComplement
 {
 

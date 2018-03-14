@@ -10,6 +10,10 @@ use ECGM\Model\Parameter;
 use ECGM\Util\KmeansPlusPlus;
 use ECGM\Util\SilhouetteAnalysis;
 
+/**
+ * Class CustomerGroupingTests
+ * @package ECGM\Tests
+ */
 class CustomerGroupingTests extends MiscTests
 {
 

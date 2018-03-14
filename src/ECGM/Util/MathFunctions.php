@@ -4,6 +4,10 @@ namespace ECGM\Util;
 
 use ECGM\Exceptions\UndefinedException;
 
+/**
+ * Class MathFunctions
+ * @package ECGM\Util
+ */
 class MathFunctions
 {
     /**

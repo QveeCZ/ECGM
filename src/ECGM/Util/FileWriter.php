@@ -5,6 +5,10 @@ namespace ECGM\Util;
 
 use ECGM\Exceptions\InvalidArgumentException;
 
+/**
+ * Class FileWriter
+ * @package ECGM\Util
+ */
 class FileWriter
 {
     /**
@@ -19,6 +23,7 @@ class FileWriter
     /**
      * FileWriter constructor.
      * @param string $fileName
+     * @param string|null $dir
      */
     public function __construct($fileName, $dir = null)
     {

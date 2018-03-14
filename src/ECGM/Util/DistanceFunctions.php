@@ -6,6 +6,10 @@ namespace ECGM\Util;
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Int\DistanceFuncInterface;
 
+/**
+ * Class DistanceFunctions
+ * @package ECGM\Util
+ */
 class DistanceFunctions implements DistanceFuncInterface
 {
     /**

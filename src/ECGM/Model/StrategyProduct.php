@@ -2,7 +2,10 @@
 
 namespace ECGM\Model;
 
-
+/**
+ * Class StrategyProduct
+ * @package ECGM\Model
+ */
 class StrategyProduct
 {
 
@@ -16,7 +19,7 @@ class StrategyProduct
      */
     protected $price;
     /**
-     * @var integer
+     * @var int
      */
     protected $amount;
     /**
@@ -31,11 +34,12 @@ class StrategyProduct
     /**
      * StrategyProduct constructor.
      * @param mixed $id
+     * @param mixed $orderId
      * @param float $price
      * @param int $amount
      * @param float $discount
      */
-    public function __construct($id, $orderId, $price = 0, $amount = 0, $discount = 0.0)
+    public function __construct($id, $orderId, $price = 0.0, $amount = 0, $discount = 0.0)
     {
         $this->id = $id;
         $this->orderId = $orderId;

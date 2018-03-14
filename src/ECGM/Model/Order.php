@@ -2,7 +2,10 @@
 
 namespace ECGM\Model;
 
-
+/**
+ * Class Order
+ * @package ECGM\Model
+ */
 class Order
 {
     /**

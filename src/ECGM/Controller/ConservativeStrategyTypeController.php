@@ -13,6 +13,10 @@ use ECGM\Model\CurrentProduct;
 use ECGM\Model\Customer;
 use ECGM\Model\Order;
 
+/**
+ * Class ConservativeStrategyTypeController
+ * @package ECGM\Controller
+ */
 class ConservativeStrategyTypeController implements StrategyTypeInterface
 {
 
@@ -82,10 +86,11 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
      * @return AssociativeBaseArray
      * @throws InvalidArgumentException
      * @throws LogicalException
+     * @throws \ReflectionException
      */
     public function getIdealStrategy(Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null)
     {
-        return $this->getConservativeStrategy( $customer, $currentProducts, $currentOrder);
+        return $this->getConservativeStrategy($customer, $currentProducts, $currentOrder);
     }
 
     /**
@@ -95,6 +100,7 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
      * @return AssociativeBaseArray
      * @throws InvalidArgumentException
      * @throws LogicalException
+     * @throws \ReflectionException
      */
     protected function getConservativeStrategy(Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null)
     {
@@ -106,9 +112,7 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
 
         $testProducts = new AssociativeBaseArray($currentProducts, CurrentProduct::class);
 
-        /**
-         * @var CurrentProduct $currentProduct
-         */
+
         foreach ($currentProducts as $currentProduct) {
             $testProducts->add($this->getMaxDiscountProduct($currentProduct, $customer, $currentProducts, $currentOrder));
 
@@ -119,13 +123,13 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
 
             if ($this->getVectorDiff($currentDealerStrategy, $testDealerStrategy) != 0 || $this->getVectorDiff($currentCustomerStrategy, $testCustomerStrategy) == 0) {
                 $testProducts->add($currentProduct);
-            }else{
+            } else {
                 $currentCustomerStrategy = $testCustomerStrategy;
                 $currentDealerStrategy = $testDealerStrategy;
             }
         }
 
-        $customerStrategy =  $this->customerStrategyController->getCustomerStrategy($customer, $testProducts, $currentOrder);
+        $customerStrategy = $this->customerStrategyController->getCustomerStrategy($customer, $testProducts, $currentOrder);
 
         $sortedProducts = new AssociativeBaseArray(null, CurrentProduct::class);
 
@@ -137,40 +141,13 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
     }
 
     /**
-     * @param $v1
-     * @param $v2
-     * @return int
-     * @throws LogicalException
-     */
-    protected function getVectorDiff($v1, $v2)
-    {
-
-
-        if (count($v1) != count($v2)) {
-            throw new LogicalException("Dimension of both arrays has to be equal, but is " . count($v1) . " for v1 and " . count($v2) . " for v2.");
-        }
-
-        $v1Keys = array_keys($v1);
-        $v2Keys = array_keys($v2);
-
-        $dist = 0;
-
-        for ($v1Pos = 0; $v1Pos < count($v1Keys); $v1Pos++) {
-
-            $v2Pos = array_search($v1Keys[$v1Pos], $v2Keys);
-            $dist += ($v2Pos === false) ? PHP_INT_MAX : pow($v1Pos - $v2Pos, 2);
-        }
-
-        return $dist;
-    }
-
-    /**
      * @param CurrentProduct $product
      * @param Customer $customer
      * @param AssociativeBaseArray $currentProducts
      * @param Order|null $currentOrder
      * @return CurrentProduct
      * @throws InvalidArgumentException
+     * @throws \ReflectionException
      */
     protected function getMaxDiscountProduct(CurrentProduct $product, Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null)
     {
@@ -186,7 +163,7 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
         $customerStrategyKeys = array_keys($initialCustomerStrategy);
         $retProductPos = array_search($retProduct->getId(), $customerStrategyKeys);
 
-        if($retProductPos == 0){
+        if ($retProductPos == 0) {
             return $retProduct;
         }
 
@@ -220,5 +197,33 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
         $retProduct = $this->mainInterface->setProductPPC($retProduct);
 
         return $retProduct;
+    }
+
+    /**
+     * @param $v1
+     * @param $v2
+     * @return int
+     * @throws LogicalException
+     */
+    protected function getVectorDiff($v1, $v2)
+    {
+
+
+        if (count($v1) != count($v2)) {
+            throw new LogicalException("Dimension of both arrays has to be equal, but is " . count($v1) . " for v1 and " . count($v2) . " for v2.");
+        }
+
+        $v1Keys = array_keys($v1);
+        $v2Keys = array_keys($v2);
+
+        $dist = 0;
+
+        for ($v1Pos = 0; $v1Pos < count($v1Keys); $v1Pos++) {
+
+            $v2Pos = array_search($v1Keys[$v1Pos], $v2Keys);
+            $dist += ($v2Pos === false) ? PHP_INT_MAX : pow($v1Pos - $v2Pos, 2);
+        }
+
+        return $dist;
     }
 }

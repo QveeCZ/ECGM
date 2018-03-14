@@ -11,6 +11,10 @@ use ECGM\Model\Parameter;
 use ECGM\Model\Product;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class MiscTests
+ * @package ECGM\Tests
+ */
 class MiscTests extends TestCase
 {
 

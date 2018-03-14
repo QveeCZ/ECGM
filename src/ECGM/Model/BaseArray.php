@@ -5,10 +5,14 @@ namespace ECGM\Model;
 
 use ECGM\Exceptions\InvalidArgumentException;
 
+/**
+ * Class BaseArray
+ * @package ECGM\Model
+ */
 class BaseArray implements \Iterator, \Countable
 {
     /**
-     * @var integer $size
+     * @var int $size
      */
     protected $size;
     /**
@@ -16,7 +20,7 @@ class BaseArray implements \Iterator, \Countable
      */
     protected $list;
     /**
-     * @var integer
+     * @var int
      */
     protected $position;
     /**
@@ -165,7 +169,7 @@ class BaseArray implements \Iterator, \Countable
     }
 
     /**
-     * @param integer $index
+     * @param int $index
      */
     public function remove($index)
     {
@@ -177,7 +181,7 @@ class BaseArray implements \Iterator, \Countable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function size()
     {
@@ -218,7 +222,7 @@ class BaseArray implements \Iterator, \Countable
     //Iterator functions
 
     /**
-     * @param integer $key
+     * @param int $key
      * @return mixed|null
      */
     public function getObj($key)

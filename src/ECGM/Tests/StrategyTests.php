@@ -17,6 +17,10 @@ use ECGM\Model\Parameter;
 use ECGM\Model\Product;
 use ECGM\Model\ProductComplement;
 
+/**
+ * Class StrategyTests
+ * @package ECGM\Tests
+ */
 class StrategyTests extends MiscTests
 {
     protected $mainInterface;
@@ -39,9 +43,9 @@ class StrategyTests extends MiscTests
 
         $currentProducts = $this->mainInterface->getProducts();
 
-        $strategyController = new StrategyController(2, $this->mainInterface, StrategyType::PASSIVE);
+        $strategyController = new StrategyController(2, $this->mainInterface);
 
-        $strategy = $strategyController->getIdealStrategy($this->getCustomer(), $currentProducts, null);
+        $strategy = $strategyController->getStrategy($this->getCustomer(), $currentProducts, null, StrategyType::PASSIVE);
 
 
         $expected = array(1, 4, 2, 3);
@@ -62,141 +66,9 @@ class StrategyTests extends MiscTests
     }
 
     /**
-     * @throws \ECGM\Exceptions\InvalidArgumentException
-     * @throws \ECGM\Exceptions\LogicalException
-     * @throws \ReflectionException
-     */
-    public function testConservativeStrategy()
-    {
-
-        echo "Conservative strategy test\n\n";
-
-        $currentProducts = $this->mainInterface->getProducts();
-
-        $strategyController = new StrategyController(2, $this->mainInterface, StrategyType::CONSERVATIVE);
-
-        $strategy = $strategyController->getIdealStrategy($this->getCustomer(), $currentProducts, null);
-
-        $expected = array(1, 2, 3, 4);
-        $this->assertEquals(count($expected), $strategy->size());
-
-        $i = 0;
-        /**
-         * @var CurrentProduct $value
-         */
-        foreach ($strategy as $value) {
-            echo $value->getId();
-            $this->assertEquals($expected[$i], $value->getId());
-            echo " - OK\n";
-            $i++;
-        }
-
-        echo self::$splitLine;
-
-    }
-
-    /**
-     * @throws \ECGM\Exceptions\InvalidArgumentException
-     * @throws \ECGM\Exceptions\LogicalException
-     * @throws \ReflectionException
-     */
-    public function testAggressiveStrategy()
-    {
-
-        echo "Aggressive strategy test\n\n";
-
-        $currentProducts = $this->mainInterface->getProducts();
-
-        $strategyController = new StrategyController(2, $this->mainInterface, StrategyType::AGGRESSIVE);
-
-        $strategy = $strategyController->getIdealStrategy($this->getCustomer(), $currentProducts, null);
-
-        $expected = array(1, 2, 3, 4);
-        $this->assertEquals(count($expected), $strategy->size());
-
-        $i = 0;
-        /**
-         * @var CurrentProduct $value
-         */
-        foreach ($strategy as $value) {
-            echo $value->getId();
-            $this->assertEquals($expected[$i], $value->getId());
-            echo " - OK\n";
-            $i++;
-        }
-
-        echo self::$splitLine;
-
-    }
-
-    /**
-     * @throws \ECGM\Exceptions\InvalidArgumentException
-     */
-    public function testDealerStrategy()
-    {
-        echo "Dealer strategy tests\n\n";
-
-        $products = new BaseArray(null, CurrentProduct::class);
-
-        $products->add(new CurrentProduct(1, 100, 30, 420));
-        $products->add(new CurrentProduct(2, 200, 30, 126));
-        $products->add(new CurrentProduct(3, 300, 30, 150));
-        $products->add(new CurrentProduct(4, 400, 30, 400));
-
-        $strategyController = new DealerStrategyController();
-
-        $strategy = $strategyController->getDealerStrategy($products);
-
-        $expected = array(1 => 420 / 1096, 2 => 126 / 1096, 3 => 150 / 1096, 4 => 400 / 1096);
-
-        $this->assertEquals(count($expected), count($strategy));
-
-        for ($j = 1; $j <= count($expected); $j++) {
-            echo $j;
-            $this->assertEquals(round($expected[$j], 3), $strategy[$j], 3);
-            echo " - OK\n";
-        }
-
-        echo self::$splitLine;
-    }
-
-    /**
-     * @throws \ECGM\Exceptions\InvalidArgumentException
-     */
-    public function testCustomerStrategy()
-    {
-
-        echo "Customer strategy test\n\n";
-
-
-        $currentProducts = new BaseArray(null, CurrentProduct::class);
-
-        $currentProducts->add(new CurrentProduct(1, 600, 1000, 700));
-        $currentProducts->add(new CurrentProduct(2, 250, 1000, 700));
-        $currentProducts->add(new CurrentProduct(3, 900, 1000, 700));
-        $currentProducts->add(new CurrentProduct(4, 1100, 1000, 700));
-
-        $strategyController = new CustomerStrategyController(2);
-
-        $strategy = $strategyController->getCustomerStrategy($this->getCustomer(), $currentProducts);
-
-        $expected = array(1 => 0.319, 2 => 0.386, 3 => 0.156, 4 => 0.139);
-
-        $this->assertEquals(count($expected), count($strategy));
-
-        for ($j = 1; $j <= count($expected); $j++) {
-            echo $j;
-            $this->assertEquals(round($expected[$j], 3), $strategy[$j], 3);
-            echo " - OK\n";
-        }
-
-        echo self::$splitLine;
-
-    }
-
-    /**
      * @return Customer
      * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ReflectionException
      */
     private function getCustomer()
     {
@@ -284,6 +156,7 @@ class StrategyTests extends MiscTests
     /**
      * @return CustomerGroup
      * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ReflectionException
      */
     private function getGroupHistory()
     {
@@ -391,6 +264,141 @@ class StrategyTests extends MiscTests
         $group->addCustomer($customer);
 
         return $group;
+    }
+
+    /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ECGM\Exceptions\LogicalException
+     * @throws \ReflectionException
+     */
+    public function testConservativeStrategy()
+    {
+
+        echo "Conservative strategy test\n\n";
+
+        $currentProducts = $this->mainInterface->getProducts();
+
+        $strategyController = new StrategyController(2, $this->mainInterface);
+
+        $strategy = $strategyController->getStrategy($this->getCustomer(), $currentProducts, null, StrategyType::CONSERVATIVE);
+
+        $expected = array(1, 2, 3, 4);
+        $this->assertEquals(count($expected), $strategy->size());
+
+        $i = 0;
+        /**
+         * @var CurrentProduct $value
+         */
+        foreach ($strategy as $value) {
+            echo $value->getId();
+            $this->assertEquals($expected[$i], $value->getId());
+            echo " - OK\n";
+            $i++;
+        }
+
+        echo self::$splitLine;
+
+    }
+
+    /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ECGM\Exceptions\LogicalException
+     * @throws \ReflectionException
+     */
+    public function testAggressiveStrategy()
+    {
+
+        echo "Aggressive strategy test\n\n";
+
+        $currentProducts = $this->mainInterface->getProducts();
+
+        $strategyController = new StrategyController(2, $this->mainInterface);
+
+        $strategy = $strategyController->getStrategy($this->getCustomer(), $currentProducts, null, StrategyType::AGGRESSIVE);
+
+        $expected = array(1, 2, 3, 4);
+        $this->assertEquals(count($expected), $strategy->size());
+
+        $i = 0;
+        /**
+         * @var CurrentProduct $value
+         */
+        foreach ($strategy as $value) {
+            echo $value->getId();
+            $this->assertEquals($expected[$i], $value->getId());
+            echo " - OK\n";
+            $i++;
+        }
+
+        echo self::$splitLine;
+
+    }
+
+    /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ReflectionException
+     */
+    public function testDealerStrategy()
+    {
+        echo "Dealer strategy tests\n\n";
+
+        $products = new BaseArray(null, CurrentProduct::class);
+
+        $products->add(new CurrentProduct(1, 100, 30, 420));
+        $products->add(new CurrentProduct(2, 200, 30, 126));
+        $products->add(new CurrentProduct(3, 300, 30, 150));
+        $products->add(new CurrentProduct(4, 400, 30, 400));
+
+        $strategyController = new DealerStrategyController();
+
+        $strategy = $strategyController->getDealerStrategy($products);
+
+        $expected = array(1 => 420 / 1096, 2 => 126 / 1096, 3 => 150 / 1096, 4 => 400 / 1096);
+
+        $this->assertEquals(count($expected), count($strategy));
+
+        for ($j = 1; $j <= count($expected); $j++) {
+            echo $j;
+            $this->assertEquals(round($expected[$j], 3), $strategy[$j], 3);
+            echo " - OK\n";
+        }
+
+        echo self::$splitLine;
+    }
+
+    /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ReflectionException
+     */
+    public function testCustomerStrategy()
+    {
+
+        echo "Customer strategy test\n\n";
+
+
+        $currentProducts = new BaseArray(null, CurrentProduct::class);
+
+        $currentProducts->add(new CurrentProduct(1, 600, 1000, 700));
+        $currentProducts->add(new CurrentProduct(2, 250, 1000, 700));
+        $currentProducts->add(new CurrentProduct(3, 900, 1000, 700));
+        $currentProducts->add(new CurrentProduct(4, 1100, 1000, 700));
+
+        $strategyController = new CustomerStrategyController(2);
+
+        $strategy = $strategyController->getCustomerStrategy($this->getCustomer(), $currentProducts);
+
+        $expected = array(1 => 0.319, 2 => 0.386, 3 => 0.156, 4 => 0.139);
+
+        $this->assertEquals(count($expected), count($strategy));
+
+        for ($j = 1; $j <= count($expected); $j++) {
+            echo $j;
+            $this->assertEquals(round($expected[$j], 3), $strategy[$j], 3);
+            echo " - OK\n";
+        }
+
+        echo self::$splitLine;
+
     }
 
 }

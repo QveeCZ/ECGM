@@ -2,7 +2,10 @@
 
 namespace ECGM\Enum;
 
-
+/**
+ * Class BasicEnum
+ * @package ECGM\Enum
+ */
 abstract class BasicEnum
 {
     protected static $constCacheArray = NULL;

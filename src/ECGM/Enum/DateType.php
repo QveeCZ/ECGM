@@ -2,7 +2,10 @@
 
 namespace ECGM\Enum;
 
-
+/**
+ * Class DateType
+ * @package ECGM\Enum
+ */
 abstract class DateType extends BasicEnum
 {
 

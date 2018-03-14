@@ -13,6 +13,10 @@ use ECGM\Int\StrategyInterface;
 use ECGM\Model\Customer;
 use ECGM\Model\Order;
 
+/**
+ * Class ECGM
+ * @package ECGM
+ */
 class ECGM
 {
     /**
@@ -41,7 +45,6 @@ class ECGM
      * @param bool $autoClusterNumberAdjustment
      * @throws Exceptions\InvalidArgumentException
      * @throws Exceptions\UndefinedException
-     * @throws \ReflectionException
      */
     public function __construct(MainInterface $mainInterface, $strategyMultiplierCoefficient, $dimension, $initialClusterNumber, $autoClusterNumberAdjustment = true)
     {
@@ -118,7 +121,8 @@ class ECGM
      * @param int $strategyType
      * @return Model\AssociativeBaseArray
      */
-    public function getStrategy(Customer $customer, Order $currentOrder = null, $strategyType = StrategyType::CONSERVATIVE){
+    public function getStrategy(Customer $customer, Order $currentOrder = null, $strategyType = StrategyType::CONSERVATIVE)
+    {
         $products = $this->mainInterface->getProducts();
         return $this->strategyController->getStrategy($customer, $products, $currentOrder, $strategyType);
     }

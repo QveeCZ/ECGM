@@ -5,6 +5,10 @@ namespace ECGM\Model;
 
 use ECGM\Enum\DateType;
 
+/**
+ * Class OrderProduct
+ * @package ECGM\Model
+ */
 class OrderProduct extends StrategyProduct
 {
     /**
@@ -12,7 +16,7 @@ class OrderProduct extends StrategyProduct
      */
     protected $order;
     /**
-     * @var integer
+     * @var int
      */
     protected $expiration;
     /**

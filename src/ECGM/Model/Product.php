@@ -7,6 +7,10 @@ use ECGM\Enum\DateType;
 use ECGM\Exceptions\InvalidArgumentException;
 use ECGM\Int\KeyeableValue;
 
+/**
+ * Class Product
+ * @package ECGM\Model
+ */
 class Product implements KeyeableValue
 {
 
@@ -23,7 +27,7 @@ class Product implements KeyeableValue
      */
     protected $discount;
     /**
-     * @var integer
+     * @var int
      */
     protected $expiration;
     /**
@@ -39,8 +43,8 @@ class Product implements KeyeableValue
      * Product constructor.
      * @param mixed $id
      * @param float $price
-     * @param integer $expiration
-     * @param int $expirationDateType
+     * @param int $expiration
+     * @param float|int $expirationDateType
      * @param float $discount
      * @throws InvalidArgumentException
      * @throws \ReflectionException

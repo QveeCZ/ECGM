@@ -6,6 +6,10 @@ namespace ECGM\Controller;
 use ECGM\Model\BaseArray;
 use ECGM\Model\CurrentProduct;
 
+/**
+ * Class DealerStrategyController
+ * @package ECGM\Controller
+ */
 class DealerStrategyController
 {
 
@@ -53,7 +57,7 @@ class DealerStrategyController
 
     /**
      * @param CurrentProduct $product
-     * @param integer $ppcSum
+     * @param int $ppcSum
      * @return float
      */
     protected function getStrategy(CurrentProduct $product, $ppcSum)

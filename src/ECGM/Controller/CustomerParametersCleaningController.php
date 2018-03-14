@@ -12,6 +12,10 @@ use ECGM\Model\CustomerGroup;
 use ECGM\Model\Order;
 use ECGM\Model\Parameter;
 
+/**
+ * Class CustomerParametersCleaningController
+ * @package ECGM\Controller
+ */
 class CustomerParametersCleaningController implements CustomerParametersCleaningInterface
 {
     /**
@@ -47,7 +51,6 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
      * @param BaseArray $customerGroups
      * @return BaseArray
      * @throws InvalidArgumentException
-     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function cleanCustomerGroups(BaseArray $customerGroups)
     {
@@ -71,7 +74,6 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
      * @param CustomerGroup $customerGroup
      * @return CustomerGroup
      * @throws InvalidArgumentException
-     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function cleanCustomerGroup(CustomerGroup $customerGroup)
     {
@@ -83,7 +85,6 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
      * @param BaseArray $customers
      * @return BaseArray
      * @throws InvalidArgumentException
-     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function cleanCustomers(BaseArray $customers)
     {
@@ -107,7 +108,6 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
      * @param Customer $customer
      * @return Customer
      * @throws InvalidArgumentException
-     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function cleanCustomer(Customer $customer)
     {
@@ -206,8 +206,6 @@ class CustomerParametersCleaningController implements CustomerParametersCleaning
     /**
      * @param BaseArray $history
      * @return BaseArray
-     * @throws InvalidArgumentException
-     * @throws \ECGM\Exceptions\UndefinedException
      */
     protected function getMergedCustomerParameters(BaseArray $history)
     {

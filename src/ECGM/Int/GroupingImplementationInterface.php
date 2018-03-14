@@ -25,7 +25,7 @@ interface GroupingImplementationInterface
     public function setCustomers(BaseArray $customers);
 
     /**
-     * @param integer $nbGroups
+     * @param int $nbGroups
      * @return BaseArray|mixed|null
      */
     public function solve($nbGroups);

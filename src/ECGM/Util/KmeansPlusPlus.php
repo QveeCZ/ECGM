@@ -31,7 +31,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
 
     /**
      * KmeansPlusPlus constructor.
-     * @param integer $dimension
+     * @param int $dimension
      * @throws InvalidArgumentException
      * @throws UndefinedException
      */
@@ -100,7 +100,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
     }
 
     /**
-     * @param integer $nbGroups
+     * @param int $nbGroups
      * @return BaseArray|mixed|null
      * @throws InvalidArgumentException
      */
@@ -127,7 +127,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
     }
 
     /**
-     * @param integer $clusterNumber
+     * @param int $clusterNumber
      * @return BaseArray
      * @throws InvalidArgumentException
      */

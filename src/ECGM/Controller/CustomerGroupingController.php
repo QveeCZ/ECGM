@@ -14,14 +14,18 @@ use ECGM\Util\DistanceFunctions;
 use ECGM\Util\KmeansPlusPlus;
 use ECGM\Util\SilhouetteAnalysis;
 
+/**
+ * Class CustomerGroupingController
+ * @package ECGM\Controller
+ */
 class CustomerGroupingController implements CustomerGroupingInterface
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $dimension;
     /**
-     * @var integer
+     * @var int
      */
     protected $k;
     /**

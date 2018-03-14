@@ -2,7 +2,10 @@
 
 namespace ECGM\Enum;
 
-
+/**
+ * Class StrategyType
+ * @package ECGM\Enum
+ */
 class StrategyType extends BasicEnum
 {
 

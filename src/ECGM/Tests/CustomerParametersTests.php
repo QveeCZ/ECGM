@@ -11,6 +11,10 @@ use ECGM\Model\Order;
 use ECGM\Model\Parameter;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class CustomerParametersTests
+ * @package ECGM\Tests
+ */
 class CustomerParametersTests extends TestCase
 {
 
@@ -29,7 +33,6 @@ class CustomerParametersTests extends TestCase
      * @param array $data
      * @param string $dataName
      * @throws \ECGM\Exceptions\InvalidArgumentException
-     * @throws \ECGM\Exceptions\UndefinedException
      */
     public function __construct($name = null, array $data = [], $dataName = '')
     {
@@ -121,7 +124,6 @@ class CustomerParametersTests extends TestCase
      * @param Customer $customer
      * @return Customer|mixed
      * @throws \ECGM\Exceptions\InvalidArgumentException
-     * @throws \ECGM\Exceptions\UndefinedException
      */
     protected function getCleanedCustomer(Customer $customer)
     {

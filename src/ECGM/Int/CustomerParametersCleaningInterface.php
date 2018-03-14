@@ -17,7 +17,6 @@ interface CustomerParametersCleaningInterface
 {
 
 
-
     /**
      * @return CustomerParametersMergeInterface
      */

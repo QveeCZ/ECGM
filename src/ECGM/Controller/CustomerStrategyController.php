@@ -14,6 +14,10 @@ use ECGM\Model\OrderProduct;
 use ECGM\Model\ProductComplement;
 use ECGM\Model\StrategyProduct;
 
+/**
+ * Class CustomerStrategyController
+ * @package ECGM\Controller
+ */
 class CustomerStrategyController implements CustomerStrategyInterface
 {
 

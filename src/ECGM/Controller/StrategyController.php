@@ -13,6 +13,10 @@ use ECGM\Model\AssociativeBaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\Order;
 
+/**
+ * Class StrategyController
+ * @package ECGM\Controller
+ */
 class StrategyController implements StrategyInterface
 {
 
@@ -32,11 +36,9 @@ class StrategyController implements StrategyInterface
 
     /**
      * StrategyController constructor.
-     * @param $coefficient
+     * @param int $coefficient
      * @param MainInterface $mainInterface
-     * @param int $strategyType
      * @throws InvalidArgumentException
-     * @throws \ReflectionException
      */
     public function __construct($coefficient, MainInterface $mainInterface)
     {

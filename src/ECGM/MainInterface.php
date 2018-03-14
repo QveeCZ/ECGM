@@ -7,6 +7,10 @@ use ECGM\Model\AssociativeBaseArray;
 use ECGM\Model\BaseArray;
 use ECGM\Model\CurrentProduct;
 
+/**
+ * Interface MainInterface
+ * @package ECGM
+ */
 interface MainInterface
 {
 

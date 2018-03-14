@@ -5,10 +5,14 @@ namespace ECGM\Model;
 
 use ECGM\Exceptions\InvalidArgumentException;
 
+/**
+ * Class Customer
+ * @package ECGM\Model
+ */
 class Customer
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $id;
     /**

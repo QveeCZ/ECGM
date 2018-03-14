@@ -12,6 +12,10 @@ use ECGM\Model\CurrentProduct;
 use ECGM\Model\Customer;
 use ECGM\Model\Order;
 
+/**
+ * Class PassiveStrategyTypeController
+ * @package ECGM\Controller
+ */
 class PassiveStrategyTypeController implements StrategyTypeInterface
 {
     /**

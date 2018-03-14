@@ -13,6 +13,10 @@ use ECGM\Model\CurrentProduct;
 use ECGM\Model\Customer;
 use ECGM\Model\Order;
 
+/**
+ * Class AggressiveStrategyTypeController
+ * @package ECGM\Controller
+ */
 class AggressiveStrategyTypeController implements StrategyTypeInterface
 {
 
@@ -82,6 +86,7 @@ class AggressiveStrategyTypeController implements StrategyTypeInterface
      * @return AssociativeBaseArray
      * @throws InvalidArgumentException
      * @throws LogicalException
+     * @throws \ReflectionException
      */
     public function getIdealStrategy(Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null)
     {
@@ -95,6 +100,7 @@ class AggressiveStrategyTypeController implements StrategyTypeInterface
      * @return AssociativeBaseArray
      * @throws InvalidArgumentException
      * @throws LogicalException
+     * @throws \ReflectionException
      */
     protected function getAggressiveStrategy(Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null)
     {
@@ -110,6 +116,7 @@ class AggressiveStrategyTypeController implements StrategyTypeInterface
         arsort($initialCustomerStrategy);
         $currentStrategyDistance = $this->getVectorDiff($initialDealerStrategy, $initialCustomerStrategy);
 
+        $customerStrategy = $initialCustomerStrategy;
         $customerStrategyKeys = array_keys($initialCustomerStrategy);
         for ($i = 1; $i < count($customerStrategyKeys); $i++) {
             $testProducts->add($this->getMaxDiscountProduct($currentProducts->getObj($customerStrategyKeys[$i]), $currentProducts->getObj($customerStrategyKeys[$i - 1])));
@@ -122,7 +129,7 @@ class AggressiveStrategyTypeController implements StrategyTypeInterface
 
             if ($currentStrategyDistance <= $proposedStrategyDistance) {
                 $testProducts->add($currentProducts->getObj($customerStrategyKeys[$i]));
-            }else{
+            } else {
                 $currentStrategyDistance = $proposedStrategyDistance;
             }
         }
@@ -169,6 +176,7 @@ class AggressiveStrategyTypeController implements StrategyTypeInterface
      * @param CurrentProduct $prevProduct
      * @return CurrentProduct
      * @throws InvalidArgumentException
+     * @throws \ReflectionException
      */
     protected function getMaxDiscountProduct(CurrentProduct $product, CurrentProduct $prevProduct)
     {

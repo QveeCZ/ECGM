@@ -12,7 +12,6 @@ use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
 
 /**
- *
  * Class SilhouetteAnalysis
  * @package ECGM\Util
  */

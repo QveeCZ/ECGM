@@ -117,19 +117,17 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
             $testProducts->add($this->getMaxDiscountProduct($currentProduct, $customer, $currentProducts, $currentOrder));
 
             $testCustomerStrategy = $this->customerStrategyController->getCustomerStrategy($customer, $testProducts, $currentOrder);
-            $testDealerStrategy = $this->dealerStrategyController->getDealerStrategy($testProducts);
             arsort($testCustomerStrategy);
-            arsort($testDealerStrategy);
 
-            if ($this->getVectorDiff($currentDealerStrategy, $testDealerStrategy) != 0 || $this->getVectorDiff($currentCustomerStrategy, $testCustomerStrategy) == 0) {
+            if ($this->getVectorDiff($currentCustomerStrategy, $testCustomerStrategy) == 0) {
                 $testProducts->add($currentProduct);
             } else {
                 $currentCustomerStrategy = $testCustomerStrategy;
-                $currentDealerStrategy = $testDealerStrategy;
             }
         }
 
         $customerStrategy = $this->customerStrategyController->getCustomerStrategy($customer, $testProducts, $currentOrder);
+
 
         $sortedProducts = new AssociativeBaseArray(null, CurrentProduct::class);
 
@@ -169,6 +167,9 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
 
         $prevProduct = $currentProducts->getObj($customerStrategyKeys[$retProductPos - 1]);
 
+        if($product->getPpc() < $prevProduct->getPpc()){
+            return $product;
+        }
 
         $prevGuess = 0;
         $guess = 50;
@@ -195,6 +196,10 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
 
         $retProduct->setDiscount(ceil($guess));
         $retProduct = $this->mainInterface->setProductPPC($retProduct);
+
+        if($retProduct->getPpc() < $prevProduct->getPpc()){
+            return $product;
+        }
 
         return $retProduct;
     }

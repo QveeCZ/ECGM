@@ -16,6 +16,7 @@ use ECGM\Model\Order;
 /**
  * Class AggressiveStrategyTypeController
  * @package ECGM\Controller
+ * @uses
  */
 class AggressiveStrategyTypeController implements StrategyTypeInterface
 {

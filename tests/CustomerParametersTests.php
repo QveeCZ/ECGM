@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class CustomerParametersTests
- * @package ECGM\Tests
+ * @package ECGM\tests
  */
 class CustomerParametersTests extends TestCase
 {

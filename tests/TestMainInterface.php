@@ -13,7 +13,7 @@ use ECGM\Model\CustomerGroup;
 
 /**
  * Class TestMainInterface
- * @package ECGM\Tests
+ * @package ECGM\tests
  */
 class TestMainInterface implements MainInterface
 {

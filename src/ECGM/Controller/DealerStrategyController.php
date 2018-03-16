@@ -3,6 +3,7 @@
 namespace ECGM\Controller;
 
 
+use ECGM\Int\DealerStrategyInterface;
 use ECGM\Model\BaseArray;
 use ECGM\Model\CurrentProduct;
 
@@ -10,7 +11,7 @@ use ECGM\Model\CurrentProduct;
  * Class DealerStrategyController
  * @package ECGM\Controller
  */
-class DealerStrategyController
+class DealerStrategyController implements DealerStrategyInterface
 {
 
     /**

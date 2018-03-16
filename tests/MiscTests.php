@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class MiscTests
- * @package ECGM\Tests
+ * @package ECGM\tests
  */
 class MiscTests extends TestCase
 {

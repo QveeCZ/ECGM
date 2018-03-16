@@ -12,7 +12,7 @@ use ECGM\Util\SilhouetteAnalysis;
 
 /**
  * Class CustomerGroupingTests
- * @package ECGM\Tests
+ * @package ECGM\tests
  */
 class CustomerGroupingTests extends MiscTests
 {

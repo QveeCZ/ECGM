@@ -19,7 +19,7 @@ use ECGM\Model\ProductComplement;
 
 /**
  * Class StrategyTests
- * @package ECGM\Tests
+ * @package ECGM\tests
  */
 class StrategyTests extends MiscTests
 {

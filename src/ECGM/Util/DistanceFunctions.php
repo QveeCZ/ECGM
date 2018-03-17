@@ -26,12 +26,12 @@ class DistanceFunctions implements DistanceFuncInterface
             throw new InvalidArgumentException("Vector v1 size " . $dimension . " is not equal to vector v2 size " . count($v2));
         }
 
-        $sum = 0;
-        for ($i = 0; $i < $dimension; $i++) {
-            $sum += abs($v1[$i] - $v2[$i]);
+        $distance = 0;
+        for ($n = 0; $n < $dimension; $n++) {
+            $distance += abs($v1[$n] - $v2[$n]);
         }
 
-        return $sum;
+        return $distance;
     }
 
     /**

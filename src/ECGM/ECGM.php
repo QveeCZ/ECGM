@@ -41,7 +41,7 @@ class ECGM
      * @param MainInterface $mainInterface
      * @param int $strategyMultiplierCoefficient
      * @param int $dimension
-     * @param $initialClusterNumber
+     * @param int $initialClusterNumber
      * @param bool $autoClusterNumberAdjustment
      * @throws Exceptions\InvalidArgumentException
      * @throws Exceptions\UndefinedException

@@ -141,7 +141,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
     /**
      * @param BaseArray $customers
      * @param BaseArray|null $initialGroups
-     * @return BaseArray
+     * @return BaseArray|mixed|null
      * @throws InvalidArgumentException
      * @throws \ECGM\Exceptions\LogicalException
      */
@@ -152,6 +152,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
         $silhouette = PHP_INT_MIN + 1;
 
         $groups = new BaseArray(null, CustomerGroup::class);
+        $initialGroups = new BaseArray($initialGroups, CustomerGroup::class);
 
         while ($prevSilhouette < $silhouette) {
             if ($this->verbose) {
@@ -188,7 +189,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
         $groups = new BaseArray($groups, CustomerGroup::class);
 
         if ($groups->size() > 0) {
-            $this->groupingClass->setGroups($groups);
+            $this->groupingClass->setInitialGroups($groups);
         }
 
         $this->groupingClass->setCustomers($customers);

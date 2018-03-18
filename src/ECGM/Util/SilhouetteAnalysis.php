@@ -38,6 +38,7 @@ class SilhouetteAnalysis implements GroupingValidationInterface
     public function __construct($verbose = false)
     {
         $this->verbose = ($verbose) ? true : false;
+        $this->distanceFunctions = new DistanceFunctions();
 
         if ($this->verbose) {
             $dateTime = new \DateTime();

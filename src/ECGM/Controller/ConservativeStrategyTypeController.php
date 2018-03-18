@@ -167,7 +167,7 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
 
         $prevProduct = $currentProducts->getObj($customerStrategyKeys[$retProductPos - 1]);
 
-        if($product->getPpc() < $prevProduct->getPpc()){
+        if ($product->getPpc() < $prevProduct->getPpc()) {
             return $product;
         }
 
@@ -197,7 +197,7 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
         $retProduct->setDiscount(ceil($guess));
         $retProduct = $this->mainInterface->setProductPPC($retProduct);
 
-        if($retProduct->getPpc() < $prevProduct->getPpc()){
+        if ($retProduct->getPpc() < $prevProduct->getPpc()) {
             return $product;
         }
 

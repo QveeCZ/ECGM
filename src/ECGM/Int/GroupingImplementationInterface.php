@@ -12,7 +12,7 @@ interface GroupingImplementationInterface
     /**
      * @param BaseArray $groups
      */
-    public function setGroups(BaseArray $groups);
+    public function setInitialGroups(BaseArray $groups);
 
     /**
      * @param Customer $customer

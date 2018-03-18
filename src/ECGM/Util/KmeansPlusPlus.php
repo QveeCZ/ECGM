@@ -21,6 +21,7 @@ use ECGM\Model\Parameter;
 class KmeansPlusPlus implements GroupingImplementationInterface
 {
     protected $dimension;
+    protected $initialGroups;
     protected $groups;
     protected $customers;
 
@@ -42,6 +43,7 @@ class KmeansPlusPlus implements GroupingImplementationInterface
         }
 
         $this->dimension = $dimension;
+        $this->initialGroups = new BaseArray(null, CustomerGroup::class);
         $this->groups = new BaseArray(null, CustomerGroup::class);
         $this->customers = new BaseArray(null, Customer::class);
 
@@ -65,12 +67,12 @@ class KmeansPlusPlus implements GroupingImplementationInterface
     }
 
     /**
-     * @param BaseArray $groups
+     * @param BaseArray $initialGroups
      * @throws InvalidArgumentException
      */
-    public function setGroups(BaseArray $groups)
+    public function setInitialGroups(BaseArray $initialGroups)
     {
-        $this->groups->set($groups);
+        $this->initialGroups->set($initialGroups);
     }
 
     /**
@@ -106,13 +108,14 @@ class KmeansPlusPlus implements GroupingImplementationInterface
      */
     public function solve($nbGroups)
     {
-
-        if ($this->groups->size() && $nbGroups != $this->groups->size()) {
-            throw new InvalidArgumentException("Required number of groups $nbGroups is not equal to set number of groups " . $this->groups->size() . ".");
+        if ($this->initialGroups->size() && $nbGroups != $this->initialGroups->size()) {
+            throw new InvalidArgumentException("Required number of groups $nbGroups is not equal to set number of groups " . $this->initialGroups->size() . ".");
         }
 
-        if (!$this->groups->size()) {
+        if (!$this->initialGroups->size()) {
             $this->groups = $this->initializeGroups($nbGroups);
+        } else {
+            $this->groups = $this->initialGroups;
         }
 
         if ($this->groups->size() == 1) {

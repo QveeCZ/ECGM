@@ -1,6 +1,6 @@
 <?php
 
-namespace ECGM\Tests;
+namespace ECGM\tests;
 
 
 use ECGM\Exceptions\InvalidArgumentException;

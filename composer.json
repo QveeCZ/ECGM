@@ -5,7 +5,8 @@
   "description": "Application of game theory to e-commerce solutions",
   "autoload": {
     "psr-4": {
-      "ECGM\\": "src/ECGM"
+      "ECGM\\": "src/ECGM",
+      "ECGM\\tests\\": "tests"
     }
   },
   "require": {

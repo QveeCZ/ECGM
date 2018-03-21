@@ -28,6 +28,10 @@ class CustomerStrategyController implements CustomerStrategyInterface
      * @var array
      */
     protected $customerPurchasedProducts;
+    /**
+     * @var string
+     */
+    protected $customerHistoryHash = "";
 
     /**
      * CustomerStrategyController constructor.
@@ -116,7 +120,7 @@ class CustomerStrategyController implements CustomerStrategyInterface
     {
         $currentProducts = new BaseArray($currentProducts, CurrentProduct::class);
 
-        if (!$this->customerPurchasedProducts) {
+        if (!$this->customerPurchasedProducts || !hash_equals($this->customerHistoryHash, hash("sha256", serialize($customer->getHistory())))) {
             $this->customerPurchasedProducts = $this->getCustomerOrderProductAmounts($customer->getHistory(), $currentOrderProducts);
         }
 

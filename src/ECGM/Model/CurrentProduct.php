@@ -18,9 +18,9 @@ class CurrentProduct extends Product
     /**
      * CurrentProduct constructor.
      * @param $id
-     * @param $price
-     * @param $expiration
-     * @param $ppc
+     * @param float $price
+     * @param integer $expiration
+     * @param mixed $ppc
      * @param float $discount
      * @throws InvalidArgumentException
      * @throws \ReflectionException

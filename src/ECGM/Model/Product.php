@@ -80,10 +80,10 @@ class Product implements KeyeableValue
     }
 
     /**
-     * @param $complements
+     * @param BaseArray $complements
      * @throws InvalidArgumentException
      */
-    public function setComplements($complements)
+    public function setComplements(BaseArray $complements)
     {
         $this->complements->set($complements);
     }

@@ -13,7 +13,7 @@ class Order
      */
     protected $id;
     /**
-     * @var Customer
+     * @var BaseArray
      */
     protected $customerParameters;
     /**

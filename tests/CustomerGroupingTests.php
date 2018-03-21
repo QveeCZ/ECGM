@@ -25,7 +25,15 @@ class CustomerGroupingTests extends ECGMTest
     protected $initialK;
     protected $parameterRules;
 
-
+    /**
+     * CustomerGroupingTests constructor.
+     * @param int $customerNum
+     * @param int $parameterDimension
+     * @param int $initialK
+     * @param null $name
+     * @param array $data
+     * @param string $dataName
+     */
     public function __construct($customerNum = 1000, $parameterDimension = 10, $initialK = 2, $name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);

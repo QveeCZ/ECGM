@@ -9,16 +9,14 @@ use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
 use ECGM\Model\Parameter;
 use ECGM\Model\Product;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class MiscTests
  * @package ECGM\tests
  */
-class MiscTests extends TestCase
+class MiscTests extends ECGMTest
 {
 
-    public static $splitLine = "\n\n---------------------------------------------------------\n\n";
 
     /**
      * @throws InvalidArgumentException

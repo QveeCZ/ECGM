@@ -10,13 +10,12 @@ use ECGM\Model\Customer;
 use ECGM\Model\CustomerGroup;
 use ECGM\Model\Order;
 use ECGM\Model\Parameter;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class CustomerParametersTests
  * @package ECGM\tests
  */
-class CustomerParametersTests extends TestCase
+class CustomerParametersTests extends ECGMTest
 {
 
     /**
@@ -36,6 +35,91 @@ class CustomerParametersTests extends TestCase
         $this->customer = $this->prepareTestCustomer();
 
         parent::__construct($name, $data, $dataName);
+    }
+
+    /**
+     * @param CustomerParametersCleaningInterface|null $customerParametersController
+     */
+    public function testCustomerParametersSize(CustomerParametersCleaningInterface $customerParametersController = null)
+    {
+        if (is_null($customerParametersController)) {
+            $customerParametersController = new CustomerParametersCleaningController();
+        }
+
+        echo "Size test\n\n";
+
+        $cleanedCustomer = $this->getCleanedCustomer($this->customer, $customerParametersController);
+
+        $this->assertEquals(8, $cleanedCustomer->getParameters()->size());
+
+        echo "Size OK.";
+        echo self::$splitLine;
+    }
+
+    /**
+     * @param CustomerParametersCleaningInterface|null $customerParametersController
+     */
+    public function testHistoryCleaning(CustomerParametersCleaningInterface $customerParametersController = null)
+    {
+        if (is_null($customerParametersController)) {
+            $customerParametersController = new CustomerParametersCleaningController();
+        }
+        $cleanedCustomer = $this->getCleanedCustomer($this->customer, $customerParametersController);
+
+        echo "History cleaning test\n\n";
+
+        $numbers = range(0, 5);
+
+        $expecteds = array();
+
+        $expecteds[] = array(0.866, -0.5, -0.975, -0.223, 0.259, -0.966, 49.652, 16.260);
+        $expecteds[] = array(0, -1, -0.782, 0.623, 0, -1, 49.652, 16.260);
+        $expecteds[] = array(-0.866, -0.5, 0.782, 0.623, 0.707, -0.707, 49.652, 16.260);
+        $expecteds[] = array(-0.866, 0.5, 0.975, -0.223, -0.259, -0.966, 35.321, 25.139);
+        $expecteds[] = array(-0.5, 0.866, -0.782, 0.623, 0.5, -0.866, 49.652, 16.260);
+        $expecteds[] = array(0, 1, 0.782, 0.623, -0.259, 0.966, 49.652, 16.260);
+
+
+        foreach ($numbers as $number) {
+
+            echo "Testing pps" . ($number + 1) . "\n\n";
+
+            for ($j = 0; $j < 8; $j++) {
+                echo $j;
+                $expected = $expecteds[$number];
+                $this->assertEquals($expected[$j], round($cleanedCustomer->getHistory()->getObj($number)->getCustomerParameters()->getObj($j)->getValue(), 3));
+                echo " - OK\n";
+            }
+            echo "\npps" . ($number + 1) . " OK.\n\n";
+        }
+
+
+        echo "Historical parameters OK.";
+        echo self::$splitLine;
+    }
+
+    /**
+     * @param CustomerParametersCleaningInterface|null $customerParametersController
+     */
+    public function testCustomerParametersTransformation(CustomerParametersCleaningInterface $customerParametersController = null)
+    {
+        if (is_null($customerParametersController)) {
+            $customerParametersController = new CustomerParametersCleaningController();
+        }
+        $cleanedCustomer = $this->getCleanedCustomer($this->customer, $customerParametersController);
+
+        echo "Parameter merging test\n\n";
+
+        $expected = array(-0.228, 0.061, 0, 0.341, 0.158, -0.59, 49.401, 16.509);
+
+        for ($j = 0; $j < 8; $j++) {
+            echo $j;
+            $this->assertEquals($expected[$j], round($cleanedCustomer->getParameters()->getObj($j)->getValue(), 3));
+            echo " - OK\n";
+        }
+
+        echo "\nMerged parameters OK.";
+        echo self::$splitLine;
     }
 
 
@@ -117,25 +201,6 @@ class CustomerParametersTests extends TestCase
     }
 
     /**
-     * @param CustomerParametersCleaningInterface|null $customerParametersController
-     */
-    public function testCustomerParametersSize(CustomerParametersCleaningInterface $customerParametersController = null)
-    {
-        if (is_null($customerParametersController)) {
-            $customerParametersController = new CustomerParametersCleaningController();
-        }
-
-        echo "Size test\n\n";
-
-        $cleanedCustomer = $this->getCleanedCustomer($this->customer, $customerParametersController);
-
-        $this->assertEquals(8, $cleanedCustomer->getParameters()->size());
-
-        echo "Size OK.";
-        echo MiscTests::$splitLine;
-    }
-
-    /**
      * @param Customer $customer
      * @param CustomerParametersCleaningInterface|null $customerParametersController
      * @return Customer|mixed
@@ -149,72 +214,6 @@ class CustomerParametersTests extends TestCase
         $cleanedCustomer = $customerParametersController->cleanCustomer($customer);
 
         return $cleanedCustomer;
-    }
-
-    /**
-     * @param CustomerParametersCleaningInterface|null $customerParametersController
-     */
-    public function testHistoryCleaning(CustomerParametersCleaningInterface $customerParametersController = null)
-    {
-        if (is_null($customerParametersController)) {
-            $customerParametersController = new CustomerParametersCleaningController();
-        }
-        $cleanedCustomer = $this->getCleanedCustomer($this->customer, $customerParametersController);
-
-        echo "History cleaning test\n\n";
-
-        $numbers = range(0, 5);
-
-        $expecteds = array();
-
-        $expecteds[] = array(0.866, -0.5, -0.975, -0.223, 0.259, -0.966, 49.652, 16.260);
-        $expecteds[] = array(0, -1, -0.782, 0.623, 0, -1, 49.652, 16.260);
-        $expecteds[] = array(-0.866, -0.5, 0.782, 0.623, 0.707, -0.707, 49.652, 16.260);
-        $expecteds[] = array(-0.866, 0.5, 0.975, -0.223, -0.259, -0.966, 35.321, 25.139);
-        $expecteds[] = array(-0.5, 0.866, -0.782, 0.623, 0.5, -0.866, 49.652, 16.260);
-        $expecteds[] = array(0, 1, 0.782, 0.623, -0.259, 0.966, 49.652, 16.260);
-
-
-        foreach ($numbers as $number) {
-
-            echo "Testing pps" . ($number + 1) . "\n\n";
-
-            for ($j = 0; $j < 8; $j++) {
-                echo $j;
-                $expected = $expecteds[$number];
-                $this->assertEquals($expected[$j], round($cleanedCustomer->getHistory()->getObj($number)->getCustomerParameters()->getObj($j)->getValue(), 3));
-                echo " - OK\n";
-            }
-            echo "\npps" . ($number + 1) . " OK.\n\n";
-        }
-
-
-        echo "Historical parameters OK.";
-        echo MiscTests::$splitLine;
-    }
-
-    /**
-     * @param CustomerParametersCleaningInterface|null $customerParametersController
-     */
-    public function testCustomerParametersTransformation(CustomerParametersCleaningInterface $customerParametersController = null)
-    {
-        if (is_null($customerParametersController)) {
-            $customerParametersController = new CustomerParametersCleaningController();
-        }
-        $cleanedCustomer = $this->getCleanedCustomer($this->customer, $customerParametersController);
-
-        echo "Parameter merging test\n\n";
-
-        $expected = array(-0.228, 0.061, 0, 0.341, 0.158, -0.59, 49.401, 16.509);
-
-        for ($j = 0; $j < 8; $j++) {
-            echo $j;
-            $this->assertEquals($expected[$j], round($cleanedCustomer->getParameters()->getObj($j)->getValue(), 3));
-            echo " - OK\n";
-        }
-
-        echo "\nMerged parameters OK.";
-        echo MiscTests::$splitLine;
     }
 
 }

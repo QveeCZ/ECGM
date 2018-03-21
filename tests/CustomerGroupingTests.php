@@ -17,7 +17,7 @@ use ECGM\Util\SilhouetteAnalysis;
  * Class CustomerGroupingTests
  * @package ECGM\tests
  */
-class CustomerGroupingTests extends MiscTests
+class CustomerGroupingTests extends ECGMTest
 {
 
     protected $customerNum;
@@ -63,6 +63,61 @@ class CustomerGroupingTests extends MiscTests
     }
 
     /**
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
+     */
+    public function testGrouping(GroupingImplementationInterface $groupingImplementation = null)
+    {
+
+        if (is_null($groupingImplementation)) {
+            $groupingImplementation = new KmeansPlusPlus($this->parameterDimension);
+        }
+
+        echo "\n\nGrouping test\n\n";
+
+        $customer = $this->getCustomers();
+        $groupingImplementation->setCustomers($customer);
+        $groupingImplementation->solve($this->initialK);
+        echo "Complete\n\n";
+        echo self::$splitLine;
+    }
+
+    /**
+     * @param GroupingImplementationInterface|null $groupingImplementation
+     * @param GroupingValidationInterface|null $groupingValidation
+     * @throws \ECGM\Exceptions\InvalidArgumentException
+     * @throws \ECGM\Exceptions\UndefinedException
+     */
+    public function testSilhouette(GroupingImplementationInterface $groupingImplementation = null, GroupingValidationInterface $groupingValidation = null)
+    {
+
+        if (is_null($groupingImplementation)) {
+            $groupingImplementation = new KmeansPlusPlus($this->parameterDimension);
+        }
+
+        if (is_null($groupingValidation)) {
+            $groupingValidation = new SilhouetteAnalysis();
+        }
+
+
+        echo "\n\nSilhouette test\n\n";
+
+        $customer = $this->getCustomers();
+        $groupingImplementation->setCustomers($customer);
+        $time = microtime(true);
+        echo $time . "\n";
+        $groups = $groupingImplementation->solve($this->initialK);
+        echo "Kmeans: " . (microtime(true) - $time) . "\n";
+        $time = microtime(true);
+
+        $silhouette = $groupingValidation->getGroupingScore($groups);
+        echo "Silhouette: " . (microtime(true) - $time) . "\n";
+
+        echo "Average silhouette width: " . $silhouette;
+        echo self::$splitLine;
+    }
+
+    /**
      * @return BaseArray
      * @throws \ECGM\Exceptions\InvalidArgumentException
      */
@@ -97,60 +152,6 @@ class CustomerGroupingTests extends MiscTests
             $customer->addParameter(new Parameter(uniqid(), rand($this->parameterRules[$i]['min'], $this->parameterRules[$i]['max'])));
         }
         return $customer;
-    }
-
-    /**
-     * @throws \ECGM\Exceptions\InvalidArgumentException
-     * @throws \ECGM\Exceptions\UndefinedException
-     */
-    public function testGrouping(GroupingImplementationInterface $groupingImplementation = null)
-    {
-
-        if (is_null($groupingImplementation)) {
-            $groupingImplementation = new KmeansPlusPlus($this->parameterDimension);
-        }
-
-        echo "\n\nGrouping test\n\n";
-
-        $customer = $this->getCustomers();
-        $groupingImplementation->setCustomers($customer);
-        $groupingImplementation->solve($this->initialK);
-        echo "Complete\n\n";
-        echo self::$splitLine;
-    }
-
-    /**
-     * @throws \ECGM\Exceptions\InvalidArgumentException
-     * @throws \ECGM\Exceptions\LogicalException
-     * @throws \ECGM\Exceptions\UndefinedException
-     */
-    public function testSilhouette(GroupingImplementationInterface $groupingImplementation = null, GroupingValidationInterface $groupingValidation = null)
-    {
-
-        if (is_null($groupingImplementation)) {
-            $groupingImplementation = new KmeansPlusPlus($this->parameterDimension);
-        }
-
-        if (is_null($groupingValidation)) {
-            $groupingValidation = new SilhouetteAnalysis();
-        }
-
-
-        echo "\n\nSilhouette test\n\n";
-
-        $customer = $this->getCustomers();
-        $groupingImplementation->setCustomers($customer);
-        $time = microtime(true);
-        echo $time . "\n";
-        $groups = $groupingImplementation->solve($this->initialK);
-        echo "Kmeans: " . (microtime(true) - $time) . "\n";
-        $time = microtime(true);
-
-        $silhouette = $groupingValidation->getGroupingScore($groups);
-        echo "Silhouette: " . (microtime(true) - $time) . "\n";
-
-        echo "Average silhouette width: " . $silhouette;
-        echo self::$splitLine;
     }
 
 }

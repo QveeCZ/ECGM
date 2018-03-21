@@ -65,7 +65,7 @@ class ECGM
     /**
      * @param StrategyInterface $strategyController
      */
-    public function setStrategyController($strategyController)
+    public function setStrategyController(StrategyInterface $strategyController)
     {
         $this->strategyController = $strategyController;
     }
@@ -81,7 +81,7 @@ class ECGM
     /**
      * @param CustomerGroupingInterface $groupingController
      */
-    public function setGroupingController($groupingController)
+    public function setGroupingController(CustomerGroupingInterface $groupingController)
     {
         $this->groupingController = $groupingController;
     }
@@ -97,7 +97,7 @@ class ECGM
     /**
      * @param CustomerParametersCleaningInterface $parameterCleaningController
      */
-    public function setParameterCleaningController($parameterCleaningController)
+    public function setParameterCleaningController(CustomerParametersCleaningInterface $parameterCleaningController)
     {
         $this->parameterCleaningController = $parameterCleaningController;
     }

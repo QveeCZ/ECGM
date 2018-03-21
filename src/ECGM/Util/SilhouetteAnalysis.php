@@ -247,8 +247,8 @@ class SilhouetteAnalysis implements GroupingValidationInterface
     }
 
     /**
-     * @param $silhouette
-     * @param $group
+     * @param string $silhouette
+     * @param string $group
      * @throws InvalidArgumentException
      */
     protected function addToFile($silhouette, $group)

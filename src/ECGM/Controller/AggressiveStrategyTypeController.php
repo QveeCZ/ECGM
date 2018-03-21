@@ -36,7 +36,7 @@ class AggressiveStrategyTypeController implements StrategyTypeInterface
 
     /**
      * StrategyController constructor.
-     * @param $coefficient
+     * @param float $coefficient
      * @param MainInterface $mainInterface
      * @throws InvalidArgumentException
      */
@@ -145,12 +145,12 @@ class AggressiveStrategyTypeController implements StrategyTypeInterface
     }
 
     /**
-     * @param $v1
-     * @param $v2
+     * @param array $v1
+     * @param array $v2
      * @return int
      * @throws LogicalException
      */
-    protected function getVectorDiff($v1, $v2)
+    protected function getVectorDiff(array $v1, array $v2)
     {
 
 

@@ -37,7 +37,7 @@ class DealerStrategyController implements DealerStrategyInterface
 
     /**
      * @param BaseArray $products
-     * @return int|mixed
+     * @return float
      * @throws \ECGM\Exceptions\InvalidArgumentException
      */
     protected function getPPCSum(BaseArray $products)
@@ -58,7 +58,7 @@ class DealerStrategyController implements DealerStrategyInterface
 
     /**
      * @param CurrentProduct $product
-     * @param int $ppcSum
+     * @param float $ppcSum
      * @return float
      */
     protected function getStrategy(CurrentProduct $product, $ppcSum)

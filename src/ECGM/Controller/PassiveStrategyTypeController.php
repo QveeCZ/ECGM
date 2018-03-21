@@ -33,7 +33,7 @@ class PassiveStrategyTypeController implements StrategyTypeInterface
 
     /**
      * StrategyController constructor.
-     * @param $coefficient
+     * @param float $coefficient
      * @param MainInterface $mainInterface
      * @throws InvalidArgumentException
      */

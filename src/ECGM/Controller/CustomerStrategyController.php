@@ -20,13 +20,18 @@ use ECGM\Model\StrategyProduct;
  */
 class CustomerStrategyController implements CustomerStrategyInterface
 {
-
+    /**
+     * @var float
+     */
     protected $coefficient;
+    /**
+     * @var array
+     */
     protected $customerPurchasedProducts;
 
     /**
      * CustomerStrategyController constructor.
-     * @param $coefficient
+     * @param float $coefficient
      * @throws InvalidArgumentException
      */
     public function __construct($coefficient)

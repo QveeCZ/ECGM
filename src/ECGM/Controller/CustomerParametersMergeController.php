@@ -86,7 +86,7 @@ class CustomerParametersMergeController implements CustomerParametersMergeInterf
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
      * @return float|int
      * @throws \ECGM\Exceptions\UndefinedException
      */
@@ -113,8 +113,8 @@ class CustomerParametersMergeController implements CustomerParametersMergeInterf
     }
 
     /**
-     * @param $parameters
-     * @param $median
+     * @param array $parameters
+     * @param float $median
      * @return array
      * @throws \ECGM\Exceptions\UndefinedException
      */
@@ -142,8 +142,8 @@ class CustomerParametersMergeController implements CustomerParametersMergeInterf
     }
 
     /**
-     * @param $parameters
-     * @param null $median
+     * @param array $parameters
+     * @param float|null $median
      * @return float|int
      * @throws \ECGM\Exceptions\UndefinedException
      */
@@ -164,8 +164,8 @@ class CustomerParametersMergeController implements CustomerParametersMergeInterf
 
 
     /**
-     * @param $parameters
-     * @param null $median
+     * @param array $parameters
+     * @param float|null $median
      * @return float|int
      * @throws \ECGM\Exceptions\UndefinedException
      */

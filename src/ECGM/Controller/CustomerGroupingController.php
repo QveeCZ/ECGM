@@ -54,8 +54,8 @@ class CustomerGroupingController implements CustomerGroupingInterface
 
     /**
      * CustomerGroupingController constructor.
-     * @param $dimension
-     * @param $initK
+     * @param int $dimension
+     * @param int $initK
      * @param bool $autoKAdjustment
      * @param bool $verbose
      * @throws InvalidArgumentException
@@ -256,7 +256,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getDimension()
     {
@@ -264,7 +264,7 @@ class CustomerGroupingController implements CustomerGroupingInterface
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getK()
     {

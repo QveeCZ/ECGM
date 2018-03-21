@@ -32,6 +32,9 @@ class StrategyController implements StrategyInterface
      * @var StrategyTypeInterface $aggressiveStrategyController
      */
     protected $aggressiveStrategyController;
+    /**
+     * @var MainInterface
+     */
     protected $mainInterface;
 
     /**
@@ -50,25 +53,49 @@ class StrategyController implements StrategyInterface
     }
 
     /**
+     * @return StrategyTypeInterface
+     */
+    public function getPassiveStrategyController()
+    {
+        return $this->passiveStrategyController;
+    }
+
+    /**
      * @param StrategyTypeInterface $passiveStrategyController
      */
-    public function setPassiveStrategyController(StrategyTypeInterface $passiveStrategyController)
+    public function setPassiveStrategyController($passiveStrategyController)
     {
         $this->passiveStrategyController = $passiveStrategyController;
     }
 
     /**
+     * @return StrategyTypeInterface
+     */
+    public function getConservativeStrategyController()
+    {
+        return $this->conservativeStrategyController;
+    }
+
+    /**
      * @param StrategyTypeInterface $conservativeStrategyController
      */
-    public function setConservativeStrategyController(StrategyTypeInterface $conservativeStrategyController)
+    public function setConservativeStrategyController($conservativeStrategyController)
     {
         $this->conservativeStrategyController = $conservativeStrategyController;
     }
 
     /**
+     * @return StrategyTypeInterface
+     */
+    public function getAggressiveStrategyController()
+    {
+        return $this->aggressiveStrategyController;
+    }
+
+    /**
      * @param StrategyTypeInterface $aggressiveStrategyController
      */
-    public function setAggressiveStrategyController(StrategyTypeInterface $aggressiveStrategyController)
+    public function setAggressiveStrategyController($aggressiveStrategyController)
     {
         $this->aggressiveStrategyController = $aggressiveStrategyController;
     }

@@ -108,7 +108,6 @@ class Customer
      */
     public function addOrder(Order $order)
     {
-        $order->setCustomerParameters($this->getParameters());
         $this->history->add($order);
     }
 

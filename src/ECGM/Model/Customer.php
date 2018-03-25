@@ -160,7 +160,7 @@ class Customer
     public function __toString()
     {
         $str = "Customer " . $this->getId() . "\n";
-        $str .= "Parameters: " . implode(", ", $this->getParametersAsSimpleArray()) . "\n";
+        $str .= "Parameters: " . ($this->simpleParams) ? implode(", ", $this->getParametersAsSimpleArray()) : "" . "\n";
         $groupId = (isset($this->group) && $this->group) ? $this->group->getId() : "none";
         $str .= "Group: " . $groupId;
         return $str;

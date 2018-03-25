@@ -196,7 +196,7 @@ class CustomerParametersMergeController implements CustomerParametersMergeInterf
 
         $hatU = abs($hatU);
 
-        if (-$hatU == $parameter) {
+        if ($hatU == abs($parameter)) {
             $hatU += 1;
         }
 

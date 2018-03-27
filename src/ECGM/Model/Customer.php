@@ -151,7 +151,7 @@ class Customer
     /**
      * @param CustomerGroup $group
      */
-    public function setGroup(CustomerGroup $group)
+    public function setGroup(CustomerGroup $group = null)
     {
         $this->group = $group;
     }

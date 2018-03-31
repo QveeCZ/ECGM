@@ -16,7 +16,6 @@ use ECGM\Model\CustomerGroup;
 interface CustomerParametersCleaningInterface
 {
 
-
     /**
      * @return CustomerParametersMergeInterface
      */

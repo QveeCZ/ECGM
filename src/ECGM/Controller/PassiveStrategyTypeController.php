@@ -30,19 +30,25 @@ class PassiveStrategyTypeController implements StrategyTypeInterface
      * @var MainInterface
      */
     protected $mainInterface;
+    /**
+     * @var int
+     */
+    protected $maxProductsInStrategy;
 
     /**
-     * StrategyController constructor.
-     * @param float $coefficient
+     * PassiveStrategyTypeController constructor.
+     * @param $coefficient
      * @param MainInterface $mainInterface
+     * @param int $maxProductsInStrategy
      * @throws InvalidArgumentException
      */
-    public function __construct($coefficient, MainInterface $mainInterface)
+    public function __construct($coefficient, MainInterface $mainInterface, $maxProductsInStrategy = 40)
     {
 
         $this->mainInterface = $mainInterface;
         $this->customerStrategyController = new CustomerStrategyController($coefficient);
         $this->dealerStrategyController = new DealerStrategyController();
+        $this->maxProductsInStrategy = $maxProductsInStrategy;
     }
 
     /**
@@ -117,6 +123,6 @@ class PassiveStrategyTypeController implements StrategyTypeInterface
 
         arsort($idealStrategy);
 
-        return $idealStrategy;
+        return array_slice($idealStrategy, 0, $this->maxProductsInStrategy, true);
     }
 }

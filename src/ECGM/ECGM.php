@@ -43,13 +43,14 @@ class ECGM
      * @param int $dimension
      * @param int $initialClusterNumber
      * @param bool $autoClusterNumberAdjustment
+     * @param int $maxProductsInStrategy
      * @throws Exceptions\InvalidArgumentException
      * @throws Exceptions\UndefinedException
      */
-    public function __construct(MainInterface $mainInterface, $strategyMultiplierCoefficient, $dimension, $initialClusterNumber, $autoClusterNumberAdjustment = true)
+    public function __construct(MainInterface $mainInterface, $strategyMultiplierCoefficient, $dimension, $initialClusterNumber, $autoClusterNumberAdjustment = true, $maxProductsInStrategy = 40)
     {
         $this->mainInterface = $mainInterface;
-        $this->strategyController = new StrategyController($strategyMultiplierCoefficient, $mainInterface);
+        $this->strategyController = new StrategyController($strategyMultiplierCoefficient, $mainInterface, $maxProductsInStrategy);
         $this->groupingController = new CustomerGroupingController($dimension, $initialClusterNumber, $autoClusterNumberAdjustment);
         $this->parameterCleaningController = new CustomerParametersCleaningController();
     }

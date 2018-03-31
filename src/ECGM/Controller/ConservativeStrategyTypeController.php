@@ -32,19 +32,25 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
      * @var MainInterface
      */
     protected $mainInterface;
+    /**
+     * @var int
+     */
+    protected $maxProductsInStrategy;
 
     /**
-     * StrategyController constructor.
-     * @param float $coefficient
+     * ConservativeStrategyTypeController constructor.
+     * @param $coefficient
      * @param MainInterface $mainInterface
+     * @param int $maxProductsInStrategy
      * @throws InvalidArgumentException
      */
-    public function __construct($coefficient, MainInterface $mainInterface)
+    public function __construct($coefficient, MainInterface $mainInterface, $maxProductsInStrategy = 40)
     {
 
         $this->mainInterface = $mainInterface;
         $this->customerStrategyController = new CustomerStrategyController($coefficient);
         $this->dealerStrategyController = new DealerStrategyController();
+        $this->maxProductsInStrategy = $maxProductsInStrategy;
     }
 
     /**
@@ -95,23 +101,30 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
 
     /**
      * @param Customer $customer
-     * @param AssociativeBaseArray $currentProducts
+     * @param AssociativeBaseArray $currentProductsAll
      * @param Order|null $currentOrder
      * @return AssociativeBaseArray
      * @throws InvalidArgumentException
      * @throws LogicalException
      * @throws \ReflectionException
      */
-    protected function getConservativeStrategy(Customer $customer, AssociativeBaseArray $currentProducts, Order $currentOrder = null)
+    protected function getConservativeStrategy(Customer $customer, AssociativeBaseArray $currentProductsAll, Order $currentOrder = null)
     {
 
-        $currentCustomerStrategy = $this->customerStrategyController->getCustomerStrategy($customer, $currentProducts, $currentOrder);
-        $currentDealerStrategy = $this->dealerStrategyController->getDealerStrategy($currentProducts);
-        arsort($currentDealerStrategy);
+        $currentCustomerStrategy = $this->customerStrategyController->getCustomerStrategy($customer, $currentProductsAll, $currentOrder);
         arsort($currentCustomerStrategy);
 
-        $testProducts = new AssociativeBaseArray($currentProducts, CurrentProduct::class);
+        $currentCustomerStrategy = array_slice($currentCustomerStrategy, 0, $this->maxProductsInStrategy, true);
 
+
+        $currentProducts = new AssociativeBaseArray(null, CurrentProduct::class);
+
+
+        foreach ($currentCustomerStrategy as $key => $product) {
+            $currentProducts->add($currentProductsAll->getObj($key));
+        }
+
+        $testProducts = new AssociativeBaseArray($currentProducts, CurrentProduct::class);
 
         foreach ($currentProducts as $currentProduct) {
             $testProducts->add($this->getMaxDiscountProduct($currentProduct, $customer, $currentProducts, $currentOrder));
@@ -127,7 +140,7 @@ class ConservativeStrategyTypeController implements StrategyTypeInterface
         }
 
         $customerStrategy = $this->customerStrategyController->getCustomerStrategy($customer, $testProducts, $currentOrder);
-
+        arsort($customerStrategy);
 
         $sortedProducts = new AssociativeBaseArray(null, CurrentProduct::class);
 

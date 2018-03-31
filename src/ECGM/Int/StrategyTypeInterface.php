@@ -4,12 +4,22 @@ namespace ECGM\Int;
 
 
 use ECGM\Exceptions\InvalidArgumentException;
+use ECGM\MainInterface;
 use ECGM\Model\AssociativeBaseArray;
 use ECGM\Model\Customer;
 use ECGM\Model\Order;
 
 interface StrategyTypeInterface
 {
+
+    /**
+     * StrategyTypeInterface constructor.
+     * @param float $coefficient
+     * @param MainInterface $mainInterface
+     * @param int $maxProductsInStrategy
+     */
+    public function __construct($coefficient, MainInterface $mainInterface, $maxProductsInStrategy = 40);
+
     /**
      * @return CustomerStrategyInterface
      */

@@ -11,6 +11,12 @@ use ECGM\Model\Order;
 interface CustomerStrategyInterface
 {
 
+
+    /**
+     * @param float $coefficient
+     */
+    public function __construct($coefficient);
+
     /**
      * @param Customer $customer
      * @param BaseArray $currentProducts

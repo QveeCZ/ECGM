@@ -12,6 +12,14 @@ interface CustomerGroupingInterface
 
 
     /**
+     * @param int $dimension
+     * @param int $initK
+     * @param bool $autoKAdjustment
+     * @param bool $verbosesternum
+     */
+    public function __construct($dimension, $initK, $autoKAdjustment = true, $verbose = false);
+
+    /**
      * @return GroupingValidationInterface
      */
     public function getValidationClass();

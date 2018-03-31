@@ -39,17 +39,18 @@ class StrategyController implements StrategyInterface
 
     /**
      * StrategyController constructor.
-     * @param int $coefficient
+     * @param float $coefficient
      * @param MainInterface $mainInterface
+     * @param int $maxProductsInStrategy
      * @throws InvalidArgumentException
      */
-    public function __construct($coefficient, MainInterface $mainInterface)
+    public function __construct($coefficient, MainInterface $mainInterface, $maxProductsInStrategy = 40)
     {
 
         $this->mainInterface = $mainInterface;
-        $this->passiveStrategyController = new PassiveStrategyTypeController($coefficient, $mainInterface);
-        $this->conservativeStrategyController = new ConservativeStrategyTypeController($coefficient, $mainInterface);
-        $this->aggressiveStrategyController = new AggressiveStrategyTypeController($coefficient, $mainInterface);
+        $this->passiveStrategyController = new PassiveStrategyTypeController($coefficient, $mainInterface, $maxProductsInStrategy);
+        $this->conservativeStrategyController = new ConservativeStrategyTypeController($coefficient, $mainInterface, $maxProductsInStrategy);
+        $this->aggressiveStrategyController = new AggressiveStrategyTypeController($coefficient, $mainInterface, $maxProductsInStrategy);
     }
 
     /**

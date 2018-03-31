@@ -33,19 +33,25 @@ class AggressiveStrategyTypeController implements StrategyTypeInterface
      * @var MainInterface
      */
     protected $mainInterface;
+    /**
+     * @var int
+     */
+    protected $maxProductsInStrategy;
 
     /**
-     * StrategyController constructor.
-     * @param float $coefficient
+     * AggressiveStrategyTypeController constructor.
+     * @param $coefficient
      * @param MainInterface $mainInterface
+     * @param int $maxProductsInStrategy
      * @throws InvalidArgumentException
      */
-    public function __construct($coefficient, MainInterface $mainInterface)
+    public function __construct($coefficient, MainInterface $mainInterface, $maxProductsInStrategy = 40)
     {
 
         $this->mainInterface = $mainInterface;
         $this->customerStrategyController = new CustomerStrategyController($coefficient);
         $this->dealerStrategyController = new DealerStrategyController();
+        $this->maxProductsInStrategy = $maxProductsInStrategy;
     }
 
     /**
@@ -115,10 +121,15 @@ class AggressiveStrategyTypeController implements StrategyTypeInterface
 
         arsort($initialDealerStrategy);
         arsort($initialCustomerStrategy);
+
+
+        $initialCustomerStrategy = array_slice($initialCustomerStrategy, 0, $this->maxProductsInStrategy, true);
+
         $currentStrategyDistance = $this->getVectorDiff($initialDealerStrategy, $initialCustomerStrategy);
 
         $customerStrategy = $initialCustomerStrategy;
         $customerStrategyKeys = array_keys($initialCustomerStrategy);
+
         for ($i = 1; $i < count($customerStrategyKeys); $i++) {
             $testProducts->add($this->getMaxDiscountProduct($currentProducts->getObj($customerStrategyKeys[$i]), $currentProducts->getObj($customerStrategyKeys[$i - 1])));
 

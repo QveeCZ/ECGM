@@ -104,30 +104,6 @@ class Product implements KeyeableValue
         $this->expirationDateType = $expirationDateType;
     }
 
-    public function __toString()
-    {
-        $str = "";
-        $str .= "ID: " . $this->getId() . ", ";
-        $str .= "Price: " . $this->getPrice() . ", ";
-        $str .= "Discounted price: " . $this->getDiscountedPrice() . ", ";
-        $str .= "Expiration: " . $this->getExpiration() . ", ";
-        $str .= "Discount: " . $this->getDiscount();
-
-        $complements = array();
-
-        /**
-         * @var Product $complement
-         */
-        foreach ($this->complements as $complement) {
-            $complements[] = $complement->getId();
-        }
-
-
-        $str .= "Complements: [" . implode(", ", $complements) . "]\n";
-
-        return $str;
-    }
-
     /**
      * @return mixed
      */
@@ -198,5 +174,29 @@ class Product implements KeyeableValue
     public function getKey()
     {
         return $this->getId();
+    }
+
+    public function __toString()
+    {
+        $str = "";
+        $str .= "ID: " . $this->getId() . ", ";
+        $str .= "Price: " . $this->getPrice() . ", ";
+        $str .= "Discounted price: " . $this->getDiscountedPrice() . ", ";
+        $str .= "Expiration: " . $this->getExpiration() . ", ";
+        $str .= "Discount: " . $this->getDiscount();
+
+        $complements = array();
+
+        /**
+         * @var Product $complement
+         */
+        foreach ($this->complements as $complement) {
+            $complements[] = $complement->getId();
+        }
+
+
+        $str .= "Complements: [" . implode(", ", $complements) . "]\n";
+
+        return $str;
     }
 }

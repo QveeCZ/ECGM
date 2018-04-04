@@ -42,6 +42,14 @@ class Order
     }
 
     /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @return \DateTime
      */
     public function getOrderDate()
@@ -60,27 +68,11 @@ class Order
     }
 
     /**
-     * @param $productId
+     * @param int $productId
      */
     public function removeProduct($productId)
     {
         $this->products->remove($productId);
-    }
-
-    public function __toString()
-    {
-        $str = "Order: " . $this->getId() . "\n";
-        $str .= "Customer parameters:\n" . $this->getCustomerParameters()->__toString() . "\n";
-        $str .= "Products:\n" . $this->getProducts()->__toString();
-        return $str;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -106,6 +98,14 @@ class Order
     public function getProducts()
     {
         return $this->products;
+    }
+
+    public function __toString()
+    {
+        $str = "Order: " . $this->getId() . "\n";
+        $str .= "Customer parameters:\n" . $this->getCustomerParameters()->__toString() . "\n";
+        $str .= "Products:\n" . $this->getProducts()->__toString();
+        return $str;
     }
 
 }

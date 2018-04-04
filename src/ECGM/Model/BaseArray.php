@@ -166,6 +166,7 @@ class BaseArray implements \Iterator, \Countable
     {
         $this->list = array();
         $this->size = 0;
+        $this->rewind();
     }
 
     /**

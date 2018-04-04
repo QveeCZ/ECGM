@@ -51,28 +51,17 @@ class StrategyProduct
     /**
      * @return mixed
      */
-    public function getOrderId()
+    public function getId()
     {
-        return $this->orderId;
-    }
-
-    public function __toString()
-    {
-
-        $str = "";
-        $str .= "ID: " . $this->getId() . ", ";
-        $str .= "Amount: " . $this->getAmount() . ", ";
-        $str .= "Price: " . $this->getPrice() . ", ";
-        $str .= "Discounted price: " . $this->getDiscountedPrice();
-        return $str;
+        return $this->id;
     }
 
     /**
      * @return mixed
      */
-    public function getId()
+    public function getOrderId()
     {
-        return $this->id;
+        return $this->orderId;
     }
 
     /**
@@ -129,6 +118,17 @@ class StrategyProduct
     public function setDiscount($discount)
     {
         $this->discount = $discount;
+    }
+
+    public function __toString()
+    {
+
+        $str = "";
+        $str .= "ID: " . $this->getId() . ", ";
+        $str .= "Amount: " . $this->getAmount() . ", ";
+        $str .= "Price: " . $this->getPrice() . ", ";
+        $str .= "Discounted price: " . $this->getDiscountedPrice();
+        return $str;
     }
 
 

@@ -60,30 +60,6 @@ class OrderProduct extends StrategyProduct
         return $this->complements;
     }
 
-    public function __toString()
-    {
-        $str = "";
-        $str .= "ID: " . $this->getId() . ", ";
-        $str .= "Price: " . $this->getPrice() . ", ";
-        $str .= "Expiration: " . $this->getExpiration() . ", ";
-
-        $complements = array();
-
-        /**
-         * @var Product $complement
-         */
-        foreach ($this->complements as $complement) {
-            $complements[] = $complement->getId();
-        }
-
-        $str .= "Complements: [" . implode(", ", $complements) . "]\n";
-
-        $str .= ", Order: " . $this->getOrder()->getId() . ", ";
-        $str .= "Amount: " . $this->getAmount();
-
-        return $str;
-    }
-
     /**
      * @return int
      */
@@ -106,6 +82,30 @@ class OrderProduct extends StrategyProduct
     public function setOrder($order)
     {
         $this->order = $order;
+    }
+
+    public function __toString()
+    {
+        $str = "";
+        $str .= "ID: " . $this->getId() . ", ";
+        $str .= "Price: " . $this->getPrice() . ", ";
+        $str .= "Expiration: " . $this->getExpiration() . ", ";
+
+        $complements = array();
+
+        /**
+         * @var Product $complement
+         */
+        foreach ($this->complements as $complement) {
+            $complements[] = $complement->getId();
+        }
+
+        $str .= "Complements: [" . implode(", ", $complements) . "]\n";
+
+        $str .= ", Order: " . $this->getOrder()->getId() . ", ";
+        $str .= "Amount: " . $this->getAmount();
+
+        return $str;
     }
 
 

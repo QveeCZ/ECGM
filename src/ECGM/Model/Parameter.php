@@ -28,7 +28,7 @@ class Parameter
      */
     protected $isCircular;
     /**
-     * @var int
+     * @var float
      */
     protected $maxValue;
 
@@ -37,7 +37,7 @@ class Parameter
      * @param mixed $id
      * @param float $value
      * @param boolean $isCircular eg hours in day or months in year
-     * @param int $maxValue is parameter is circular maxValue must be set
+     * @param float $maxValue is parameter is circular maxValue must be set
      * @throws InvalidArgumentException
      */
     public function __construct($id, $value, $isCircular = false, $maxValue = 0)
@@ -79,7 +79,7 @@ class Parameter
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getMaxValue()
     {
@@ -102,17 +102,17 @@ class Parameter
         $this->customer = $customer;
     }
 
-    public function __toString()
-    {
-        return strval($this->getValue());
-    }
-
     /**
      * @return mixed
      */
     public function getValue()
     {
         return $this->value;
+    }
+
+    public function __toString()
+    {
+        return strval($this->getValue());
     }
 
 }

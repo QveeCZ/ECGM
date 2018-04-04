@@ -19,7 +19,7 @@ class CurrentProduct extends Product
      * CurrentProduct constructor.
      * @param $id
      * @param float $price
-     * @param integer $expiration
+     * @param int $expiration
      * @param mixed $ppc
      * @param float $discount
      * @throws InvalidArgumentException

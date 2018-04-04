@@ -203,6 +203,9 @@ class BaseArray implements \Iterator, \Countable
         }
     }
 
+    /**
+     * @param $obj
+     */
     public function removeByObject($obj)
     {
         $this->isValid($obj);
@@ -220,7 +223,6 @@ class BaseArray implements \Iterator, \Countable
     {
         return !$this->size;
     }
-    //Iterator functions
 
     /**
      * @param int $key
@@ -233,6 +235,8 @@ class BaseArray implements \Iterator, \Countable
         }
         return $this->list[$key];
     }
+
+    //Iterator functions
 
     /**
      * @return array

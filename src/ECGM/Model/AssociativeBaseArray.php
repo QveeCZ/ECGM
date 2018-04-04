@@ -106,7 +106,7 @@ class AssociativeBaseArray extends BaseArray
     }
 
     /**
-     * @param int $key
+     * @param mixed $key
      */
     public function remove($key)
     {

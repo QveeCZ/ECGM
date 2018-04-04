@@ -73,7 +73,7 @@ class Customer
     }
 
     /**
-     * @param $parameterId
+     * @param int $parameterId
      */
     public function removeParameter($parameterId)
     {
@@ -112,6 +112,14 @@ class Customer
     }
 
     /**
+     * @param int $orderId
+     */
+    public function removeOrder($orderId)
+    {
+        $this->history->remove($orderId);
+    }
+
+    /**
      * @return BaseArray
      */
     public function getParameters()
@@ -133,14 +141,6 @@ class Customer
     }
 
     /**
-     * @param $orderId
-     */
-    public function removeOrder($orderId)
-    {
-        $this->history->remove($orderId);
-    }
-
-    /**
      * @return CustomerGroup
      */
     public function getGroup()
@@ -156,6 +156,22 @@ class Customer
         $this->group = $group;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParametersAsSimpleArray()
+    {
+        return $this->simpleParams;
+    }
+
     public function __toString()
     {
         $str = "Customer " . $this->getId() . "\n";
@@ -163,18 +179,5 @@ class Customer
         $groupId = (isset($this->group) && $this->group) ? $this->group->getId() : "none";
         $str .= "Group: " . $groupId;
         return $str;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getParametersAsSimpleArray()
-    {
-        return $this->simpleParams;
     }
 }

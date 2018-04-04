@@ -40,7 +40,7 @@ interface MainInterface
 
     /**
      * Return all products that are currently in sale and should be included in strategy.
-     * Has to return BaseArray ECGM\Model\CurrentProduct requiredClass
+     * Has to return AssociativeBaseArray ECGM\Model\CurrentProduct requiredClass
      *
      * @return AssociativeBaseArray
      */

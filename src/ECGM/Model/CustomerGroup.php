@@ -122,20 +122,12 @@ class CustomerGroup
     }
 
     /**
-     * @param $parameterId
+     * @param int $parameterId
      */
     public function removeParameter($parameterId)
     {
         $this->parameters->remove($parameterId);
         $this->populateSimpleParams();
-    }
-
-    public function __toString()
-    {
-        $str = "Group: " . $this->getId() . "\n";
-        $str .= "Parameters\n{\n" . $this->getParameters()->__toString() . "}\n";
-        $str .= "Customers\n{\n" . $this->getCustomers()->__toString() . "}";
-        return $str;
     }
 
     /**
@@ -164,12 +156,9 @@ class CustomerGroup
         $this->populateSimpleParams();
     }
 
-    /**
-     * @return BaseArray
-     */
-    public function getCustomers()
+    public function getParametersAsSimpleArray()
     {
-        return $this->customers;
+        return $this->simpleParams;
     }
 
     /**
@@ -181,9 +170,20 @@ class CustomerGroup
         $this->customers->set($customers);
     }
 
-    public function getParametersAsSimpleArray()
+    /**
+     * @return BaseArray
+     */
+    public function getCustomers()
     {
-        return $this->simpleParams;
+        return $this->customers;
+    }
+
+    public function __toString()
+    {
+        $str = "Group: " . $this->getId() . "\n";
+        $str .= "Parameters\n{\n" . $this->getParameters()->__toString() . "}\n";
+        $str .= "Customers\n{\n" . $this->getCustomers()->__toString() . "}";
+        return $str;
     }
 
 }

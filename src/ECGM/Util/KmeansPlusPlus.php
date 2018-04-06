@@ -130,6 +130,25 @@ class KmeansPlusPlus implements GroupingImplementationInterface
     }
 
     /**
+     * @param BaseArray $parameters
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    public function getCustomerParametersAsArray(BaseArray $parameters)
+    {
+        $parameters = new BaseArray($parameters, Parameter::class);
+
+        $ret = array();
+        /**
+         * @var Parameter $parameter
+         */
+        foreach ($parameters as $parameter) {
+            $ret[] = $parameter->getValue();
+        }
+        return $ret;
+    }
+
+    /**
      * @param int $clusterNumber
      * @return BaseArray
      * @throws InvalidArgumentException
@@ -212,25 +231,6 @@ class KmeansPlusPlus implements GroupingImplementationInterface
 
         return $this->distanceFunctions->distancePrecise($this->getCustomerParametersAsArray($p1), $this->getCustomerParametersAsArray($p2));
 
-    }
-
-    /**
-     * @param BaseArray $parameters
-     * @return array
-     * @throws InvalidArgumentException
-     */
-    public function getCustomerParametersAsArray(BaseArray $parameters)
-    {
-        $parameters = new BaseArray($parameters, Parameter::class);
-
-        $ret = array();
-        /**
-         * @var Parameter $parameter
-         */
-        foreach ($parameters as $parameter) {
-            $ret[] = $parameter->getValue();
-        }
-        return $ret;
     }
 
     /**

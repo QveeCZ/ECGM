@@ -128,13 +128,14 @@ class CustomerGroupingController implements CustomerGroupingInterface
         return $this->distanceFunctions;
     }
 
+
+
     /**
      * @param DistanceFuncInterface $distanceFunctions
      */
     public function setDistanceFunctions(DistanceFuncInterface $distanceFunctions)
     {
         $this->distanceFunctions = $distanceFunctions;
-        $this->groupingClass->setDistanceFunctions($distanceFunctions);
         $this->groupingClass->setDistanceFunctions($distanceFunctions);
     }
 
@@ -177,6 +178,41 @@ class CustomerGroupingController implements CustomerGroupingInterface
     }
 
     /**
+     * @param Customer $customer
+     * @param BaseArray $groups
+     * @return Customer
+     * @throws InvalidArgumentException
+     */
+    public function assignToGroup(Customer $customer, BaseArray $groups)
+    {
+        if ($customer->getGroup()) {
+            throw new InvalidArgumentException("Customer has already assigned group " . $customer->getGroup()->getId() . ".");
+        }
+
+        $groups = new BaseArray($groups, CustomerGroup::class);
+
+        $customer->setGroup($this->getBestGroup($customer, $groups));
+
+        return $customer;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDimension()
+    {
+        return $this->dimension;
+    }
+
+    /**
+     * @return int
+     */
+    public function getK()
+    {
+        return $this->k;
+    }
+
+    /**
      * @param $k
      * @param BaseArray $customers
      * @param BaseArray|null $groups
@@ -212,25 +248,6 @@ class CustomerGroupingController implements CustomerGroupingInterface
     /**
      * @param Customer $customer
      * @param BaseArray $groups
-     * @return Customer
-     * @throws InvalidArgumentException
-     */
-    public function assignToGroup(Customer $customer, BaseArray $groups)
-    {
-        if ($customer->getGroup()) {
-            throw new InvalidArgumentException("Customer has already assigned group " . $customer->getGroup()->getId() . ".");
-        }
-
-        $groups = new BaseArray($groups, CustomerGroup::class);
-
-        $customer->setGroup($this->getBestGroup($customer, $groups));
-
-        return $customer;
-    }
-
-    /**
-     * @param Customer $customer
-     * @param BaseArray $groups
      * @return CustomerGroup|null
      * @throws InvalidArgumentException
      */
@@ -253,22 +270,6 @@ class CustomerGroupingController implements CustomerGroupingInterface
         }
 
         return $bestGroup;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDimension()
-    {
-        return $this->dimension;
-    }
-
-    /**
-     * @return int
-     */
-    public function getK()
-    {
-        return $this->k;
     }
 
 }

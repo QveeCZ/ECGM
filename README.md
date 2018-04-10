@@ -12,7 +12,7 @@ Check out [Documentation](/doc/doc.pdf) for czech documentation.
 ## Installation
 
 * Requires PHP 5.6 and higher, phpUnit 5
-* Install with composer: 
+* Install with composer: require okomarek/ecgm
 
 ## License
 
